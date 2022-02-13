@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <title>E-napló | Naplóbejegyzések</title>
+</head>
+<body>
+<h1>Naplóbejegyzések</h1>
+<a th:href="@{/gradebook-entries/new}">Új bejegyzés</a>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>tanuló</th>
+        <th>óra</th>
+        <th>feladat</th>
+        <th>osztályzat</th>
+    </tr>
+    <tr th:each="entry : ${entries}">
+        <td th:text="${entry.getId()}"></td>
+        <td>
+            <a th:href="@{/student_gradebook/{student} (student = ${entry.getStudentId()})}">
+                <span th:text="${entry.getStudentName()}"></span>
+            </a>
+        </td>
+        <td>
+            <a th:href="@{class_gradebook/{class} (class = ${entry.getClassId()})}">
+                <span th:text="${entry.getClassName()}"></span>
+            </a>
+        </td>
+        <td th:text="${entry.getAssignmentName()}"></td>
+        <td th:text="${entry.getGrade()}"></td>
+    </tr>
+</table>
+</body>
+</html>

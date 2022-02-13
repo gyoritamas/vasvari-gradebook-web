@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <title th:text="${editing}? 'E-napló | Feladat módosítása':'E-napló | Új feladat'"></title>
+</head>
+<body>
+<h1 th:text="${editing}? 'Feladat módosítása' : 'Új feladat'"></h1>
+<form th:object="${assignmentInput}" th:method="${editing} ? put : post">
+    <table>
+        <!-- name -->
+        <tr>
+            <td><label for="name">Feladat neve</label></td>
+        </tr>
+        <tr>
+            <td><input type="text" id="name" th:field="*{name}"></td>
+            <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></td>
+        </tr>
+
+        <!-- type -->
+        <tr>
+            <td><label for="type">típus</label></td>
+        </tr>
+        <tr>
+            <td>
+                <select id="type" th:field="*{type}">
+                    <option th:each="typeOption : ${typeOptions}"
+                            th:value="${typeOption}"
+                            th:text="${typeOption}"
+                            th:selected="${assignmentInput}">
+                    </option>
+                </select>
+            </td>
+        </tr>
+
+        <!-- description -->
+        <tr>
+            <td><label for="description">leírás</label></td>
+        </tr>
+        <tr>
+            <td><input type="text" id="description" th:field="*{description}"></td>
+            <td th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></td>
+        </tr>
+
+        <tr>
+            <td>
+                <button type="submit">Mentés</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+</body>
+</html>

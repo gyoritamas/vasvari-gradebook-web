@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <title th:text="${editing}? 'E-napló | Tanuló adatainak módosítása' : 'E-napló | Új tanuló'"></title>
+</head>
+<body>
+<h1 th:text="${editing}? 'Tanuló adatainak módosítása' : 'Új tanuló'"></h1>
+<form th:object="${studentDto}" th:method="${editing} ? put : post">
+    <table>
+        <!-- lastname -->
+        <tr>
+            <td><label for="lastname">Vezetéknév</label></td>
+        </tr>
+        <tr>
+            <td><input type="text" id="lastname" th:field="*{lastname}"></td>
+            <td th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></td>
+        </tr>
+
+        <!-- firstname -->
+        <tr>
+            <td><label for="firstname">Keresztnév</label></td>
+        </tr>
+        <tr>
+            <td><input type="text" id="firstname" th:field="*{firstname}"></td>
+            <td th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}"></td>
+        </tr>
+
+        <!-- grade level -->
+        <tr>
+            <td><label for="grade-level">Évfolyam</label></td>
+        </tr>
+        <tr>
+            <td><input type="number" id="grade-level" th:field="*{gradeLevel}"></td>
+            <td th:if="${#fields.hasErrors('gradeLevel')}" th:errors="*{gradeLevel}"></td>
+        </tr>
+
+        <!-- email -->
+        <tr>
+            <td><label for="email">E-mail cím</label></td>
+        </tr>
+        <tr>
+            <td><input type="text" id="email" th:field="*{email}"></td>
+            <td th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></td>
+        </tr>
+
+        <!-- address -->
+        <tr>
+            <td><label for="address">Lakcím</label></td>
+        </tr>
+        <tr>
+            <td><input type="text" id="address" th:field="*{address}"></td>
+            <td th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></td>
+        </tr>
+
+        <!-- phone -->
+        <tr>
+            <td><label for="phone">Telefonszám</label></td>
+        </tr>
+        <tr>
+            <td><input type="text" id="phone" th:field="*{phone}"></td>
+            <td th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></td>
+        </tr>
+
+        <!-- birthdate -->
+        <tr>
+            <td><label for="birthdate">Születési dátum</label></td>
+        </tr>
+        <tr>
+            <td><input type="date" id="birthdate" th:field="*{birthdate}"></td>
+            <td th:if="${#fields.hasErrors('birthdate')}" th:errors="*{birthdate}"></td>
+        </tr>
+
+        <tr>
+            <td>
+                <button type="submit">Mentés</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+</body>
+</html>
