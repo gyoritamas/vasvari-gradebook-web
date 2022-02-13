@@ -12,7 +12,7 @@ mvn package -DskipTests
 parancsot a Gradebook Web alkalmazás gyökérkönyvtárából. Ha a build folyamat véget ért, futtassuk 
 a programot a 
 ```
-java -jar target/gradebook-web-0.0.1-SNAPSHOT.jar
+java -jar ./target/gradebook-web-0.0.1-SNAPSHOT.jar
 ```
 paranccsal.
 Miután a Gradebook API alkalmazást is elindítottuk, használjuk a böngészőt a következő oldalak elérésére.
