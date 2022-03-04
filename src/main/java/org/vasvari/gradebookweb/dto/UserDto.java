@@ -3,10 +3,6 @@ package org.vasvari.gradebookweb.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.hateoas.server.core.Relation;
-import org.vasvari.gradebookweb.security.ApplicationUserRole;
-
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,6 +20,6 @@ public class UserDto {
     @Schema(example = "password")
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private ApplicationUserRole role;
+    @Schema(example = "TEACHER")
+    private UserRole role;
 }

@@ -7,8 +7,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.vasvari.gradebookweb.dto.StudentDto;
+import org.vasvari.gradebookweb.jwt.TokenRepository;
 import org.vasvari.gradebookweb.service.StudentService;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Controller
