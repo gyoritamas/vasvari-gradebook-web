@@ -8,10 +8,12 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.hateoas.server.core.TypeReferences;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.dto.GradebookInput;
+import org.vasvari.gradebookweb.jwt.TokenRepository;
 import org.vasvari.gradebookweb.model.GradebookEntry;
 import org.vasvari.gradebookweb.model.GradebookOutputModel;
 
@@ -26,9 +28,11 @@ public class GradebookGateway {
     @Value("${api.url}")
     private String baseUrl;
 
+    private final TokenRepository tokenRepository;
     private final RestTemplate template;
 
-    public GradebookGateway(RestTemplateBuilder builder) {
+    public GradebookGateway(TokenRepository tokenRepository, RestTemplateBuilder builder) {
+        this.tokenRepository = tokenRepository;
         this.template = builder.build();
     }
 
@@ -42,14 +46,19 @@ public class GradebookGateway {
                 new TypeReferences.CollectionModelType<>() {
                 };
 
-        CollectionModel<GradebookEntry> gradebookResource = traverson
-                .follow("$._links.self.href")
-                .toObject(collectionModelType);
+        try {
+            CollectionModel<GradebookEntry> gradebookResource = traverson
+                    .follow("$._links.self.href")
+                    .withHeaders(getAuthorizationHeader())
+                    .toObject(collectionModelType);
 
-        if (gradebookResource != null)
-            return gradebookResource.getContent();
-        else
-            return Collections.emptyList();
+            if (gradebookResource != null)
+                return gradebookResource.getContent();
+            else
+                return Collections.emptyList();
+        } catch (IllegalStateException e) {
+            throw new RuntimeException("Unauthorized");
+        }
     }
 
     public Collection<GradebookEntry> findGradebookEntriesOfStudent(Long studentId) {
@@ -58,14 +67,19 @@ public class GradebookGateway {
                 new TypeReferences.CollectionModelType<>() {
                 };
 
-        CollectionModel<GradebookEntry> gradebookResource = traverson
-                .follow("$._links.student_gradebook.href")
-                .toObject(collectionModelType);
+        try {
+            CollectionModel<GradebookEntry> gradebookResource = traverson
+                    .follow("$._links.student_gradebook.href")
+                    .withHeaders(getAuthorizationHeader())
+                    .toObject(collectionModelType);
 
-        if (gradebookResource != null)
-            return gradebookResource.getContent();
-        else
-            return Collections.emptyList();
+            if (gradebookResource != null)
+                return gradebookResource.getContent();
+            else
+                return Collections.emptyList();
+        } catch (IllegalStateException e) {
+            throw new RuntimeException("Unauthorized");
+        }
     }
 
     public void save(GradebookInput gradebookEntry) {
@@ -73,4 +87,12 @@ public class GradebookGateway {
     }
 
     // update and delete methods are not supported
+
+    private HttpHeaders getAuthorizationHeader() {
+        HttpHeaders headers = new HttpHeaders();
+        if (tokenRepository.getToken() != null) {
+            headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + tokenRepository.getToken().getTokenString());
+        }
+        return headers;
+    }
 }

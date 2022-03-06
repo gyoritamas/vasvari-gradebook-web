@@ -8,11 +8,13 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.hateoas.server.core.TypeReferences;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.dto.AssignmentInput;
 import org.vasvari.gradebookweb.dto.AssignmentOutput;
+import org.vasvari.gradebookweb.jwt.TokenRepository;
 import org.vasvari.gradebookweb.model.AssignmentOutputModel;
 
 import java.net.URI;
@@ -26,9 +28,11 @@ public class AssignmentGateway {
     @Value("${api.url}")
     private String baseUrl;
 
+    private final TokenRepository tokenRepository;
     private final RestTemplate template;
 
-    public AssignmentGateway(RestTemplateBuilder builder) {
+    public AssignmentGateway(TokenRepository tokenRepository, RestTemplateBuilder builder) {
+        this.tokenRepository = tokenRepository;
         this.template = builder.build();
     }
 
@@ -42,14 +46,19 @@ public class AssignmentGateway {
                 new TypeReferences.CollectionModelType<>() {
                 };
 
-        CollectionModel<AssignmentOutput> assignmentResource = traverson
-                .follow("$._links.self.href")
-                .toObject(collectionModelType);
+        try {
+            CollectionModel<AssignmentOutput> assignmentResource = traverson
+                    .follow("$._links.self.href")
+                    .withHeaders(getAuthorizationHeader())
+                    .toObject(collectionModelType);
 
-        if (assignmentResource != null)
-            return assignmentResource.getContent();
-        else
-            return Collections.emptyList();
+            if (assignmentResource != null)
+                return assignmentResource.getContent();
+            else
+                return Collections.emptyList();
+        } catch (IllegalStateException e){
+            throw new RuntimeException("Unauthorized");
+        }
     }
 
     public void save(AssignmentInput assignment) {
@@ -62,5 +71,13 @@ public class AssignmentGateway {
 
     public void deleteAssignment(Long id) {
         template.delete(baseUrl + "/assignments/{id}", id);
+    }
+
+    private HttpHeaders getAuthorizationHeader() {
+        HttpHeaders headers = new HttpHeaders();
+        if (tokenRepository.getToken() != null) {
+            headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + tokenRepository.getToken().getTokenString());
+        }
+        return headers;
     }
 }

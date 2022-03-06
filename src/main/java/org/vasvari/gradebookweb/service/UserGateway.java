@@ -7,12 +7,12 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.hateoas.server.core.TypeReferences;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.vasvari.gradebookweb.dto.StudentDto;
 import org.vasvari.gradebookweb.dto.UserDto;
-import org.vasvari.gradebookweb.model.StudentOutputModel;
+import org.vasvari.gradebookweb.jwt.TokenRepository;
 import org.vasvari.gradebookweb.model.UserOutputModel;
 
 import java.net.URI;
@@ -24,9 +24,11 @@ public class UserGateway {
     @Value("${api.url}")
     private String baseUrl;
 
+    private final TokenRepository tokenRepository;
     private final RestTemplate template;
 
-    public UserGateway(RestTemplateBuilder builder) {
+    public UserGateway(TokenRepository tokenRepository, RestTemplateBuilder builder) {
+        this.tokenRepository = tokenRepository;
         this.template = builder.build();
     }
 
@@ -40,14 +42,19 @@ public class UserGateway {
                 new TypeReferences.CollectionModelType<>() {
                 };
 
-        CollectionModel<UserDto> userResource = traverson
-                .follow("$._links.self.href")
-                .toObject(collectionModelType);
+        try {
+            CollectionModel<UserDto> userResource = traverson
+                    .follow("$._links.self.href")
+                    .withHeaders(getAuthorizationHeader())
+                    .toObject(collectionModelType);
 
-        if (userResource != null)
-            return userResource.getContent();
-        else
-            return Collections.emptyList();
+            if (userResource != null)
+                return userResource.getContent();
+            else
+                return Collections.emptyList();
+        } catch (IllegalStateException e) {
+            throw new RuntimeException("Unauthorized");
+        }
     }
 
     public ResponseEntity<?> save(UserDto user) {
@@ -62,5 +69,12 @@ public class UserGateway {
         template.delete(baseUrl + "/users/{id}", id);
     }
 
+    private HttpHeaders getAuthorizationHeader() {
+        HttpHeaders headers = new HttpHeaders();
+        if (tokenRepository.getToken() != null) {
+            headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + tokenRepository.getToken().getTokenString());
+        }
+        return headers;
+    }
 
 }

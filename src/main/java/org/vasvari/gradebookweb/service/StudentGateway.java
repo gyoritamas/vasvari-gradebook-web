@@ -22,11 +22,11 @@ import java.util.Collections;
 
 @Service
 public class StudentGateway {
+
     @Value("${api.url}")
     private String baseUrl;
 
     private final TokenRepository tokenRepository;
-
     private final RestTemplate template;
 
     @Autowired

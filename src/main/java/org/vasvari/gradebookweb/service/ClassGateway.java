@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.dto.ClassInput;
 import org.vasvari.gradebookweb.dto.ClassOutput;
+import org.vasvari.gradebookweb.jwt.TokenRepository;
 import org.vasvari.gradebookweb.model.ClassOutputModel;
 
 import java.net.URI;
@@ -26,9 +27,11 @@ public class ClassGateway {
     @Value("${api.url}")
     private String baseUrl;
 
+    private final TokenRepository tokenRepository;
     private final RestTemplate restTemplate;
 
-    public ClassGateway(RestTemplateBuilder builder) {
+    public ClassGateway(TokenRepository tokenRepository, RestTemplateBuilder builder) {
+        this.tokenRepository = tokenRepository;
         this.restTemplate = builder.build();
     }
 
@@ -42,14 +45,19 @@ public class ClassGateway {
                 new TypeReferences.CollectionModelType<>() {
                 };
 
-        CollectionModel<ClassOutput> classResource = traverson
-                .follow("$._links.self.href")
-                .toObject(collectionModelType);
+        try {
+            CollectionModel<ClassOutput> classResource = traverson
+                    .follow("$._links.self.href")
+                    .withHeaders(getAuthorizationHeader())
+                    .toObject(collectionModelType);
 
-        if (classResource != null)
-            return classResource.getContent();
-        else
-            return Collections.emptyList();
+            if (classResource != null)
+                return classResource.getContent();
+            else
+                return Collections.emptyList();
+        } catch (IllegalStateException e) {
+            throw new RuntimeException("Unauthorized");
+        }
     }
 
     public ResponseEntity<?> save(ClassInput clazz) {
@@ -62,5 +70,13 @@ public class ClassGateway {
 
     public void deleteClass(Long id) {
         restTemplate.delete(baseUrl + "/classes/{id}", id);
+    }
+
+    private HttpHeaders getAuthorizationHeader() {
+        HttpHeaders headers = new HttpHeaders();
+        if (tokenRepository.getToken() != null) {
+            headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + tokenRepository.getToken().getTokenString());
+        }
+        return headers;
     }
 }
