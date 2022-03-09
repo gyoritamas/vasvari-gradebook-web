@@ -15,8 +15,8 @@
             <td><label for="course">Képzés neve</label></td>
         </tr>
         <tr>
-            <td><input type="text" id="course" th:field="*{course}"></td>
-            <td th:if="${#fields.hasErrors('course')}" th:errors="*{course}">Hiba a képzés nevében</td>
+            <td><input type="text" id="course" th:field="*{name}"></td>
+            <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Hiba a képzés nevében</td>
         </tr>
         <tr>
             <td>

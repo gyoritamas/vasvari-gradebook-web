@@ -2,19 +2,17 @@ package org.vasvari.gradebookweb.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.hateoas.server.core.TypeReferences;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.dto.StudentDto;
-import org.vasvari.gradebookweb.jwt.TokenRepository;
 import org.vasvari.gradebookweb.model.StudentOutputModel;
+import org.vasvari.gradebookweb.util.JwtTokenUtil;
 
 import java.net.URI;
 import java.util.Collection;
@@ -26,12 +24,12 @@ public class StudentGateway {
     @Value("${api.url}")
     private String baseUrl;
 
-    private final TokenRepository tokenRepository;
+    private final JwtTokenUtil jwtTokenUtil;
     private final RestTemplate template;
 
     @Autowired
-    public StudentGateway(TokenRepository tokenRepository, RestTemplate restTemplate) {
-        this.tokenRepository = tokenRepository;
+    public StudentGateway(JwtTokenUtil jwtTokenUtil, RestTemplate restTemplate) {
+        this.jwtTokenUtil = jwtTokenUtil;
         this.template = restTemplate;
     }
 
@@ -49,7 +47,7 @@ public class StudentGateway {
         try {
             CollectionModel<StudentDto> studentResource = traverson
                     .follow("$._links.self.href")
-                    .withHeaders(getAuthorizationHeader())
+                    .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
                     .toObject(collectionModelType);
 
             if (studentResource != null)
@@ -73,11 +71,4 @@ public class StudentGateway {
         template.delete(baseUrl + "/students/{id}", id);
     }
 
-    private HttpHeaders getAuthorizationHeader() {
-        HttpHeaders headers = new HttpHeaders();
-        if (tokenRepository.getToken() != null) {
-            headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + tokenRepository.getToken().getTokenString());
-        }
-        return headers;
-    }
 }

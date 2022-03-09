@@ -7,7 +7,9 @@ import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+import org.vasvari.gradebookweb.jwt.TokenRepository;
 
 import java.io.Serializable;
 import java.util.function.Function;
@@ -18,6 +20,12 @@ public class JwtTokenUtil implements Serializable {
 
     @Value("${jwt.secret}")
     private String secret;
+
+    private final TokenRepository tokenRepository;
+
+    public JwtTokenUtil(TokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
@@ -42,5 +50,13 @@ public class JwtTokenUtil implements Serializable {
 
     private Claims getAllClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+    }
+
+    public HttpHeaders getAuthorizationHeaderWithToken() {
+        HttpHeaders headers = new HttpHeaders();
+        if (tokenRepository.getToken() != null) {
+            headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + tokenRepository.getToken().getTokenString());
+        }
+        return headers;
     }
 }

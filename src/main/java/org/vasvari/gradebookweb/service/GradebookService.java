@@ -41,7 +41,7 @@ public class GradebookService {
 
     public List<GradebookOutput> findGradebookEntriesOfClass(Long classId) {
         List<GradebookEntry> entriesOfClass = gateway.findAllGradebookEntries().stream()
-                .filter(entry -> entry.getClassId().equals(classId))
+                .filter(entry -> entry.getCourseId().equals(classId))
                 .collect(Collectors.toList());
         return mapper.mapAll(entriesOfClass);
     }

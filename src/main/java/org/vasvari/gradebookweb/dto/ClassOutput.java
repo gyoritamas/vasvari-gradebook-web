@@ -1,7 +1,9 @@
 package org.vasvari.gradebookweb.dto;
 
-import lombok.*;
-import org.springframework.hateoas.server.core.Relation;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -9,11 +11,11 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ClassOutput {
+public class ClassOutput{
 
     private Long id;
 
-    private String course;
+    private String name;
 
     private List<String> students;
 

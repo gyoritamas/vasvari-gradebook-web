@@ -1,21 +1,19 @@
 package org.vasvari.gradebookweb.service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.hateoas.server.core.TypeReferences;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.dto.GradebookInput;
-import org.vasvari.gradebookweb.jwt.TokenRepository;
 import org.vasvari.gradebookweb.model.GradebookEntry;
 import org.vasvari.gradebookweb.model.GradebookOutputModel;
+import org.vasvari.gradebookweb.util.JwtTokenUtil;
 
 import java.net.URI;
 import java.util.Collection;
@@ -28,12 +26,12 @@ public class GradebookGateway {
     @Value("${api.url}")
     private String baseUrl;
 
-    private final TokenRepository tokenRepository;
+    private final JwtTokenUtil jwtTokenUtil;
     private final RestTemplate template;
 
-    public GradebookGateway(TokenRepository tokenRepository, RestTemplateBuilder builder) {
-        this.tokenRepository = tokenRepository;
-        this.template = builder.build();
+    public GradebookGateway(JwtTokenUtil jwtTokenUtil, RestTemplate template) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.template = template;
     }
 
     public ResponseEntity<GradebookOutputModel> findGradebookEntryById(Long id) {
@@ -49,7 +47,7 @@ public class GradebookGateway {
         try {
             CollectionModel<GradebookEntry> gradebookResource = traverson
                     .follow("$._links.self.href")
-                    .withHeaders(getAuthorizationHeader())
+                    .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
                     .toObject(collectionModelType);
 
             if (gradebookResource != null)
@@ -70,7 +68,7 @@ public class GradebookGateway {
         try {
             CollectionModel<GradebookEntry> gradebookResource = traverson
                     .follow("$._links.student_gradebook.href")
-                    .withHeaders(getAuthorizationHeader())
+                    .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
                     .toObject(collectionModelType);
 
             if (gradebookResource != null)
@@ -88,11 +86,4 @@ public class GradebookGateway {
 
     // update and delete methods are not supported
 
-    private HttpHeaders getAuthorizationHeader() {
-        HttpHeaders headers = new HttpHeaders();
-        if (tokenRepository.getToken() != null) {
-            headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + tokenRepository.getToken().getTokenString());
-        }
-        return headers;
-    }
 }

@@ -2,9 +2,11 @@ package org.vasvari.gradebookweb.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.vasvari.gradebookweb.dto.ClassInput;
 import org.vasvari.gradebookweb.dto.ClassOutput;
+import org.vasvari.gradebookweb.model.ClassOutputModel;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,20 +1,19 @@
 package org.vasvari.gradebookweb.service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.hateoas.server.core.TypeReferences;
-import org.springframework.http.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.dto.ClassInput;
 import org.vasvari.gradebookweb.dto.ClassOutput;
-import org.vasvari.gradebookweb.jwt.TokenRepository;
 import org.vasvari.gradebookweb.model.ClassOutputModel;
+import org.vasvari.gradebookweb.util.JwtTokenUtil;
 
 import java.net.URI;
 import java.util.Collection;
@@ -27,16 +26,16 @@ public class ClassGateway {
     @Value("${api.url}")
     private String baseUrl;
 
-    private final TokenRepository tokenRepository;
-    private final RestTemplate restTemplate;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final RestTemplate template;
 
-    public ClassGateway(TokenRepository tokenRepository, RestTemplateBuilder builder) {
-        this.tokenRepository = tokenRepository;
-        this.restTemplate = builder.build();
+    public ClassGateway(JwtTokenUtil jwtTokenUtil, RestTemplate template) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.template = template;
     }
 
     public ResponseEntity<ClassOutputModel> findClassById(Long id) {
-        return restTemplate.getForEntity(baseUrl + "/classes/{id}", ClassOutputModel.class, id);
+        return template.getForEntity(baseUrl + "/classes/{id}", ClassOutputModel.class, id);
     }
 
     public Collection<ClassOutput> findAllClasses() {
@@ -48,7 +47,7 @@ public class ClassGateway {
         try {
             CollectionModel<ClassOutput> classResource = traverson
                     .follow("$._links.self.href")
-                    .withHeaders(getAuthorizationHeader())
+                    .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
                     .toObject(collectionModelType);
 
             if (classResource != null)
@@ -61,22 +60,15 @@ public class ClassGateway {
     }
 
     public ResponseEntity<?> save(ClassInput clazz) {
-        return restTemplate.postForEntity(baseUrl + "/classes", clazz, EntityModel.class);
+        return template.postForEntity(baseUrl + "/classes", clazz, EntityModel.class);
     }
 
     public void updateClass(Long id, ClassInput update) {
-        restTemplate.put(baseUrl + "/classes/{id}", update, id);
+        template.put(baseUrl + "/classes/{id}", update, id);
     }
 
     public void deleteClass(Long id) {
-        restTemplate.delete(baseUrl + "/classes/{id}", id);
+        template.delete(baseUrl + "/classes/{id}", id);
     }
 
-    private HttpHeaders getAuthorizationHeader() {
-        HttpHeaders headers = new HttpHeaders();
-        if (tokenRepository.getToken() != null) {
-            headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + tokenRepository.getToken().getTokenString());
-        }
-        return headers;
-    }
 }

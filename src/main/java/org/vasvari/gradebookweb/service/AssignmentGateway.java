@@ -1,21 +1,20 @@
 package org.vasvari.gradebookweb.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.hateoas.server.core.TypeReferences;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.dto.AssignmentInput;
 import org.vasvari.gradebookweb.dto.AssignmentOutput;
-import org.vasvari.gradebookweb.jwt.TokenRepository;
 import org.vasvari.gradebookweb.model.AssignmentOutputModel;
+import org.vasvari.gradebookweb.util.JwtTokenUtil;
 
 import java.net.URI;
 import java.util.Collection;
@@ -28,12 +27,13 @@ public class AssignmentGateway {
     @Value("${api.url}")
     private String baseUrl;
 
-    private final TokenRepository tokenRepository;
+    private final JwtTokenUtil jwtTokenUtil;
     private final RestTemplate template;
 
-    public AssignmentGateway(TokenRepository tokenRepository, RestTemplateBuilder builder) {
-        this.tokenRepository = tokenRepository;
-        this.template = builder.build();
+    @Autowired
+    public AssignmentGateway(JwtTokenUtil jwtTokenUtil, RestTemplate template) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.template = template;
     }
 
     public ResponseEntity<AssignmentOutputModel> findAssignmentById(Long id) {
@@ -45,18 +45,17 @@ public class AssignmentGateway {
         TypeReferences.CollectionModelType<AssignmentOutput> collectionModelType =
                 new TypeReferences.CollectionModelType<>() {
                 };
-
         try {
             CollectionModel<AssignmentOutput> assignmentResource = traverson
                     .follow("$._links.self.href")
-                    .withHeaders(getAuthorizationHeader())
+                    .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
                     .toObject(collectionModelType);
 
             if (assignmentResource != null)
                 return assignmentResource.getContent();
             else
                 return Collections.emptyList();
-        } catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
             throw new RuntimeException("Unauthorized");
         }
     }
@@ -73,11 +72,4 @@ public class AssignmentGateway {
         template.delete(baseUrl + "/assignments/{id}", id);
     }
 
-    private HttpHeaders getAuthorizationHeader() {
-        HttpHeaders headers = new HttpHeaders();
-        if (tokenRepository.getToken() != null) {
-            headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + tokenRepository.getToken().getTokenString());
-        }
-        return headers;
-    }
 }

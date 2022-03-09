@@ -29,9 +29,9 @@ public class GradebookEntryMapper {
                 .studentName(
                         studentService.findStudentById(entry.getStudentId()).getName()
                 )
-                .classId(entry.getClassId())
+                .classId(entry.getCourseId())
                 .className(
-                        classService.findClassById(entry.getClassId()).getCourse()
+                        classService.findClassById(entry.getCourseId()).getName()
                 )
                 .assignmentId(entry.getAssignmentId())
                 .assignmentName(

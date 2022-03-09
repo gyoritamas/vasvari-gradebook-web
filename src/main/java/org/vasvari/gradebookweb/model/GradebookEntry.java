@@ -15,7 +15,7 @@ public class GradebookEntry {
 
     private Long studentId;
 
-    private Long classId;
+    private Long courseId;
 
     private Long assignmentId;
 

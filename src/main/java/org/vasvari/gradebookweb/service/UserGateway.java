@@ -1,19 +1,17 @@
 package org.vasvari.gradebookweb.service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.hateoas.server.core.TypeReferences;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.dto.UserDto;
-import org.vasvari.gradebookweb.jwt.TokenRepository;
 import org.vasvari.gradebookweb.model.UserOutputModel;
+import org.vasvari.gradebookweb.util.JwtTokenUtil;
 
 import java.net.URI;
 import java.util.Collection;
@@ -24,12 +22,12 @@ public class UserGateway {
     @Value("${api.url}")
     private String baseUrl;
 
-    private final TokenRepository tokenRepository;
+    private final JwtTokenUtil jwtTokenUtil;
     private final RestTemplate template;
 
-    public UserGateway(TokenRepository tokenRepository, RestTemplateBuilder builder) {
-        this.tokenRepository = tokenRepository;
-        this.template = builder.build();
+    public UserGateway(JwtTokenUtil jwtTokenUtil, RestTemplate template) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.template = template;
     }
 
     public ResponseEntity<UserOutputModel> findUserById(Long id) {
@@ -45,7 +43,7 @@ public class UserGateway {
         try {
             CollectionModel<UserDto> userResource = traverson
                     .follow("$._links.self.href")
-                    .withHeaders(getAuthorizationHeader())
+                    .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
                     .toObject(collectionModelType);
 
             if (userResource != null)
@@ -67,14 +65,6 @@ public class UserGateway {
 
     public void deleteUser(Long id) {
         template.delete(baseUrl + "/users/{id}", id);
-    }
-
-    private HttpHeaders getAuthorizationHeader() {
-        HttpHeaders headers = new HttpHeaders();
-        if (tokenRepository.getToken() != null) {
-            headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + tokenRepository.getToken().getTokenString());
-        }
-        return headers;
     }
 
 }
