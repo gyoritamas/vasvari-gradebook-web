@@ -1,25 +1,21 @@
 package org.vasvari.gradebookweb.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.vasvari.gradebookweb.dto.ClassInput;
 import org.vasvari.gradebookweb.dto.ClassOutput;
-import org.vasvari.gradebookweb.model.ClassOutputModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Slf4j
 public class ClassService {
 
     @Autowired
     private ClassGateway gateway;
 
     public ClassOutput findClassById(Long id) {
-        return gateway.findClassById(id).getBody().getContent();
+        return gateway.findClassById(id);
     }
 
     public List<ClassOutput> findAllClasses() {

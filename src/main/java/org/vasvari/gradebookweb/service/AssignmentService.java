@@ -14,7 +14,7 @@ public class AssignmentService {
     private AssignmentGateway gateway;
 
     public AssignmentOutput findAssignmentById(Long id) {
-        return gateway.findAssignmentById(id).getBody().getContent();
+        return gateway.findAssignmentById(id);
     }
 
     public List<AssignmentOutput> findAllAssignments() {

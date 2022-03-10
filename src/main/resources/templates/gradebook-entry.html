@@ -31,7 +31,7 @@
                 <select id="class" th:field="*{classId}">
                     <option th:each="class : ${classList}"
                             th:value="${class.getId()}"
-                            th:text="${class.getCourse()}">
+                            th:text="${class.getName()}">
                     </option>
                 </select>
             </td>

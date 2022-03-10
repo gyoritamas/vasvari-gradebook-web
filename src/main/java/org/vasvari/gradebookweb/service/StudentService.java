@@ -13,7 +13,7 @@ public class StudentService {
     private StudentGateway gateway;
 
     public StudentDto findStudentById(Long id) {
-        return gateway.findStudentById(id).getBody().getContent();
+        return gateway.findStudentById(id);
     }
 
     public List<StudentDto> findAllStudents() {

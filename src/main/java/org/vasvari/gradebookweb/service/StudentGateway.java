@@ -33,9 +33,12 @@ public class StudentGateway {
         this.template = restTemplate;
     }
 
-    public ResponseEntity<StudentOutputModel> findStudentById(Long id) {
+    public StudentDto findStudentById(Long id) {
+        ResponseEntity<StudentOutputModel> response = template.getForEntity(baseUrl + "/students/{id}", StudentOutputModel.class, id);
+        if (response.getStatusCodeValue() != 200 || response.getBody() == null)
+            throw new RuntimeException("Something went wrong");
 
-        return template.getForEntity(baseUrl + "/students/{id}", StudentOutputModel.class, id);
+        return response.getBody().getContent();
     }
 
     public Collection<StudentDto> findAllStudents() {
@@ -59,8 +62,10 @@ public class StudentGateway {
         }
     }
 
-    public ResponseEntity<?> save(StudentDto student) {
-        return template.postForEntity(baseUrl + "/students", student, EntityModel.class);
+    public void save(StudentDto student) {
+        ResponseEntity<?> response = template.postForEntity(baseUrl + "/students", student, EntityModel.class);
+
+        if (response.getStatusCodeValue() != 201) throw new RuntimeException("Something went wrong");
     }
 
     public void updateStudent(Long id, StudentDto update) {

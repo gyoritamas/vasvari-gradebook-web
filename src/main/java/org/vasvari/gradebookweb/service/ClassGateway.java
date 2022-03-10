@@ -34,8 +34,13 @@ public class ClassGateway {
         this.template = template;
     }
 
-    public ResponseEntity<ClassOutputModel> findClassById(Long id) {
-        return template.getForEntity(baseUrl + "/classes/{id}", ClassOutputModel.class, id);
+    public ClassOutput findClassById(Long id) {
+        ResponseEntity<ClassOutputModel> response = template.getForEntity(baseUrl + "/classes/{id}", ClassOutputModel.class, id);
+        if (response.getStatusCodeValue() != 200 || response.getBody() == null)
+            // TODO: use custom exception
+            throw new RuntimeException("Something went wrong");
+
+        return response.getBody().getContent();
     }
 
     public Collection<ClassOutput> findAllClasses() {
@@ -55,12 +60,15 @@ public class ClassGateway {
             else
                 return Collections.emptyList();
         } catch (IllegalStateException e) {
+            // TODO: use custom exception
             throw new RuntimeException("Unauthorized");
         }
     }
 
-    public ResponseEntity<?> save(ClassInput clazz) {
-        return template.postForEntity(baseUrl + "/classes", clazz, EntityModel.class);
+    public void save(ClassInput clazz) {
+        ResponseEntity<?> response = template.postForEntity(baseUrl + "/classes", clazz, EntityModel.class);
+        // TODO: use custom exception
+        if (response.getStatusCodeValue() != 201) throw new RuntimeException("Something went wrong");
     }
 
     public void updateClass(Long id, ClassInput update) {

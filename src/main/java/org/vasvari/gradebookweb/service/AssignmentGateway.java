@@ -36,8 +36,12 @@ public class AssignmentGateway {
         this.template = template;
     }
 
-    public ResponseEntity<AssignmentOutputModel> findAssignmentById(Long id) {
-        return template.getForEntity(baseUrl + "/assignments/{id}", AssignmentOutputModel.class, id);
+    public AssignmentOutput findAssignmentById(Long id) {
+        ResponseEntity<AssignmentOutputModel> response = template.getForEntity(baseUrl + "/assignments/{id}", AssignmentOutputModel.class, id);
+        if (response.getStatusCodeValue() != 200 || response.getBody() == null)
+            throw new RuntimeException("Something went wrong");
+
+        return response.getBody().getContent();
     }
 
     public Collection<AssignmentOutput> findAllAssignments() {
@@ -61,7 +65,9 @@ public class AssignmentGateway {
     }
 
     public void save(AssignmentInput assignment) {
-        template.postForEntity(baseUrl + "/assignments", assignment, EntityModel.class);
+        ResponseEntity<?> response = template.postForEntity(baseUrl + "/assignments", assignment, EntityModel.class);
+        if (response.getStatusCodeValue() != 201)
+            throw new RuntimeException("Something went wrong");
     }
 
     public void updateAssignment(Long id, AssignmentInput update) {
