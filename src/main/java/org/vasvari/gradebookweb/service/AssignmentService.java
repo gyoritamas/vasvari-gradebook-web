@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vasvari.gradebookweb.dto.AssignmentInput;
 import org.vasvari.gradebookweb.dto.AssignmentOutput;
+import org.vasvari.gradebookweb.service.gateway.AssignmentGateway;
 
 import java.util.ArrayList;
 import java.util.List;

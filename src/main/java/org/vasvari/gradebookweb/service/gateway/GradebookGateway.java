@@ -1,4 +1,4 @@
-package org.vasvari.gradebookweb.service;
+package org.vasvari.gradebookweb.service.gateway;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;

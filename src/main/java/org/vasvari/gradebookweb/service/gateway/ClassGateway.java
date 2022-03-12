@@ -1,6 +1,5 @@
-package org.vasvari.gradebookweb.service;
+package org.vasvari.gradebookweb.service.gateway;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.hateoas.CollectionModel;
@@ -11,9 +10,9 @@ import org.springframework.hateoas.server.core.TypeReferences;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.vasvari.gradebookweb.dto.AssignmentInput;
-import org.vasvari.gradebookweb.dto.AssignmentOutput;
-import org.vasvari.gradebookweb.model.AssignmentOutputModel;
+import org.vasvari.gradebookweb.dto.ClassInput;
+import org.vasvari.gradebookweb.dto.ClassOutput;
+import org.vasvari.gradebookweb.model.ClassOutputModel;
 import org.vasvari.gradebookweb.util.JwtTokenUtil;
 
 import java.net.URI;
@@ -22,7 +21,7 @@ import java.util.Collections;
 
 @Service
 @ComponentScan
-public class AssignmentGateway {
+public class ClassGateway {
 
     @Value("${api.url}")
     private String baseUrl;
@@ -30,52 +29,54 @@ public class AssignmentGateway {
     private final JwtTokenUtil jwtTokenUtil;
     private final RestTemplate template;
 
-    @Autowired
-    public AssignmentGateway(JwtTokenUtil jwtTokenUtil, RestTemplate template) {
+    public ClassGateway(JwtTokenUtil jwtTokenUtil, RestTemplate template) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.template = template;
     }
 
-    public AssignmentOutput findAssignmentById(Long id) {
-        ResponseEntity<AssignmentOutputModel> response = template.getForEntity(baseUrl + "/assignments/{id}", AssignmentOutputModel.class, id);
+    public ClassOutput findClassById(Long id) {
+        ResponseEntity<ClassOutputModel> response = template.getForEntity(baseUrl + "/classes/{id}", ClassOutputModel.class, id);
         if (response.getStatusCodeValue() != 200 || response.getBody() == null)
+            // TODO: use custom exception
             throw new RuntimeException("Something went wrong");
 
         return response.getBody().getContent();
     }
 
-    public Collection<AssignmentOutput> findAllAssignments() {
-        Traverson traverson = new Traverson(URI.create(baseUrl + "/assignments"), MediaTypes.HAL_JSON);
-        TypeReferences.CollectionModelType<AssignmentOutput> collectionModelType =
+    public Collection<ClassOutput> findAllClasses() {
+        Traverson traverson = new Traverson(URI.create(baseUrl + "/classes"), MediaTypes.HAL_JSON);
+        TypeReferences.CollectionModelType<ClassOutput> collectionModelType =
                 new TypeReferences.CollectionModelType<>() {
                 };
+
         try {
-            CollectionModel<AssignmentOutput> assignmentResource = traverson
+            CollectionModel<ClassOutput> classResource = traverson
                     .follow("$._links.self.href")
                     .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
                     .toObject(collectionModelType);
 
-            if (assignmentResource != null)
-                return assignmentResource.getContent();
+            if (classResource != null)
+                return classResource.getContent();
             else
                 return Collections.emptyList();
         } catch (IllegalStateException e) {
+            // TODO: use custom exception
             throw new RuntimeException("Unauthorized");
         }
     }
 
-    public void save(AssignmentInput assignment) {
-        ResponseEntity<?> response = template.postForEntity(baseUrl + "/assignments", assignment, EntityModel.class);
-        if (response.getStatusCodeValue() != 201)
-            throw new RuntimeException("Something went wrong");
+    public void save(ClassInput clazz) {
+        ResponseEntity<?> response = template.postForEntity(baseUrl + "/classes", clazz, EntityModel.class);
+        // TODO: use custom exception
+        if (response.getStatusCodeValue() != 201) throw new RuntimeException("Something went wrong");
     }
 
-    public void updateAssignment(Long id, AssignmentInput update) {
-        template.put(baseUrl + "/assignments/{id}", update, id);
+    public void updateClass(Long id, ClassInput update) {
+        template.put(baseUrl + "/classes/{id}", update, id);
     }
 
-    public void deleteAssignment(Long id) {
-        template.delete(baseUrl + "/assignments/{id}", id);
+    public void deleteClass(Long id) {
+        template.delete(baseUrl + "/classes/{id}", id);
     }
 
 }

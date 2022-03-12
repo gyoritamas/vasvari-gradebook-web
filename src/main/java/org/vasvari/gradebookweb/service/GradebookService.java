@@ -6,6 +6,7 @@ import org.vasvari.gradebookweb.dto.GradebookInput;
 import org.vasvari.gradebookweb.dto.GradebookOutput;
 import org.vasvari.gradebookweb.dto.mapper.GradebookEntryMapper;
 import org.vasvari.gradebookweb.model.GradebookEntry;
+import org.vasvari.gradebookweb.service.gateway.GradebookGateway;
 
 import java.util.ArrayList;
 import java.util.List;

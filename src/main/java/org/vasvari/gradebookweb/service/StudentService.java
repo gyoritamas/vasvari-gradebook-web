@@ -3,6 +3,7 @@ package org.vasvari.gradebookweb.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vasvari.gradebookweb.dto.StudentDto;
+import org.vasvari.gradebookweb.service.gateway.StudentGateway;
 
 import java.util.ArrayList;
 import java.util.List;
