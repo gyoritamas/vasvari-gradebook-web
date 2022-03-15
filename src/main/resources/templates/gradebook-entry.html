@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -28,7 +28,7 @@
         <tr>
             <td>
                 <label for="class"></label>
-                <select id="class" th:field="*{classId}">
+                <select id="class" th:field="*{courseId}">
                     <option th:each="class : ${classList}"
                             th:value="${class.getId()}"
                             th:text="${class.getName()}">

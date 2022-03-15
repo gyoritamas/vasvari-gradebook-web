@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ClassInput {
+public class CourseInput {
 
     @NotBlank(message = "A név nem lehet üres")
     @Size(min=2, max=35, message = "Adjon meg 2-35 karakter közötti nevet")

@@ -14,12 +14,11 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class GradebookInput {
-
     @NotNull(message = "Student ID cannot be empty")
     private Long studentId;
 
-    @NotNull(message = "Class ID cannot be empty")
-    private Long classId;
+    @NotNull(message = "Course ID cannot be empty")
+    private Long courseId;
 
     @NotNull(message = "Assignment ID cannot be empty")
     private Long assignmentId;
@@ -28,4 +27,5 @@ public class GradebookInput {
     @Min(value = 1, message = "Grade value must be between 1-5")
     @Max(value = 5, message = "Grade value must be between 1-5")
     private Integer grade;
+
 }

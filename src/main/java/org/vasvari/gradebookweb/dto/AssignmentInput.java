@@ -16,6 +16,7 @@ public class AssignmentInput {
     @NotBlank(message = "Name field cannot be empty")
     private String name;
 
+    // TODO: use enum?
     private String type;
 
     private String description;

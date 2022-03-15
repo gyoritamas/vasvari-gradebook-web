@@ -12,8 +12,8 @@ import org.vasvari.gradebookweb.util.JwtTokenUtil;
 @RequiredArgsConstructor
 public class MainController {
 
-    private TokenRepository tokenRepository;
-    private JwtTokenUtil jwtTokenUtil;
+    private final TokenRepository tokenRepository;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @GetMapping
     public String index(Model model) {

@@ -8,11 +8,12 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.hateoas.server.core.TypeReferences;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.dto.GradebookInput;
-import org.vasvari.gradebookweb.model.GradebookEntry;
+import org.vasvari.gradebookweb.dto.GradebookOutput;
 import org.vasvari.gradebookweb.model.GradebookOutputModel;
 import org.vasvari.gradebookweb.util.JwtTokenUtil;
 
@@ -31,18 +32,23 @@ public class GradebookGateway {
     private final JwtTokenUtil jwtTokenUtil;
     private final RestTemplate template;
 
-    public ResponseEntity<GradebookOutputModel> findGradebookEntryById(Long id) {
-        return template.getForEntity(baseUrl + "/gradebook/{id}", GradebookOutputModel.class, id);
+    public GradebookOutput findGradebookEntryById(Long id) {
+        ResponseEntity<GradebookOutputModel> response = template.getForEntity(baseUrl + "/gradebook/{id}", GradebookOutputModel.class, id);
+        if (response.getStatusCodeValue() != 200 || response.getBody() == null)
+            // TODO: use custom exception
+            throw new RuntimeException("Something went wrong");
+
+        return response.getBody().getContent();
     }
 
-    public Collection<GradebookEntry> findAllGradebookEntries() {
+    public Collection<GradebookOutput> findAllGradebookEntries() {
         Traverson traverson = new Traverson(URI.create(baseUrl + "/gradebook"), MediaTypes.HAL_JSON);
-        TypeReferences.CollectionModelType<GradebookEntry> collectionModelType =
+        TypeReferences.CollectionModelType<GradebookOutput> collectionModelType =
                 new TypeReferences.CollectionModelType<>() {
                 };
 
         try {
-            CollectionModel<GradebookEntry> gradebookResource = traverson
+            CollectionModel<GradebookOutput> gradebookResource = traverson
                     .follow("$._links.self.href")
                     .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
                     .toObject(collectionModelType);
@@ -56,14 +62,14 @@ public class GradebookGateway {
         }
     }
 
-    public Collection<GradebookEntry> findGradebookEntriesOfStudent(Long studentId) {
+    public Collection<GradebookOutput> findGradebookEntriesOfStudent(Long studentId) {
         Traverson traverson = new Traverson(URI.create(baseUrl + "/student_gradebook/" + studentId), MediaTypes.HAL_JSON);
-        TypeReferences.CollectionModelType<GradebookEntry> collectionModelType =
+        TypeReferences.CollectionModelType<GradebookOutput> collectionModelType =
                 new TypeReferences.CollectionModelType<>() {
                 };
 
         try {
-            CollectionModel<GradebookEntry> gradebookResource = traverson
+            CollectionModel<GradebookOutput> gradebookResource = traverson
                     .follow("$._links.student_gradebook.href")
                     .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
                     .toObject(collectionModelType);

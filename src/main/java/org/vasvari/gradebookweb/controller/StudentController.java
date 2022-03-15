@@ -19,7 +19,7 @@ import javax.validation.Valid;
 @RequestMapping("/students")
 public class StudentController {
 
-    private StudentService service;
+    private final StudentService service;
 
     @GetMapping
     public String listAllStudents(Model model) {
