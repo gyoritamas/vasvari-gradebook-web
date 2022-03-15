@@ -1,5 +1,6 @@
 package org.vasvari.gradebookweb.service.gateway;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.hateoas.CollectionModel;
@@ -11,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.dto.ClassInput;
-import org.vasvari.gradebookweb.dto.ClassOutput;
+import org.vasvari.gradebookweb.dto.CourseOutput;
 import org.vasvari.gradebookweb.model.ClassOutputModel;
 import org.vasvari.gradebookweb.util.JwtTokenUtil;
 
@@ -21,6 +22,7 @@ import java.util.Collections;
 
 @Service
 @ComponentScan
+@RequiredArgsConstructor
 public class ClassGateway {
 
     @Value("${api.url}")
@@ -29,12 +31,7 @@ public class ClassGateway {
     private final JwtTokenUtil jwtTokenUtil;
     private final RestTemplate template;
 
-    public ClassGateway(JwtTokenUtil jwtTokenUtil, RestTemplate template) {
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.template = template;
-    }
-
-    public ClassOutput findClassById(Long id) {
+    public CourseOutput findClassById(Long id) {
         ResponseEntity<ClassOutputModel> response = template.getForEntity(baseUrl + "/classes/{id}", ClassOutputModel.class, id);
         if (response.getStatusCodeValue() != 200 || response.getBody() == null)
             // TODO: use custom exception
@@ -43,14 +40,14 @@ public class ClassGateway {
         return response.getBody().getContent();
     }
 
-    public Collection<ClassOutput> findAllClasses() {
+    public Collection<CourseOutput> findAllClasses() {
         Traverson traverson = new Traverson(URI.create(baseUrl + "/classes"), MediaTypes.HAL_JSON);
-        TypeReferences.CollectionModelType<ClassOutput> collectionModelType =
+        TypeReferences.CollectionModelType<CourseOutput> collectionModelType =
                 new TypeReferences.CollectionModelType<>() {
                 };
 
         try {
-            CollectionModel<ClassOutput> classResource = traverson
+            CollectionModel<CourseOutput> classResource = traverson
                     .follow("$._links.self.href")
                     .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
                     .toObject(collectionModelType);

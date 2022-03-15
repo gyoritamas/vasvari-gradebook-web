@@ -1,5 +1,6 @@
 package org.vasvari.gradebookweb.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -13,10 +14,11 @@ import org.vasvari.gradebookweb.service.AssignmentService;
 import javax.validation.Valid;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/assignments")
 public class AssignmentController {
-    @Autowired
-    private AssignmentService service;
+
+    private final AssignmentService service;
 
     @GetMapping
     public String findAllAssignments(Model model) {

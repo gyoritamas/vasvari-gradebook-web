@@ -1,5 +1,6 @@
 package org.vasvari.gradebookweb.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -15,18 +16,12 @@ import org.vasvari.gradebookweb.service.StudentService;
 import javax.validation.Valid;
 
 @Controller
+@RequiredArgsConstructor
 public class GradebookController {
-    @Autowired
-    private GradebookService gradebookService;
-
-    @Autowired
-    private StudentService studentService;
-
-    @Autowired
-    private ClassService classService;
-
-    @Autowired
-    private AssignmentService assignmentService;
+    private final GradebookService gradebookService;
+    private final StudentService studentService;
+    private final ClassService classService;
+    private final AssignmentService assignmentService;
 
     @GetMapping("/gradebook-entries")
     public String findAllGradebookEntries(Model model) {

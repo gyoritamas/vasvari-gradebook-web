@@ -9,8 +9,8 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 @Setter
 public class LoginRequest {
-    @NotEmpty
+    @NotEmpty(message = "A felhasználónév nem lehet üres")
     private String username;
-    @NotEmpty
+    @NotEmpty(message = "A jelszó nem lehet üres")
     private String password;
 }

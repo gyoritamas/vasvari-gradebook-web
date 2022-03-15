@@ -1,5 +1,6 @@
 package org.vasvari.gradebookweb.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vasvari.gradebookweb.dto.GradebookInput;
@@ -13,12 +14,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class GradebookService {
-    @Autowired
-    private GradebookGateway gateway;
 
-    @Autowired
-    private GradebookEntryMapper mapper;
+    private final GradebookGateway gateway;
+    private final GradebookEntryMapper mapper;
 
     public GradebookOutput findGradebookEntryById(Long id) {
         GradebookEntry entryFound = gateway.findGradebookEntryById(id).getBody().getContent();

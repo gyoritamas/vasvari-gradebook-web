@@ -21,16 +21,16 @@
     <tr th:each="entry : ${entries}">
         <td th:text="${entry.getId()}"></td>
         <td>
-            <a th:href="@{/student_gradebook/{student} (student = ${entry.getStudentId()})}">
-                <span th:text="${entry.getStudentName()}"></span>
+            <a th:href="@{/student_gradebook/{student} (student = ${entry.getStudent().getId()})}">
+                <span th:text="${entry.getStudent().getName()}"></span>
             </a>
         </td>
         <td>
-            <a th:href="@{class_gradebook/{class} (class = ${entry.getClassId()})}">
-                <span th:text="${entry.getClassName()}"></span>
+            <a th:href="@{class_gradebook/{class} (class = ${entry.getCourse().getId()})}">
+                <span th:text="${entry.getCourse().getName()}"></span>
             </a>
         </td>
-        <td th:text="${entry.getAssignmentName()}"></td>
+        <td th:text="${entry.getAssignment().getName()}"></td>
         <td th:text="${entry.getGrade()}"></td>
     </tr>
 </table>

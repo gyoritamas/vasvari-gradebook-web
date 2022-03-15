@@ -1,5 +1,6 @@
 package org.vasvari.gradebookweb.service.gateway;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.CollectionModel;
@@ -19,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Service
+@RequiredArgsConstructor
 public class StudentGateway {
 
     @Value("${api.url}")
@@ -26,12 +28,6 @@ public class StudentGateway {
 
     private final JwtTokenUtil jwtTokenUtil;
     private final RestTemplate template;
-
-    @Autowired
-    public StudentGateway(JwtTokenUtil jwtTokenUtil, RestTemplate restTemplate) {
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.template = restTemplate;
-    }
 
     public StudentDto findStudentById(Long id) {
         ResponseEntity<StudentOutputModel> response = template.getForEntity(baseUrl + "/students/{id}", StudentOutputModel.class, id);

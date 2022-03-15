@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.vasvari.gradebookweb.dto.dataTypes.SimpleData;
 
 import java.util.List;
 
@@ -11,12 +12,10 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ClassOutput{
-
+public class CourseOutput {
     private Long id;
-
     private String name;
-
-    private List<String> students;
+    private SimpleData teacher;
+    private List<SimpleData> students;
 
 }

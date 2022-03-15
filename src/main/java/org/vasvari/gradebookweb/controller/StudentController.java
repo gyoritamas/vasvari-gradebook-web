@@ -1,5 +1,6 @@
 package org.vasvari.gradebookweb.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -14,9 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/students")
 public class StudentController {
-    @Autowired
+
     private StudentService service;
 
     @GetMapping

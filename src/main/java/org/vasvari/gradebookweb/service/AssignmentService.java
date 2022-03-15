@@ -1,5 +1,6 @@
 package org.vasvari.gradebookweb.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vasvari.gradebookweb.dto.AssignmentInput;
@@ -10,9 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AssignmentService {
-    @Autowired
-    private AssignmentGateway gateway;
+
+    private final AssignmentGateway gateway;
 
     public AssignmentOutput findAssignmentById(Long id) {
         return gateway.findAssignmentById(id);

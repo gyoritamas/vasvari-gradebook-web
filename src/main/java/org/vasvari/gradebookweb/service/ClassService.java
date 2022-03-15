@@ -1,25 +1,26 @@
 package org.vasvari.gradebookweb.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vasvari.gradebookweb.dto.ClassInput;
-import org.vasvari.gradebookweb.dto.ClassOutput;
+import org.vasvari.gradebookweb.dto.CourseOutput;
 import org.vasvari.gradebookweb.service.gateway.ClassGateway;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ClassService {
 
-    @Autowired
-    private ClassGateway gateway;
+    private final ClassGateway gateway;
 
-    public ClassOutput findClassById(Long id) {
+    public CourseOutput findClassById(Long id) {
         return gateway.findClassById(id);
     }
 
-    public List<ClassOutput> findAllClasses() {
+    public List<CourseOutput> findAllClasses() {
         return new ArrayList<>(gateway.findAllClasses());
     }
 

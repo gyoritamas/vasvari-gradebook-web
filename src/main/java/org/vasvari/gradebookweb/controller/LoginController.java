@@ -1,5 +1,6 @@
 package org.vasvari.gradebookweb.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -11,9 +12,10 @@ import org.vasvari.gradebookweb.service.gateway.LoginGateway;
 import javax.validation.Valid;
 
 @Controller
+@RequiredArgsConstructor
 public class LoginController {
-    @Autowired
-    private LoginGateway loginGateway;
+
+    private final LoginGateway loginGateway;
 
     @GetMapping("/login")
     public String login(){

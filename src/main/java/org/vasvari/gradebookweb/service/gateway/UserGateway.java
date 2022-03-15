@@ -1,5 +1,6 @@
 package org.vasvari.gradebookweb.service.gateway;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -18,17 +19,13 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Service
+@RequiredArgsConstructor
 public class UserGateway {
     @Value("${api.url}")
     private String baseUrl;
 
     private final JwtTokenUtil jwtTokenUtil;
     private final RestTemplate template;
-
-    public UserGateway(JwtTokenUtil jwtTokenUtil, RestTemplate template) {
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.template = template;
-    }
 
     public ResponseEntity<UserOutputModel> findUserById(Long id) {
         return template.getForEntity(baseUrl + "/users/{id}", UserOutputModel.class, id);

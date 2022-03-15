@@ -1,6 +1,5 @@
 package org.vasvari.gradebookweb.service.gateway;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
@@ -14,12 +13,13 @@ public class LoginGateway {
     @Value("${api.url}")
     private String baseUrl;
 
-    @Autowired
-    private TokenRepository tokenRepository;
-
+    private final TokenRepository tokenRepository;
     private final RestTemplate template;
 
-    public LoginGateway(RestTemplateBuilder builder) {
+    // not using the restTemplate bean from ClientConfig here
+    // since we don't want to send any token
+    public LoginGateway(TokenRepository tokenRepository, RestTemplateBuilder builder) {
+        this.tokenRepository = tokenRepository;
         this.template = builder.build();
     }
 

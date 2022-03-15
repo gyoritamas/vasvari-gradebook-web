@@ -1,5 +1,6 @@
 package org.vasvari.gradebookweb.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -13,10 +14,11 @@ import org.vasvari.gradebookweb.service.ClassService;
 import javax.validation.Valid;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/classes")
 public class ClassController implements WebMvcConfigurer {
-    @Autowired
-    private ClassService service;
+
+    private final ClassService service;
 
     @GetMapping
     public String listAllClasses(Model model) {

@@ -1,5 +1,6 @@
 package org.vasvari.gradebookweb.service.gateway;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
@@ -22,6 +23,7 @@ import java.util.Collections;
 
 @Service
 @ComponentScan
+@RequiredArgsConstructor
 public class AssignmentGateway {
 
     @Value("${api.url}")
@@ -29,12 +31,6 @@ public class AssignmentGateway {
 
     private final JwtTokenUtil jwtTokenUtil;
     private final RestTemplate template;
-
-    @Autowired
-    public AssignmentGateway(JwtTokenUtil jwtTokenUtil, RestTemplate template) {
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.template = template;
-    }
 
     public AssignmentOutput findAssignmentById(Long id) {
         ResponseEntity<AssignmentOutputModel> response = template.getForEntity(baseUrl + "/assignments/{id}", AssignmentOutputModel.class, id);
