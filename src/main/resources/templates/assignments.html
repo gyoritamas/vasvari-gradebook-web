@@ -22,7 +22,7 @@
     <tr th:each="assignment : ${assignments}">
         <td th:text="${assignment.getId()}"></td>
         <td th:text="${assignment.getName()}"></td>
-        <td th:text="${assignment.getType()}"></td>
+        <td th:text="#{|assignmentType.${assignment.getType()}|}"></td>
         <td th:text="${assignment.getDescription()}"></td>
         <td th:text="${assignment.getCreatedAt()}"></td>
         <td>

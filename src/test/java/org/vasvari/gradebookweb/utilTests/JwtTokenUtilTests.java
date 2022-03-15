@@ -3,7 +3,7 @@ package org.vasvari.gradebookweb.utilTests;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.vasvari.gradebookweb.util.JwtTokenUtil;
+import org.vasvari.gradebookweb.business.util.JwtTokenUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

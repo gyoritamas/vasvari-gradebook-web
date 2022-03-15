@@ -13,13 +13,13 @@
 <table>
     <tr>
         <th>ID</th>
-        <th>név</th>
-        <th>évfolyam</th>
-        <th>email</th>
-        <th>cím</th>
-        <th>telefon</th>
-        <th>születési dátum</th>
-        <th>műveletek</th>
+        <th th:text="#{student.name}"></th>
+        <th th:text="#{student.gradelevel}"></th>
+        <th th:text="#{student.email}">email</th>
+        <th th:text="#{student.address}">cím</th>
+        <th th:text="#{student.phone}">telefon</th>
+        <th th:text="#{student.birthdate}">születési dátum</th>
+        <th th:text="#{student.operations}">műveletek</th>
     </tr>
     <tr th:each="student : ${students}">
         <td th:text="${student.getId()}"></td>
