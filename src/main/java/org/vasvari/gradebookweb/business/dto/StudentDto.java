@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.*;
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor

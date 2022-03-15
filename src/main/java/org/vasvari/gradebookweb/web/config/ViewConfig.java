@@ -13,7 +13,7 @@ public class ViewConfig implements WebMvcConfigurer {
         registry.addViewController("/students").setViewName("students");
         registry.addViewController("/assignments").setViewName("assignments");
         registry.addViewController("/gradebook-entries").setViewName("gradebook-entries");
-//        registry.addViewController("/error").setViewName("error");
+        registry.addViewController("/error").setViewName("error");
 
     }
 }

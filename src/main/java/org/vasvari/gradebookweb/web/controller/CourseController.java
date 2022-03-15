@@ -1,65 +1,79 @@
 package org.vasvari.gradebookweb.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.vasvari.gradebookweb.business.dto.CourseInput;
+import org.vasvari.gradebookweb.business.dto.CourseOutput;
 import org.vasvari.gradebookweb.business.service.CourseService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/courses")
-public class CourseController implements WebMvcConfigurer {
+public class CourseController {
 
     private final CourseService service;
 
-    @GetMapping
-    public String listAllCourses(Model model) {
-        model.addAttribute("courses", service.findAllCourses());
+    @ModelAttribute("allCourses")
+    public List<CourseOutput> populateCourses() {
+        return service.findAllCourses();
+    }
+
+    @GetMapping("/courses")
+    public String showAllCourses(CourseInput courseInput) {
+        return "courses";
+    }
+
+    @RequestMapping(value = "/courses")
+    public String saveCourse(@Valid CourseInput courseInput,
+                             BindingResult bindingResult,
+                             ModelMap model) {
+        if (bindingResult.hasErrors()) return "courses";
+        service.save(courseInput);
+        model.clear();
+
+        return "redirect:/courses";
+    }
+
+    @PostMapping(value = "/courses/{id}", params = {"edit"})
+    public String useEditButton(@PathVariable("id") Long id, ModelMap model) {
+
+        CourseOutput courseOutput = service.findCourseById(id);
+        CourseInput courseInput = new CourseInput();
+        courseInput.setName(courseOutput.getName());
+        model.addAttribute("courseInput", courseInput);
 
         return "courses";
     }
 
-    @GetMapping("/new")
-    public String showEmptyForm(CourseInput courseInput) {
-        return "course";
+    @GetMapping(value = "/courses/{id}")
+    public String editCourseBy(@PathVariable("id") Long id, ModelMap model) {
+
+        CourseOutput courseOutput = service.findCourseById(id);
+        CourseInput courseInput = new CourseInput();
+        courseInput.setName(courseOutput.getName());
+        model.addAttribute("courseInput", courseInput);
+
+        return "courses";
     }
 
-    @GetMapping("/{id}")
-    public String showFormWithCourse(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("editing", true);
-        model.addAttribute("courseInput", service.findCourseById(id));
-
-        return "course";
-    }
-
-    @PostMapping(value = "/new", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String saveCourse(@Valid CourseInput courseInput, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) return "course";
-        service.save(courseInput);
-
-        return "redirect:/courses";
-    }
-
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @RequestMapping(value = "courses/{id}")
     public String updateCourse(@PathVariable("id") Long id,
-                               @Valid CourseInput update,
+                               @Valid CourseInput courseInput,
                                BindingResult bindingResult,
-                               Model model) {
-        model.addAttribute("editing", true);
-        if (bindingResult.hasErrors()) return "course";
-        service.updateCourse(id, update);
+                               ModelMap model) {
+        if (bindingResult.hasErrors()) return "courses";
+        service.updateCourse(id, courseInput);
+        model.clear();
 
         return "redirect:/courses";
     }
 
-    @DeleteMapping("/{id}")
+    @RequestMapping(value = "courses/{id}", params = {"delete"})
     public String deleteCourse(@PathVariable("id") Long id) {
         service.deleteCourse(id);
 

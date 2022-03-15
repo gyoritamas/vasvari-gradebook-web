@@ -27,9 +27,9 @@
         <tr>
             <td>
                 <select id="type" th:field="*{type}">
-                    <option th:each="typeOption : ${typeOptions}"
-                            th:value="${typeOption}"
-                            th:text="#{|assignmentType.${typeOption}|}"
+                    <option th:each="type : ${typeOptions}"
+                            th:value="${type}"
+                            th:text="#{|assignmentType.${type}|}"
                             th:selected="${assignmentInput}">
                     </option>
                 </select>
