@@ -27,7 +27,7 @@
         </tr>
         <tr>
             <td>
-                <select id="teacher" th:name="*{teacherId}">
+                <select id="teacher" th:field="*{teacherId}">
                     <option th:each="teacher : ${teacherOptions}"
                             th:value="${teacher.getId()}"
                             th:text="${teacher.getName()}">

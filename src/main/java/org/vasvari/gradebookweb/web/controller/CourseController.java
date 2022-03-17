@@ -7,8 +7,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.vasvari.gradebookweb.business.dto.CourseInput;
-import org.vasvari.gradebookweb.business.dto.TeacherDto;
+import org.vasvari.gradebookweb.business.dto.*;
+import org.vasvari.gradebookweb.business.dto.mapper.CourseMapper;
 import org.vasvari.gradebookweb.business.service.CourseService;
 import org.vasvari.gradebookweb.business.service.TeacherService;
 
@@ -20,6 +20,7 @@ import java.util.List;
 public class CourseController implements WebMvcConfigurer {
     private final CourseService courseService;
     private final TeacherService teacherService;
+    private final CourseMapper mapper;
 
     @ModelAttribute("teacherOptions")
     public List<TeacherDto> populateTeacherOptions() {
@@ -40,8 +41,11 @@ public class CourseController implements WebMvcConfigurer {
 
     @GetMapping("/courses/{id}")
     public String showFormWithCourse(@PathVariable("id") Long id, Model model) {
+        CourseOutput courseOutput = courseService.findCourseById(id);
+        CourseInput courseInput = mapper.map(courseOutput);
+        model.addAttribute("courseInput", courseInput);
         model.addAttribute("editing", true);
-        model.addAttribute("courseInput", courseService.findCourseById(id));
+
         return "course";
     }
 
