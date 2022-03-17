@@ -9,45 +9,26 @@
 </head>
 <body>
 <h1>Kurzusok</h1>
+<a th:href="@{/courses/new}">Új kurzus</a>
 <table>
     <tr>
         <th>ID</th>
         <th>kurzus neve</th>
         <th>műveletek</th>
     </tr>
-    <tr th:each="course : ${allCourses}">
+    <tr th:each="course : ${courses}">
         <td th:text="${course.getId()}"></td>
         <td th:text="${course.getName()}"></td>
         <td>
             <!-- edit button -->
-            <form th:method="post"
-                  th:action="@{/courses/{id} (id = ${course.getId()})}">
-                <button type="submit" class="btn btn-link" name="edit"><a><i class="bi bi-pen"></i></a></button>
-            </form>
+            <div class="btn">
+                <a th:href="@{/courses/{id}/ (id = ${course.getId()})}"><i class="bi bi-pencil-square"></i></a>
+            </div>
             <!-- delete button -->
-            <form th:method="post"
+            <form th:method="delete"
                   th:action="@{/courses/{id} (id = ${course.getId()})}">
                 <button type="submit" class="btn btn-link" name="delete"><a><i class="bi bi-trash"></i></a></button>
             </form>
         </td>
     </tr>
 </table>
-<h1>Kurzus adatai</h1>
-<form action="#" th:object="${courseInput}" th:method="post">
-    <table>
-        <tr>
-            <td><label for="name">Kurzus neve</label></td>
-        </tr>
-        <tr>
-            <td><input type="text" id="name" th:field="*{name}"></td>
-            <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Hiba a kurzus nevében</td>
-        </tr>
-        <tr>
-            <td>
-                <button type="submit" >Mentés</button>
-            </td>
-        </tr>
-    </table>
-</form>
-</body>
-</html>

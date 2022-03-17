@@ -60,9 +60,7 @@ public class AssignmentController {
 
     @PostMapping("/assignments/new")
     public String saveAssignment(@Valid AssignmentInput assignment, BindingResult bindingResult, ModelMap model) {
-        if (bindingResult.hasErrors()) {
-            return "assignment";
-        }
+        if (bindingResult.hasErrors()) return "assignment";
         assignmentService.save(assignment);
         model.clear();
 
