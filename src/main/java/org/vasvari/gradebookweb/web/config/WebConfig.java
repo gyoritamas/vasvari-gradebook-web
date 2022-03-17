@@ -7,10 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.vasvari.gradebookweb.web.conversion.ZonedDateTimeFormatter;
 
 @Configuration
 @EnableWebMvc
@@ -24,9 +22,6 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
         this.applicationContext = applicationContext;
     }
 
-    /*
-     *  Message externalization/internationalization
-     */
     @Bean
     public ResourceBundleMessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
@@ -34,14 +29,4 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
         return messageSource;
     }
 
-    @Override
-    public void addFormatters(final FormatterRegistry registry) {
-        WebMvcConfigurer.super.addFormatters(registry);
-        registry.addFormatter(dateFormatter());
-    }
-
-    @Bean
-    public ZonedDateTimeFormatter dateFormatter() {
-        return new ZonedDateTimeFormatter();
-    }
 }

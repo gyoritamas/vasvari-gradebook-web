@@ -45,6 +45,31 @@
             <td th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></td>
         </tr>
 
+        <!-- deadline -->
+        <tr>
+            <td><label for="deadline">határidő</label></td>
+        </tr>
+        <tr>
+            <td><input type="date" id="deadline" th:field="*{deadline}"></td>
+            <td th:if="${#fields.hasErrors('deadline')}" th:errors="*{deadline}"></td>
+        </tr>
+
+        <!-- course -->
+        <tr>
+            <td><label for="course">kurzus</label></td>
+        </tr>
+        <tr>
+            <td>
+                <select id="course" th:field="*{courseId}">
+                    <option th:each="course : ${courseOptions}"
+                            th:value="${course.getId()}"
+                            th:text="${course.getName()}"
+                            th:selected="${assignmentInput}">
+                    </option>
+                </select>
+            </td>
+        </tr>
+
         <tr>
             <td>
                 <button type="submit">Mentés</button>

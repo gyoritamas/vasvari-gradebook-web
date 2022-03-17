@@ -16,7 +16,8 @@
         <th>téma</th>
         <th>típus</th>
         <th>leírás</th>
-        <th>létrehozás dátuma</th>
+        <th>határidő</th>
+        <th>kurzus</th>
         <th>műveletek</th>
     </tr>
     <tr th:each="assignment : ${assignments}">
@@ -24,7 +25,8 @@
         <td th:text="${assignment.getName()}"></td>
         <td th:text="#{|assignmentType.${assignment.getType()}|}"></td>
         <td th:text="${assignment.getDescription()}"></td>
-        <td th:text="${assignment.getCreatedAt()}"></td>
+        <td th:text="${assignment.getDeadline()}"></td>
+        <td th:text="${assignment.getCourse().getName()}"></td>
         <td>
             <!-- edit button -->
             <div class="btn">
@@ -33,7 +35,7 @@
             <!-- delete button -->
             <form th:method="delete"
                   th:action="@{/assignments/{id} (id = ${assignment.getId()})}">
-                <button type="submit" class="btn btn-link"><a><i class="bi bi-trash"></i></a></button>
+                <button type="submit" class="btn btn-link" name="delete"><a><i class="bi bi-trash"></i></a></button>
             </form>
         </td>
     </tr>
