@@ -9,10 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.vasvari.gradebookweb.business.dto.dataTypes.SimpleData;
-import org.vasvari.gradebookweb.business.util.ZonedDateTimeDeserializer;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 
 @Getter
 @Setter

@@ -17,8 +17,7 @@ import org.vasvari.gradebookweb.business.model.CourseOutputModel;
 import org.vasvari.gradebookweb.business.util.JwtTokenUtil;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 @Service
 @ComponentScan
@@ -65,7 +64,8 @@ public class CourseGateway {
     public void save(CourseInput course) {
         ResponseEntity<?> response = template.postForEntity(baseUrl + "/classes", course, EntityModel.class);
         // TODO: use custom exception
-        if (response.getStatusCodeValue() != 201) throw new RuntimeException("Something went wrong");
+        if (response.getStatusCodeValue() != 201 || response.getBody() == null)
+            throw new RuntimeException("Something went wrong");
     }
 
     public void updateClass(Long id, CourseInput update) {

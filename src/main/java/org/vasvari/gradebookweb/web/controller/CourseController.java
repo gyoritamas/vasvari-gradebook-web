@@ -1,7 +1,6 @@
 package org.vasvari.gradebookweb.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -9,18 +8,27 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.vasvari.gradebookweb.business.dto.CourseInput;
+import org.vasvari.gradebookweb.business.dto.TeacherDto;
 import org.vasvari.gradebookweb.business.service.CourseService;
+import org.vasvari.gradebookweb.business.service.TeacherService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class CourseController implements WebMvcConfigurer {
-    private final CourseService service;
+    private final CourseService courseService;
+    private final TeacherService teacherService;
+
+    @ModelAttribute("teacherOptions")
+    public List<TeacherDto> populateTeacherOptions() {
+        return teacherService.findAllTeachers();
+    }
 
     @GetMapping("/courses")
     public String listAllCourses(Model model) {
-        model.addAttribute("courses", service.findAllCourses());
+        model.addAttribute("courses", courseService.findAllCourses());
 
         return "courses";
     }
@@ -33,14 +41,16 @@ public class CourseController implements WebMvcConfigurer {
     @GetMapping("/courses/{id}")
     public String showFormWithCourse(@PathVariable("id") Long id, Model model) {
         model.addAttribute("editing", true);
-        model.addAttribute("courseInput", service.findCourseById(id));
+        model.addAttribute("courseInput", courseService.findCourseById(id));
         return "course";
     }
 
     @PostMapping("/courses/new")
-    public String saveCourse(@Valid CourseInput courseInput, BindingResult bindingResult, ModelMap model) {
+    public String saveCourse(@Valid CourseInput courseInput,
+                             BindingResult bindingResult,
+                             ModelMap model) {
         if (bindingResult.hasErrors()) return "course";
-        service.save(courseInput);
+        courseService.save(courseInput);
         model.clear();
 
         return "redirect:/courses";
@@ -53,7 +63,7 @@ public class CourseController implements WebMvcConfigurer {
                                ModelMap model) {
         model.addAttribute("editing", true);
         if (bindingResult.hasErrors()) return "course";
-        service.updateCourse(id, update);
+        courseService.updateCourse(id, update);
         model.clear();
 
         return "redirect:/courses";
@@ -61,7 +71,7 @@ public class CourseController implements WebMvcConfigurer {
 
     @RequestMapping(value = "/courses/{id}", params = "delete")
     public String deleteCourse(@PathVariable("id") Long id) {
-        service.deleteCourse(id);
+        courseService.deleteCourse(id);
 
         return "redirect:/courses";
     }

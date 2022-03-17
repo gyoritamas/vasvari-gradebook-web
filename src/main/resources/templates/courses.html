@@ -14,11 +14,13 @@
     <tr>
         <th>ID</th>
         <th>kurzus neve</th>
+        <th>tanár</th>
         <th>műveletek</th>
     </tr>
     <tr th:each="course : ${courses}">
         <td th:text="${course.getId()}"></td>
         <td th:text="${course.getName()}"></td>
+        <td th:text="${course.getTeacher()}? ${course.getTeacher().getName()} : '(nincs adat)'"></td>
         <td>
             <!-- edit button -->
             <div class="btn">
