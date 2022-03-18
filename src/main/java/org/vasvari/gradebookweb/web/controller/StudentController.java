@@ -19,7 +19,7 @@ public class StudentController {
 
     @GetMapping("/students")
     public String listAllStudents(Model model) {
-        model.addAttribute("students", service.findAllStudents());
+        model.addAttribute("students", service.findAllStudentsForUser());
 
         return "students";
     }
@@ -40,7 +40,7 @@ public class StudentController {
     @PostMapping(value = "/students/new")
     public String saveStudent(@Valid StudentDto student, BindingResult bindingResult, ModelMap model) {
         if (bindingResult.hasErrors()) return "student";
-        service.save(student);
+        service.saveStudent(student);
         model.clear();
 
         return "redirect:/students";

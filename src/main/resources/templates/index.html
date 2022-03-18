@@ -9,23 +9,23 @@
 </head>
 <body>
 
-<div th:text="'bejelentkezve: ' + ${role}"></div>
+<div th:text="'bejelentkezve: ' + ${userDetails}"></div>
 
 <h1>Menü</h1>
 <ul>
-    <li th:if="${role=='ADMIN' || role=='TEACHER'}">
+    <li th:if="${userRole=='ADMIN' || userRole=='TEACHER'}">
         <a th:href="@{students}">Tanulók</a>
     </li>
-    <li th:if="${role=='ADMIN'}">
+    <li th:if="${userRole=='ADMIN'}">
         <a th:href="@{teachers}">Tanárok</a>
     </li>
-    <li th:if="${role=='ADMIN'}">
-        <a th:href="@{courses}">Kurzusok</a>
+    <li>
+        <a th:href="@{subjects}">Tantárgyak</a>
     </li>
-    <li th:if="${role=='ADMIN' || role=='TEACHER'}">
+    <li>
         <a th:href="@{assignments}">Feladatok</a>
     </li>
-    <li th:if="${role=='ADMIN' || role=='TEACHER'}">
+    <li>
         <a th:href="@{gradebook-entries}">Osztályzatok</a>
     </li>
 </ul>

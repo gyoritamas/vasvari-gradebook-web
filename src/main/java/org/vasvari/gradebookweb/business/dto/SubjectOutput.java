@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CourseOutput {
+public class SubjectOutput {
     private Long id;
     private String name;
     private SimpleData teacher;

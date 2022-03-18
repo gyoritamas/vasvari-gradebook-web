@@ -11,7 +11,7 @@ import org.vasvari.gradebookweb.business.dto.dataTypes.SimpleData;
 public class GradebookOutput {
     private Long id;
     private SimpleData student;
-    private SimpleData course;
+    private SimpleData subject;
     private SimpleData assignment;
     private Integer grade;
 

@@ -17,8 +17,8 @@ public class GradebookInput {
     @NotNull(message = "Student ID cannot be empty")
     private Long studentId;
 
-    @NotNull(message = "Course ID cannot be empty")
-    private Long courseId;
+    @NotNull(message = "Subject ID cannot be empty")
+    private Long subjectId;
 
     @NotNull(message = "Assignment ID cannot be empty")
     private Long assignmentId;

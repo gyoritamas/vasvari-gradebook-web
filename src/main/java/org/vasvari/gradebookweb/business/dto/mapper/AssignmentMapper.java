@@ -12,7 +12,7 @@ public class AssignmentMapper {
                 .type(assignmentOutput.getType())
                 .deadline(assignmentOutput.getDeadline())
                 .description(assignmentOutput.getDescription())
-                .courseId(assignmentOutput.getCourse().getId())
+                .subjectId(assignmentOutput.getSubject().getId())
                 .build();
     }
 }

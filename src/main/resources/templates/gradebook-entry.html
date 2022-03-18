@@ -24,14 +24,14 @@
             </td>
         </tr>
 
-        <!-- class -->
+        <!-- subject -->
         <tr>
             <td>
-                <label for="class"></label>
-                <select id="class" th:field="*{courseId}">
-                    <option th:each="class : ${classList}"
-                            th:value="${class.getId()}"
-                            th:text="${class.getName()}">
+                <label for="subject"></label>
+                <select id="subject" th:field="*{subjectId}">
+                    <option th:each="subject : ${subjectList}"
+                            th:value="${subject.getId()}"
+                            th:text="${subject.getName()}">
                     </option>
                 </select>
             </td>

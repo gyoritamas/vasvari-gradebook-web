@@ -23,7 +23,7 @@ public class AssignmentService {
         return new ArrayList<>(gateway.findAllAssignments());
     }
 
-    public void save(AssignmentInput assignment) {
+    public void saveAssignment(AssignmentInput assignment) {
         gateway.save(assignment);
     }
 

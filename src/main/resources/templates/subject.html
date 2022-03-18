@@ -8,8 +8,8 @@
     <title>E-napló | Új kurzus</title>
 </head>
 <body>
-<h1 th:text="${editing}? 'Kurzus módosítása' : 'Új kurzus'">placeholder</h1>
-<form th:object="${courseInput}" th:method="${editing} ? put : post">
+<h1 th:text="${editing}? 'Kurzus adatai' : 'Új kurzus'">placeholder</h1>
+<form th:object="${subjectInput}" th:method="${editing} ? put : post">
     <table>
 
         <!-- name -->
@@ -43,5 +43,28 @@
         </tr>
     </table>
 </form>
+<div th:if="${editing}">
+    <h2>Tanulók</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th th:text="#{column.name}"></th>
+            <th th:text="#{column.gradelevel}"></th>
+            <th th:text="#{column.email}">email</th>
+            <th th:text="#{column.address}">cím</th>
+            <th th:text="#{column.phone}">telefon</th>
+            <th th:text="#{column.birthdate}">születési dátum</th>
+        </tr>
+        <tr th:each="student : ${studentsOfCourse}">
+            <td th:text="${student.getId()}"></td>
+            <td th:text="${student.getName()}"></td>
+            <td th:text="${student.getGradeLevel()}"></td>
+            <td th:text="${student.getEmail()}"></td>
+            <td th:text="${student.getAddress()}"></td>
+            <td th:text="${student.getPhone()}"></td>
+            <td th:text="${student.getBirthdate()}"></td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>

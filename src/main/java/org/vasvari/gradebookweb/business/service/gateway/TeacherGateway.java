@@ -2,21 +2,15 @@ package org.vasvari.gradebookweb.business.service.gateway;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.client.Traverson;
-import org.springframework.hateoas.server.core.TypeReferences;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.business.dto.TeacherDto;
 import org.vasvari.gradebookweb.business.model.TeacherOutputModel;
-import org.vasvari.gradebookweb.business.util.JwtTokenUtil;
+import org.vasvari.gradebookweb.business.util.TraversonUtil;
 
-import java.net.URI;
 import java.util.Collection;
-import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +19,7 @@ public class TeacherGateway {
     @Value("${api.url}")
     private String baseUrl;
 
-    private final JwtTokenUtil jwtTokenUtil;
+    private final TraversonUtil traversonUtil;
     private final RestTemplate template;
 
     public TeacherDto findTeacherById(Long id) {
@@ -37,24 +31,10 @@ public class TeacherGateway {
     }
 
     public Collection<TeacherDto> findAllTeachers() {
-        Traverson traverson = new Traverson(URI.create(baseUrl + "/teachers"), MediaTypes.HAL_JSON);
-        TypeReferences.CollectionModelType<TeacherDto> collectionModelType =
-                new TypeReferences.CollectionModelType<>() {
-                };
+        String url = baseUrl + "/teachers";
+        String linkTo = "self";
 
-        try {
-            CollectionModel<TeacherDto> teacherResource = traverson
-                    .follow("$._links.self.href")
-                    .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
-                    .toObject(collectionModelType);
-
-            if (teacherResource != null)
-                return teacherResource.getContent();
-            else
-                return Collections.emptyList();
-        } catch (IllegalStateException e) {
-            throw new RuntimeException("Unauthorized");
-        }
+        return traversonUtil.getTeacherDtoCollection(url, linkTo);
     }
 
     public void save(TeacherDto teacher) {

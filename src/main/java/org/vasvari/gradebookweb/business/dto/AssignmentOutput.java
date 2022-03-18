@@ -34,6 +34,6 @@ public class AssignmentOutput {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadline;
 
-    private SimpleData course;
+    private SimpleData subject;
 
 }

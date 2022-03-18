@@ -31,8 +31,8 @@ public class AssignmentInput {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadline;
 
-    @NotNull(message = "Course ID cannot be empty")
+    @NotNull(message = "Subject ID cannot be empty")
     @Schema(example = "1")
-    private Long courseId;
+    private Long subjectId;
 
 }

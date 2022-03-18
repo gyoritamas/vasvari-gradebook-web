@@ -2,21 +2,15 @@ package org.vasvari.gradebookweb.business.service.gateway;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.client.Traverson;
-import org.springframework.hateoas.server.core.TypeReferences;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.business.dto.StudentDto;
 import org.vasvari.gradebookweb.business.model.StudentOutputModel;
-import org.vasvari.gradebookweb.business.util.JwtTokenUtil;
+import org.vasvari.gradebookweb.business.util.TraversonUtil;
 
-import java.net.URI;
 import java.util.Collection;
-import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +19,7 @@ public class StudentGateway {
     @Value("${api.url}")
     private String baseUrl;
 
-    private final JwtTokenUtil jwtTokenUtil;
+    private final TraversonUtil traversonUtil;
     private final RestTemplate template;
 
     public StudentDto findStudentById(Long id) {
@@ -37,27 +31,20 @@ public class StudentGateway {
     }
 
     public Collection<StudentDto> findAllStudents() {
-        Traverson traverson = new Traverson(URI.create(baseUrl + "/students"), MediaTypes.HAL_JSON);
-        TypeReferences.CollectionModelType<StudentDto> collectionModelType =
-                new TypeReferences.CollectionModelType<>() {
-                };
+        String url = baseUrl + "/students";
+        String linkTo = "self";
 
-        try {
-            CollectionModel<StudentDto> studentResource = traverson
-                    .follow("$._links.self.href")
-                    .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
-                    .toObject(collectionModelType);
-
-            if (studentResource != null)
-                return studentResource.getContent();
-            else
-                return Collections.emptyList();
-        } catch (IllegalStateException e) {
-            throw new RuntimeException("Unauthorized");
-        }
+        return traversonUtil.getStudentDtoCollection(url, linkTo);
     }
 
-    public void save(StudentDto student) {
+    public Collection<StudentDto> findStudentsOfCurrentUserAsTeacher() {
+        String url = baseUrl + "/teacher-user/students";
+        String linkTo = "students-of-teacher";
+
+        return traversonUtil.getStudentDtoCollection(url, linkTo);
+    }
+
+    public void saveStudent(StudentDto student) {
         ResponseEntity<?> response = template.postForEntity(baseUrl + "/students", student, EntityModel.class);
 
         if (response.getStatusCodeValue() != 201) throw new RuntimeException("Something went wrong");

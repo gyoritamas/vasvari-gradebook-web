@@ -40,7 +40,7 @@ public class TeacherController {
     @PostMapping(value = "/teachers/new")
     public String saveTeacher(@Valid TeacherDto teacher, BindingResult bindingResult, ModelMap model) {
         if (bindingResult.hasErrors()) return "teacher";
-        service.save(teacher);
+        service.saveTeacher(teacher);
         model.clear();
 
         return "redirect:/teachers";

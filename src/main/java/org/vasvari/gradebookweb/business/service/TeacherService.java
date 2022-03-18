@@ -22,7 +22,7 @@ public class TeacherService {
         return new ArrayList<>(gateway.findAllTeachers());
     }
 
-    public void save(TeacherDto teacher) {
+    public void saveTeacher(TeacherDto teacher) {
         gateway.save(teacher);
     }
 

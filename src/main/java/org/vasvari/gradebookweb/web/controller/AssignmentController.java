@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import org.vasvari.gradebookweb.business.dto.AssignmentInput;
 import org.vasvari.gradebookweb.business.dto.AssignmentOutput;
 import org.vasvari.gradebookweb.business.dto.AssignmentType;
-import org.vasvari.gradebookweb.business.dto.CourseOutput;
+import org.vasvari.gradebookweb.business.dto.SubjectOutput;
 import org.vasvari.gradebookweb.business.dto.mapper.AssignmentMapper;
 import org.vasvari.gradebookweb.business.service.AssignmentService;
-import org.vasvari.gradebookweb.business.service.CourseService;
+import org.vasvari.gradebookweb.business.service.SubjectService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
 public class AssignmentController {
 
     private final AssignmentService assignmentService;
-    private final CourseService courseService;
+    private final SubjectService subjectService;
     private final AssignmentMapper mapper;
 
     @ModelAttribute("typeOptions")
@@ -30,9 +30,9 @@ public class AssignmentController {
         return AssignmentType.values();
     }
 
-    @ModelAttribute("courseOptions")
-    public List<CourseOutput> populateCourseOptions() {
-        return courseService.findAllCourses();
+    @ModelAttribute("subjectOptions")
+    public List<SubjectOutput> populateSubjectOptions() {
+        return subjectService.findSubjectsForUser();
     }
 
     @GetMapping("/assignments")
@@ -61,7 +61,7 @@ public class AssignmentController {
     @PostMapping("/assignments/new")
     public String saveAssignment(@Valid AssignmentInput assignment, BindingResult bindingResult, ModelMap model) {
         if (bindingResult.hasErrors()) return "assignment";
-        assignmentService.save(assignment);
+        assignmentService.saveAssignment(assignment);
         model.clear();
 
         return "redirect:/assignments";

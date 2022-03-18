@@ -15,6 +15,7 @@ import org.vasvari.gradebookweb.business.dto.GradebookOutput;
 import org.vasvari.gradebookweb.business.dto.GradebookInput;
 import org.vasvari.gradebookweb.business.model.GradebookOutputModel;
 import org.vasvari.gradebookweb.business.util.JwtTokenUtil;
+import org.vasvari.gradebookweb.business.util.TraversonUtil;
 
 import java.net.URI;
 import java.util.Collection;
@@ -28,7 +29,7 @@ public class GradebookGateway {
     @Value("${api.url}")
     private String baseUrl;
 
-    private final JwtTokenUtil jwtTokenUtil;
+    private final TraversonUtil traversonUtil;
     private final RestTemplate template;
 
     public GradebookOutput findGradebookEntryById(Long id) {
@@ -41,48 +42,34 @@ public class GradebookGateway {
     }
 
     public Collection<GradebookOutput> findAllGradebookEntries() {
-        Traverson traverson = new Traverson(URI.create(baseUrl + "/gradebook"), MediaTypes.HAL_JSON);
-        TypeReferences.CollectionModelType<GradebookOutput> collectionModelType =
-                new TypeReferences.CollectionModelType<>() {
-                };
+        String url = baseUrl + "/gradebook";
+        String linkTo = "self";
 
-        try {
-            CollectionModel<GradebookOutput> gradebookResource = traverson
-                    .follow("$._links.self.href")
-                    .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
-                    .toObject(collectionModelType);
+        return traversonUtil.getGradebookOutputCollection(url, linkTo);
+    }
 
-            if (gradebookResource != null)
-                return gradebookResource.getContent();
-            else
-                return Collections.emptyList();
-        } catch (IllegalStateException e) {
-            throw new RuntimeException("Unauthorized");
-        }
+    public Collection<GradebookOutput> findGradebookEntriesOfCurrentUserAsTeacher() {
+        String url = baseUrl + "/teacher-user/gradebook-entries";
+        String linkTo = "gradebook-entries-of-teacher";
+
+        return traversonUtil.getGradebookOutputCollection(url, linkTo);
+    }
+
+    public Collection<GradebookOutput> findGradebookEntriesOfCurrentUserAsStudent() {
+        String url = baseUrl + "/student-user/gradebook-entries";
+        String linkTo = "gradebook-entries-of-student";
+
+        return traversonUtil.getGradebookOutputCollection(url, linkTo);
     }
 
     public Collection<GradebookOutput> findGradebookEntriesOfStudent(Long studentId) {
-        Traverson traverson = new Traverson(URI.create(baseUrl + "/student_gradebook/" + studentId), MediaTypes.HAL_JSON);
-        TypeReferences.CollectionModelType<GradebookOutput> collectionModelType =
-                new TypeReferences.CollectionModelType<>() {
-                };
+        String url = baseUrl + "/student_gradebook";
+        String linkTo = "student_gradebook";
 
-        try {
-            CollectionModel<GradebookOutput> gradebookResource = traverson
-                    .follow("$._links.student_gradebook.href")
-                    .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
-                    .toObject(collectionModelType);
-
-            if (gradebookResource != null)
-                return gradebookResource.getContent();
-            else
-                return Collections.emptyList();
-        } catch (IllegalStateException e) {
-            throw new RuntimeException("Unauthorized");
-        }
+        return traversonUtil.getGradebookOutputCollection(url, linkTo);
     }
 
-    public void save(GradebookInput gradebookEntry) {
+    public void saveGradebookEntry(GradebookInput gradebookEntry) {
         template.postForEntity(baseUrl + "/gradebook", gradebookEntry, EntityModel.class);
     }
 

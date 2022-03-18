@@ -54,16 +54,16 @@
             <td th:if="${#fields.hasErrors('deadline')}" th:errors="*{deadline}"></td>
         </tr>
 
-        <!-- course -->
+        <!-- subject -->
         <tr>
-            <td><label for="course">kurzus</label></td>
+            <td><label for="subject">tantárgy</label></td>
         </tr>
         <tr>
             <td>
-                <select id="course" th:field="*{courseId}">
-                    <option th:each="course : ${courseOptions}"
-                            th:value="${course.getId()}"
-                            th:text="${course.getName()}"
+                <select id="subject" th:field="*{subjectId}">
+                    <option th:each="subject : ${subjectOptions}"
+                            th:value="${subject.getId()}"
+                            th:text="${subject.getName()}"
                             th:selected="${assignmentInput}">
                     </option>
                 </select>

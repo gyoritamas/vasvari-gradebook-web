@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.vasvari.gradebookweb.business.dto.GradebookInput;
 import org.vasvari.gradebookweb.business.service.AssignmentService;
-import org.vasvari.gradebookweb.business.service.CourseService;
+import org.vasvari.gradebookweb.business.service.SubjectService;
 import org.vasvari.gradebookweb.business.service.GradebookService;
 import org.vasvari.gradebookweb.business.service.StudentService;
 
@@ -19,12 +19,12 @@ import javax.validation.Valid;
 public class GradebookController {
     private final GradebookService gradebookService;
     private final StudentService studentService;
-    private final CourseService courseService;
+    private final SubjectService subjectService;
     private final AssignmentService assignmentService;
 
     @GetMapping("/gradebook-entries")
     public String findAllGradebookEntries(Model model) {
-        model.addAttribute("entries", gradebookService.findAllGradebookEntries());
+        model.addAttribute("entries", gradebookService.findGradebookEntriesForUser());
 
         return "gradebook-entries";
     }
@@ -36,17 +36,17 @@ public class GradebookController {
         return "gradebook-entries";
     }
 
-    @GetMapping("/class_gradebook/{class}")
-    public String findGradebookEntriesOfClass(@PathVariable("class") Long classId, Model model) {
-        model.addAttribute("entries", gradebookService.findGradebookEntriesOfCourse(classId));
+    @GetMapping("/subject_gradebook/{subject}")
+    public String findGradebookEntriesOfClass(@PathVariable("subject") Long subjectId, Model model) {
+        model.addAttribute("entries", gradebookService.findGradebookEntriesOfCourse(subjectId));
 
         return "gradebook-entries";
     }
 
     @GetMapping("gradebook-entries/new")
-    public String showEmptyForm(GradebookInput gradebookInput, Model model) {
+    public String showEmptyForm(@ModelAttribute GradebookInput gradebookInput, Model model) {
         model.addAttribute("studentList", studentService.findAllStudents());
-        model.addAttribute("classList", courseService.findAllCourses());
+        model.addAttribute("subjectList", subjectService.findSubjectsForUser());
         model.addAttribute("assignmentList", assignmentService.findAllAssignments());
 
         return "gradebook-entry";
@@ -55,7 +55,7 @@ public class GradebookController {
     @PostMapping(value = "gradebook-entries/new", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String saveGradebookEntry(@Valid GradebookInput gradebookInput, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) return "gradebook-entry";
-        gradebookService.save(gradebookInput);
+        gradebookService.saveGradebookEntry(gradebookInput);
 
         return "redirect:/gradebook-entries";
     }
