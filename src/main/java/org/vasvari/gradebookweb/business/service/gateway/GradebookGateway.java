@@ -4,23 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.client.Traverson;
-import org.springframework.hateoas.server.core.TypeReferences;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.business.dto.GradebookOutput;
 import org.vasvari.gradebookweb.business.dto.GradebookInput;
 import org.vasvari.gradebookweb.business.model.GradebookOutputModel;
-import org.vasvari.gradebookweb.business.util.JwtTokenUtil;
 import org.vasvari.gradebookweb.business.util.TraversonUtil;
 
-import java.net.URI;
 import java.util.Collection;
-import java.util.Collections;
 
 @Service
 @ComponentScan
@@ -37,7 +30,7 @@ public class GradebookGateway {
         ResponseEntity<GradebookOutputModel> response = template.getForEntity(baseUrl + "/gradebook/{id}", GradebookOutputModel.class, id);
         if (response.getStatusCodeValue() != 200 || response.getBody() == null)
             // TODO: use custom exception
-            throw new RuntimeException("Something went wrong");
+            throw new RuntimeException("Failed to find gradebook entry with ID " + id);
 
         return response.getBody().getContent();
     }

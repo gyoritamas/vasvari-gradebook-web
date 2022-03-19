@@ -25,7 +25,7 @@ public class TeacherGateway {
     public TeacherDto findTeacherById(Long id) {
         ResponseEntity<TeacherOutputModel> response = template.getForEntity(baseUrl + "/teachers/{id}", TeacherOutputModel.class, id);
         if (response.getStatusCodeValue() != 200 || response.getBody() == null)
-            throw new RuntimeException("Something went wrong");
+            throw new RuntimeException("Failed to find teacher with ID " + id);
 
         return response.getBody().getContent();
     }
@@ -37,10 +37,10 @@ public class TeacherGateway {
         return traversonUtil.getTeacherDtoCollection(url, linkTo);
     }
 
-    public void save(TeacherDto teacher) {
+    public void saveTeacher(TeacherDto teacher) {
         ResponseEntity<?> response = template.postForEntity(baseUrl + "/teachers", teacher, EntityModel.class);
 
-        if (response.getStatusCodeValue() != 201) throw new RuntimeException("Something went wrong");
+        if (response.getStatusCodeValue() != 201) throw new RuntimeException("Failed to save teacher");
     }
 
     public void updateTeacher(Long id, TeacherDto update) {

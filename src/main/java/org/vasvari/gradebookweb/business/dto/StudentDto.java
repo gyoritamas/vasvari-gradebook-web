@@ -1,12 +1,15 @@
 package org.vasvari.gradebookweb.business.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -40,8 +43,11 @@ public class StudentDto {
             message = "A telefonszám formátuma hibás")
     private String phone;
 
-    @NotBlank(message = "A születési dátum nem lehet üres")
-    private String birthdate;
+    @NotNull(message = "A születési dátum nem lehet üres")
+    @Past
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate birthdate;
 
     public String getName() {
         return lastname + " " + firstname;

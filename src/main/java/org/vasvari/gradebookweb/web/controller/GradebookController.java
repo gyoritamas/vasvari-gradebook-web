@@ -1,7 +1,6 @@
 package org.vasvari.gradebookweb.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;

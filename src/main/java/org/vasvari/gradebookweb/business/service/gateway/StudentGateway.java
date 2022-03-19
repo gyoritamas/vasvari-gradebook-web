@@ -25,21 +25,21 @@ public class StudentGateway {
     public StudentDto findStudentById(Long id) {
         ResponseEntity<StudentOutputModel> response = template.getForEntity(baseUrl + "/students/{id}", StudentOutputModel.class, id);
         if (response.getStatusCodeValue() != 200 || response.getBody() == null)
-            throw new RuntimeException("Something went wrong");
+            throw new RuntimeException("Failed to find student with ID " + id);
 
         return response.getBody().getContent();
     }
 
     public Collection<StudentDto> findAllStudents() {
-        String url = baseUrl + "/studentOptions";
+        String url = baseUrl + "/students";
         String linkTo = "self";
 
         return traversonUtil.getStudentDtoCollection(url, linkTo);
     }
 
     public Collection<StudentDto> findStudentsOfCurrentUserAsTeacher() {
-        String url = baseUrl + "/teacher-user/studentOptions";
-        String linkTo = "studentOptions-of-teacher";
+        String url = baseUrl + "/teacher-user/students";
+        String linkTo = "students-of-teacher";
 
         return traversonUtil.getStudentDtoCollection(url, linkTo);
     }
@@ -47,7 +47,7 @@ public class StudentGateway {
     public void saveStudent(StudentDto student) {
         ResponseEntity<?> response = template.postForEntity(baseUrl + "/students", student, EntityModel.class);
 
-        if (response.getStatusCodeValue() != 201) throw new RuntimeException("Something went wrong");
+        if (response.getStatusCodeValue() != 201) throw new RuntimeException("Failed to save student");
     }
 
     public void updateStudent(Long id, StudentDto update) {

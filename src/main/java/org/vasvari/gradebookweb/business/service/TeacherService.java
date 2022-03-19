@@ -23,7 +23,7 @@ public class TeacherService {
     }
 
     public void saveTeacher(TeacherDto teacher) {
-        gateway.save(teacher);
+        gateway.saveTeacher(teacher);
     }
 
     public void updateTeacher(Long id, TeacherDto teacher) {

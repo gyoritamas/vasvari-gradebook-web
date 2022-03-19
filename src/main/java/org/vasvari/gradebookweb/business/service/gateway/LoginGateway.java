@@ -25,6 +25,7 @@ public class LoginGateway {
 
     public void login(LoginRequest loginRequest) {
         LoginResponse response = template.postForObject(baseUrl + "/authenticate", loginRequest, LoginResponse.class);
+        if (response == null) throw new RuntimeException("Authentication failed");
         String token = response.getJwtToken();
         tokenRepository.setToken(token);
     }

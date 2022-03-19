@@ -6,10 +6,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.hateoas.server.core.TypeReferences;
 import org.springframework.stereotype.Component;
-import org.vasvari.gradebookweb.business.dto.SubjectOutput;
-import org.vasvari.gradebookweb.business.dto.GradebookOutput;
-import org.vasvari.gradebookweb.business.dto.StudentDto;
-import org.vasvari.gradebookweb.business.dto.TeacherDto;
+import org.vasvari.gradebookweb.business.dto.*;
 
 import java.net.URI;
 import java.util.Collection;
@@ -99,6 +96,27 @@ public class TraversonUtil {
 
             if (gradebookResource != null)
                 return gradebookResource.getContent();
+            else
+                return Collections.emptyList();
+        } catch (IllegalStateException e) {
+            throw new RuntimeException("Unauthorized");
+        }
+    }
+
+    public Collection<UserDto> getUserDtoCollection(String url, String linkTo) {
+        Traverson traverson = new Traverson(URI.create(url), MediaTypes.HAL_JSON);
+        TypeReferences.CollectionModelType<UserDto> collectionModelType =
+                new TypeReferences.CollectionModelType<>() {
+                };
+
+        try {
+            CollectionModel<UserDto> userResource = traverson
+                    .follow(String.format("$._links.%s.href", linkTo))
+                    .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
+                    .toObject(collectionModelType);
+
+            if (userResource != null)
+                return userResource.getContent();
             else
                 return Collections.emptyList();
         } catch (IllegalStateException e) {

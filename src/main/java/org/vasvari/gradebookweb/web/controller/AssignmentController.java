@@ -15,7 +15,6 @@ import org.vasvari.gradebookweb.business.service.AssignmentService;
 import org.vasvari.gradebookweb.business.service.SubjectService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -34,7 +34,7 @@ public class AssignmentGateway {
     public AssignmentOutput findAssignmentById(Long id) {
         ResponseEntity<AssignmentOutputModel> response = template.getForEntity(baseUrl + "/assignments/{id}", AssignmentOutputModel.class, id);
         if (response.getStatusCodeValue() != 200 || response.getBody() == null)
-            throw new RuntimeException("Something went wrong");
+            throw new RuntimeException("Failed to find assignment with ID " + id);
 
         return response.getBody().getContent();
     }
@@ -62,7 +62,7 @@ public class AssignmentGateway {
     public void save(AssignmentInput assignment) {
         ResponseEntity<?> response = template.postForEntity(baseUrl + "/assignments", assignment, EntityModel.class);
         if (response.getStatusCodeValue() != 201)
-            throw new RuntimeException("Something went wrong");
+            throw new RuntimeException("Failed to save assignment");
     }
 
     public void updateAssignment(Long id, AssignmentInput update) {

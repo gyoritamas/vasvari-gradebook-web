@@ -57,8 +57,8 @@ public class SubjectGateway {
     }
 
     public Collection<StudentDto> findStudentsOfSubject(Long subjectId) {
-        String url = String.format("%s/subjects/%s/studentOptions", baseUrl, subjectId);
-        String linkTo = "studentOptions-of-subject";
+        String url = String.format("%s/subjects/%s/students", baseUrl, subjectId);
+        String linkTo = "students-of-subject";
 
         return traversonUtil.getStudentDtoCollection(url, linkTo);
     }

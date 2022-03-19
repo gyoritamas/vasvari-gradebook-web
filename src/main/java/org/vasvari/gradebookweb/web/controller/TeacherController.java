@@ -8,7 +8,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.vasvari.gradebookweb.business.dto.TeacherDto;
 import org.vasvari.gradebookweb.business.service.TeacherService;
-import org.vasvari.gradebookweb.business.util.UserUtil;
 
 import javax.validation.Valid;
 
