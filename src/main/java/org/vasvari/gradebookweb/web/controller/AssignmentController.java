@@ -15,8 +15,12 @@ import org.vasvari.gradebookweb.business.service.AssignmentService;
 import org.vasvari.gradebookweb.business.service.SubjectService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles 'assignment' and 'assignments' views
+ */
 @Controller
 @RequiredArgsConstructor
 public class AssignmentController {
@@ -35,19 +39,38 @@ public class AssignmentController {
         return subjectService.findSubjectsForUser();
     }
 
+    /**
+     * Shows a list of assignments
+     *
+     * @param model contains attributes the view works with
+     * @return view 'assignments' with all assignments
+     */
     @GetMapping("/assignments")
-    public String findAllAssignments(Model model) {
+    public String findAllAssignments(ModelMap model) {
         model.addAttribute("assignments", assignmentService.findAllAssignments());
 
         return "assignments";
     }
 
+    /**
+     * Shows an empty assignment form
+     *
+     * @param assignmentInput AssignmentInput object used to contain details of the assignment is to be created
+     * @return view 'assignment' with empty fields
+     */
     @GetMapping("/assignments/new")
     public String showEmptyForm(@ModelAttribute AssignmentInput assignmentInput) {
 
         return "assignment";
     }
 
+    /**
+     * Shows assignment details in form
+     *
+     * @param id    id of the selected assignment
+     * @param model contains attributes the form works with
+     * @return view 'assignment' with details of the selected assignment
+     */
     @GetMapping("/assignments/{id}")
     public String showFormWithAssignment(@PathVariable("id") Long id, Model model) {
         AssignmentOutput assignmentOutput = assignmentService.findAssignmentById(id);
@@ -58,6 +81,15 @@ public class AssignmentController {
         return "assignment";
     }
 
+    /**
+     * Creates a new assignment
+     *
+     * @param assignment    AssignmentInput object containing details the new assignment is to be created with
+     * @param bindingResult BindingResult object for handling errors
+     * @param model         contains attributes the form works with
+     * @return view 'assignment' in case bindingResult contained any errors,
+     * or view 'assignments' in case not
+     */
     @PostMapping("/assignments/new")
     public String saveAssignment(@Valid AssignmentInput assignment, BindingResult bindingResult, ModelMap model) {
         if (bindingResult.hasErrors()) return "assignment";
@@ -68,6 +100,16 @@ public class AssignmentController {
         return "redirect:/assignments";
     }
 
+    /**
+     * Updates assignment details
+     *
+     * @param id            id of the assignment
+     * @param update        AssignmentInput object containing details the assignment is to be updated by
+     * @param bindingResult BindingResult object for handling errors
+     * @param model         contains attributes the form works with
+     * @return view 'assignment' in case bindingResult contained any errors,
+     * or view 'assignments' in case not
+     */
     @RequestMapping(value = "/assignments/{id}")
     public String updateAssignment(@PathVariable("id") Long id,
                                    @Valid AssignmentInput update,
@@ -82,6 +124,12 @@ public class AssignmentController {
         return "redirect:/assignments";
     }
 
+    /**
+     * Deletes an assignment
+     *
+     * @param id id of the assignment
+     * @return view 'assignments'
+     */
     @RequestMapping(value = "/assignments/{id}", params = "delete")
     public String deleteAssignment(@PathVariable("id") Long id) {
         assignmentService.deleteAssignment(id);

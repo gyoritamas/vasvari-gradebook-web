@@ -29,7 +29,7 @@ public class AssignmentInput {
     @Future(message = "Deadline must be a date in the future")
     @Schema(example = "2051-01-01")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate deadline;
+    private LocalDate deadline = LocalDate.now().plusDays(1);
 
     @NotNull(message = "Subject ID cannot be empty")
     @Schema(example = "1")
