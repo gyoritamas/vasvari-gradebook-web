@@ -9,7 +9,6 @@ import org.vasvari.gradebookweb.business.util.UserUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,19 +47,22 @@ public class GradebookService {
     }
 
     public List<GradebookOutput> findGradebookEntriesOfStudent(Long studentId) {
-        return gateway.findAllGradebookEntries().stream()
-                .filter(entry -> entry.getStudent().getId().equals(studentId))
-                .collect(Collectors.toList());
+        return new ArrayList<>(gateway.findGradebookEntriesOfStudent(studentId));
     }
 
-    public List<GradebookOutput> findGradebookEntriesOfCourse(Long courseId) {
-        return gateway.findAllGradebookEntries().stream()
-                .filter(entry -> entry.getSubject().getId().equals(courseId))
-                .collect(Collectors.toList());
+    public List<GradebookOutput> findGradebookEntriesOfSubject(Long subjectId) {
+        return new ArrayList<>(gateway.findGradebookEntriesOfSubject(subjectId));
     }
 
     public void saveGradebookEntry(GradebookInput gradebookEntry) {
         gateway.saveGradebookEntry(gradebookEntry);
     }
 
+    public void updateEntry(Long id, GradebookInput update) {
+        gateway.updateGradebookEntry(id, update);
+    }
+
+    public void deleteGradebookEntry(Long id) {
+        gateway.deleteGradebookEntry(id);
+    }
 }

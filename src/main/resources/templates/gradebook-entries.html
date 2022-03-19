@@ -17,6 +17,7 @@
         <th>óra</th>
         <th>feladat</th>
         <th>osztályzat</th>
+        <th th:text="#{column.operations}">műveletek</th>
     </tr>
     <tr th:each="entry : ${entries}">
         <td th:text="${entry.getId()}"></td>
@@ -26,13 +27,25 @@
             </a>
         </td>
         <td>
-            <a th:href="@{subject_gradebook/{subject} (subject = ${entry.getSubject().getId()})}">
+            <a th:href="@{/subject_gradebook/{subject} (subject = ${entry.getSubject().getId()})}">
                 <span th:text="${entry.getSubject().getName()}"></span>
             </a>
         </td>
         <td th:text="${entry.getAssignment().getName()}"></td>
         <td th:text="${entry.getGrade()}"></td>
+        <td>
+            <!-- edit button -->
+            <div class="btn">
+                <a th:href="@{/gradebook-entries/{id}/ (id = ${entry.getId()})}"><i class="bi bi-pencil-square"></i></a>
+            </div>
+            <!-- delete button -->
+            <form th:method="delete"
+                  th:action="@{/gradebook-entries/{id} (id = ${entry.getId()})}">
+                <button type="submit" class="btn btn-link" name="delete"><a><i class="bi bi-trash"></i></a></button>
+            </form>
+        </td>
     </tr>
 </table>
+<span th:if="${#lists.isEmpty(entries)}">Nincsenek bejegyzések</span>
 </body>
 </html>

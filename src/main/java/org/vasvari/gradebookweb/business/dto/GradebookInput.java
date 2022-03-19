@@ -1,9 +1,6 @@
 package org.vasvari.gradebookweb.business.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -13,6 +10,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class GradebookInput {
     @NotNull(message = "Student ID cannot be empty")
     private Long studentId;

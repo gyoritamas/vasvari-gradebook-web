@@ -31,8 +31,8 @@ public class StudentController {
 
     @GetMapping("/students/{id}")
     public String showFormWithStudent(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("studentDto", service.findStudentById(id));
         model.addAttribute("editing", true);
+        model.addAttribute("studentDto", service.findStudentById(id));
 
         return "student";
     }

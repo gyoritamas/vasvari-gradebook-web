@@ -1,6 +1,7 @@
 package org.vasvari.gradebookweb.business.service.gateway;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.hateoas.CollectionModel;
@@ -63,8 +64,15 @@ public class GradebookGateway {
     }
 
     public Collection<GradebookOutput> findGradebookEntriesOfStudent(Long studentId) {
-        String url = baseUrl + "/student_gradebook";
+        String url = String.format("%s/student_gradebook/%s", baseUrl, studentId);
         String linkTo = "student_gradebook";
+
+        return traversonUtil.getGradebookOutputCollection(url, linkTo);
+    }
+
+    public Collection<GradebookOutput> findGradebookEntriesOfSubject(Long subjectId) {
+        String url = String.format("%s/subject_gradebook/%s", baseUrl, subjectId);
+        String linkTo = "subject_gradebook";
 
         return traversonUtil.getGradebookOutputCollection(url, linkTo);
     }
@@ -73,6 +81,12 @@ public class GradebookGateway {
         template.postForEntity(baseUrl + "/gradebook", gradebookEntry, EntityModel.class);
     }
 
-    // update and delete methods are not supported
+    public void updateGradebookEntry(Long id, GradebookInput update) {
+        throw new NotImplementedException("Method not implemented yet");
+    }
+
+    public void deleteGradebookEntry(Long id) {
+        template.delete(String.format("%s/gradebook/%s", baseUrl, id));
+    }
 
 }

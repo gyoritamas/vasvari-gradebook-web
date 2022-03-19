@@ -31,15 +31,15 @@ public class StudentGateway {
     }
 
     public Collection<StudentDto> findAllStudents() {
-        String url = baseUrl + "/students";
+        String url = baseUrl + "/studentOptions";
         String linkTo = "self";
 
         return traversonUtil.getStudentDtoCollection(url, linkTo);
     }
 
     public Collection<StudentDto> findStudentsOfCurrentUserAsTeacher() {
-        String url = baseUrl + "/teacher-user/students";
-        String linkTo = "students-of-teacher";
+        String url = baseUrl + "/teacher-user/studentOptions";
+        String linkTo = "studentOptions-of-teacher";
 
         return traversonUtil.getStudentDtoCollection(url, linkTo);
     }

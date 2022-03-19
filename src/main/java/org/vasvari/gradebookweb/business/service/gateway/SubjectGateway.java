@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.business.dto.SubjectInput;
 import org.vasvari.gradebookweb.business.dto.SubjectOutput;
 import org.vasvari.gradebookweb.business.dto.StudentDto;
-import org.vasvari.gradebookweb.business.model.CourseOutputModel;
+import org.vasvari.gradebookweb.business.model.SubjectOutputModel;
 import org.vasvari.gradebookweb.business.util.TraversonUtil;
 
 import java.util.Collection;
@@ -27,10 +27,10 @@ public class SubjectGateway {
     private final RestTemplate template;
 
     public SubjectOutput findSubjectById(Long id) {
-        ResponseEntity<CourseOutputModel> response = template.getForEntity(baseUrl + "/subjects/{id}", CourseOutputModel.class, id);
+        ResponseEntity<SubjectOutputModel> response = template.getForEntity(baseUrl + "/subjects/{id}", SubjectOutputModel.class, id);
         if (response.getStatusCodeValue() != 200 || response.getBody() == null)
             // TODO: use custom exception
-            throw new RuntimeException("Something went wrong");
+            throw new RuntimeException("Failed to find subject with ID " + id);
 
         return response.getBody().getContent();
     }
@@ -57,8 +57,8 @@ public class SubjectGateway {
     }
 
     public Collection<StudentDto> findStudentsOfSubject(Long subjectId) {
-        String url = String.format("%s/subjects/%s/students", baseUrl, subjectId);
-        String linkTo = "students-of-subject";
+        String url = String.format("%s/subjects/%s/studentOptions", baseUrl, subjectId);
+        String linkTo = "studentOptions-of-subject";
 
         return traversonUtil.getStudentDtoCollection(url, linkTo);
     }
@@ -67,11 +67,21 @@ public class SubjectGateway {
         ResponseEntity<?> response = template.postForEntity(baseUrl + "/subjects", subject, EntityModel.class);
         // TODO: use custom exception
         if (response.getStatusCodeValue() != 201 || response.getBody() == null)
-            throw new RuntimeException("Something went wrong");
+            throw new RuntimeException("Failed to save subject");
     }
 
     public void updateSubject(Long id, SubjectInput update) {
         template.put(baseUrl + "/subjects/{id}", update, id);
+    }
+
+    public void addStudentToSubject(Long subjectId, Long studentId) {
+        ResponseEntity<?> response = template.postForEntity(
+                String.format("%s/subjects/%d/add_student/%d", baseUrl, subjectId, studentId),
+                null,
+                EntityModel.class);
+
+        if (response.getStatusCodeValue() != 200)
+            throw new RuntimeException(String.format("Failed to add student %d to subject %d", studentId, subjectId));
     }
 
     public void deleteSubject(Long id) {

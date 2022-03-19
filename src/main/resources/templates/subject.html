@@ -5,10 +5,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <title>E-napló | Új kurzus</title>
+    <title>E-napló | Új tantárgy</title>
 </head>
 <body>
-<h1 th:text="${editing}? 'Kurzus adatai' : 'Új kurzus'">placeholder</h1>
+<h1 th:text="${editing}? 'Tantárgy adatai' : 'Új tantárgy'">placeholder</h1>
 <form th:object="${subjectInput}" th:method="${editing} ? put : post">
     <table>
 
@@ -45,6 +45,7 @@
 </form>
 <div th:if="${editing}">
     <h2>Tanulók</h2>
+
     <table>
         <tr>
             <th>ID</th>
@@ -65,6 +66,20 @@
             <td th:text="${student.getBirthdate()}"></td>
         </tr>
     </table>
+    <span th:if="${#lists.isEmpty(studentsOfCourse)}">Nincsenek tanulók</span>
+
+
+    <h2>Tanuló hozzáadása</h2>
+    <form th:method="post" th:action="@{/subjects/{subjectId}/add-student (subjectId=${subjectInput.getId()})}">
+        <label for="student">tanuló</label>
+        <select id="student" th:name="studentId">
+            <option th:each="student : ${studentOptions}"
+                    th:value="${student.getId()}"
+                    th:text="${student.getName()}">
+            </option>
+        </select>
+        <button th:type="submit">OK</button>
+    </form>
 </div>
 </body>
 </html>

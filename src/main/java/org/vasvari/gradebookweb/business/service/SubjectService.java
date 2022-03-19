@@ -58,6 +58,10 @@ public class SubjectService {
         gateway.updateSubject(id, update);
     }
 
+    public void addStudentToSubject(Long subjectId, Long studentId) {
+        gateway.addStudentToSubject(subjectId, studentId);
+    }
+
     public void deleteSubject(Long id) {
         gateway.deleteSubject(id);
     }

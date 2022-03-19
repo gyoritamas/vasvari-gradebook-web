@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.vasvari.gradebookweb.business.dto.TeacherDto;
 import org.vasvari.gradebookweb.business.service.TeacherService;
+import org.vasvari.gradebookweb.business.util.UserUtil;
 
 import javax.validation.Valid;
 
@@ -31,8 +32,8 @@ public class TeacherController {
 
     @GetMapping("/teachers/{id}")
     public String showFormWithTeacher(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("teacherDto", service.findTeacherById(id));
         model.addAttribute("editing", true);
+        model.addAttribute("teacherDto", service.findTeacherById(id));
 
         return "teacher";
     }
@@ -53,6 +54,7 @@ public class TeacherController {
                                 ModelMap model) {
         model.addAttribute("editing", true);
         if (bindingResult.hasErrors()) return "teacher";
+
         service.updateTeacher(id, teacher);
         model.clear();
 

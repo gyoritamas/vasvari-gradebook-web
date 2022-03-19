@@ -8,6 +8,7 @@ import org.vasvari.gradebookweb.business.dto.SubjectOutput;
 public class SubjectMapper {
     public SubjectInput map(SubjectOutput subjectOutput) {
         return SubjectInput.builder()
+                .id(subjectOutput.getId())
                 .name(subjectOutput.getName())
                 .teacherId(subjectOutput.getTeacher().getId())
                 .build();

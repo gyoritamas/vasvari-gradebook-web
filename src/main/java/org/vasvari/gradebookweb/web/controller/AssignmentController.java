@@ -52,8 +52,8 @@ public class AssignmentController {
     public String showFormWithAssignment(@PathVariable("id") Long id, Model model) {
         AssignmentOutput assignmentOutput = assignmentService.findAssignmentById(id);
         AssignmentInput assignmentInput = mapper.map(assignmentOutput);
-        model.addAttribute("assignmentInput", assignmentInput);
         model.addAttribute("editing", true);
+        model.addAttribute("assignmentInput", assignmentInput);
 
         return "assignment";
     }
@@ -61,6 +61,7 @@ public class AssignmentController {
     @PostMapping("/assignments/new")
     public String saveAssignment(@Valid AssignmentInput assignment, BindingResult bindingResult, ModelMap model) {
         if (bindingResult.hasErrors()) return "assignment";
+
         assignmentService.saveAssignment(assignment);
         model.clear();
 
@@ -74,6 +75,7 @@ public class AssignmentController {
                                    ModelMap model) {
         model.addAttribute("editing", true);
         if (bindingResult.hasErrors()) return "assignment";
+
         assignmentService.updateAssignment(id, update);
         model.clear();
 
