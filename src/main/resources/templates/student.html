@@ -34,7 +34,8 @@
             <td><label for="grade-level">Évfolyam</label></td>
         </tr>
         <tr>
-            <td><input type="number" id="grade-level" th:field="*{gradeLevel}"></td>
+            <td><input type="number" id="grade-level" th:field="*{gradeLevel}" th:min="#{gradeLevel.min}"
+                       th:max="#{gradeLevel.max}"></td>
             <td th:if="${#fields.hasErrors('gradeLevel')}" th:errors="*{gradeLevel}"></td>
         </tr>
 

@@ -84,6 +84,16 @@ public class SubjectGateway {
             throw new RuntimeException(String.format("Failed to add student %d to subject %d", studentId, subjectId));
     }
 
+    public void removeStudentFromSubject(Long subjectId, Long studentId) {
+        ResponseEntity<?> response = template.postForEntity(
+                String.format("%s/subjects/%d/remove_student/%d", baseUrl, subjectId, studentId),
+                null,
+                EntityModel.class);
+
+        if (response.getStatusCodeValue() != 200)
+            throw new RuntimeException(String.format("Failed to add student %d to subject %d", studentId, subjectId));
+    }
+
     public void deleteSubject(Long id) {
         template.delete(baseUrl + "/subjects/{id}", id);
     }

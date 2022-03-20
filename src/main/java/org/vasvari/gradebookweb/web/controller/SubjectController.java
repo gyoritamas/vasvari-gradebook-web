@@ -96,6 +96,19 @@ public class SubjectController implements WebMvcConfigurer {
         return "redirect:/subjects/" + subjectId;
     }
 
+    @RequestMapping("/subjects/{subjectId}/remove-student")
+    public String removeStudentFromSubject(@PathVariable("subjectId") Long subjectId,
+                                           @RequestParam("studentId") Long studentId,
+                                           ModelMap model) {
+        model.addAttribute("editing", true);
+        model.addAttribute("studentOptions", studentService.findAllStudents());
+
+        subjectService.removeStudentFromSubject(subjectId, studentId);
+        model.clear();
+
+        return "redirect:/subjects/" + subjectId;
+    }
+
     @RequestMapping(value = "/subjects/{id}", params = "delete")
     public String deleteSubject(@PathVariable("id") Long id) {
         subjectService.deleteSubject(id);

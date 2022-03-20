@@ -28,15 +28,21 @@
         <td th:text="${assignment.getDeadline()}"></td>
         <td th:text="${assignment.getSubject().getName()}"></td>
         <td>
-            <!-- edit button -->
-            <div class="btn">
-                <a th:href="@{/assignments/{id}/ (id = ${assignment.getId()})}"><i class="bi bi-pencil-square"></i></a>
+            <div class="d-flex flex-row">
+                <!-- edit button -->
+                <div class="btn">
+                    <a th:href="@{/assignments/{id}/ (id = ${assignment.getId()})}"><i class="bi bi-pencil-square"></i></a>
+                </div>
+                <!-- delete button -->
+                <div>
+                    <form th:method="delete"
+                          th:action="@{/assignments/{id} (id = ${assignment.getId()})}">
+                        <button type="submit" class="btn btn-link" name="delete">
+                            <a class="text-danger"><i class="bi bi-x-circle"></i></a>
+                        </button>
+                    </form>
+                </div>
             </div>
-            <!-- delete button -->
-            <form th:method="delete"
-                  th:action="@{/assignments/{id} (id = ${assignment.getId()})}">
-                <button type="submit" class="btn btn-link" name="delete"><a><i class="bi bi-trash"></i></a></button>
-            </form>
         </td>
     </tr>
 </table>
