@@ -34,7 +34,7 @@ public class AssignmentController {
      */
     @GetMapping("/assignments")
     public String findAllAssignments(ModelMap model) {
-        model.addAttribute("assignments", assignmentService.findAllAssignments());
+        model.addAttribute("assignments", assignmentService.findAssignmentsForUser());
 
         return "assignments";
     }
@@ -43,7 +43,7 @@ public class AssignmentController {
      * Shows an empty assignment form
      *
      * @param assignmentInput AssignmentInput object used to contain details of the assignment is to be created
-     * @param model contains attributes the form works with
+     * @param model           contains attributes the form works with
      * @return view 'assignment' with empty fields
      */
     @GetMapping("/assignments/new")

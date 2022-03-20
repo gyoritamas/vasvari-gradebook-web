@@ -123,4 +123,24 @@ public class TraversonUtil {
             throw new RuntimeException("Unauthorized");
         }
     }
+
+    public Collection<AssignmentOutput> getAssignmentOutputCollection(String url, String linkTo) {
+        Traverson traverson = new Traverson(URI.create(url), MediaTypes.HAL_JSON);
+        TypeReferences.CollectionModelType<AssignmentOutput> collectionModelType =
+                new TypeReferences.CollectionModelType<>() {
+                };
+        try {
+            CollectionModel<AssignmentOutput> assignmentResource = traverson
+                    .follow(String.format("$._links.%s.href", linkTo))
+                    .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
+                    .toObject(collectionModelType);
+
+            if (assignmentResource != null)
+                return assignmentResource.getContent();
+            else
+                return Collections.emptyList();
+        } catch (IllegalStateException e) {
+            throw new RuntimeException("Unauthorized");
+        }
+    }
 }
