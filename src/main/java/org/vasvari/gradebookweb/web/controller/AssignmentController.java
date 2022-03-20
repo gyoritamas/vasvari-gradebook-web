@@ -9,13 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import org.vasvari.gradebookweb.business.dto.AssignmentInput;
 import org.vasvari.gradebookweb.business.dto.AssignmentOutput;
 import org.vasvari.gradebookweb.business.dto.AssignmentType;
-import org.vasvari.gradebookweb.business.dto.SubjectOutput;
 import org.vasvari.gradebookweb.business.dto.mapper.AssignmentMapper;
 import org.vasvari.gradebookweb.business.service.AssignmentService;
 import org.vasvari.gradebookweb.business.service.SubjectService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * Handles 'assignment' and 'assignments' views
@@ -27,16 +25,6 @@ public class AssignmentController {
     private final AssignmentService assignmentService;
     private final SubjectService subjectService;
     private final AssignmentMapper mapper;
-
-    @ModelAttribute("typeOptions")
-    public AssignmentType[] assignmentTypes() {
-        return AssignmentType.values();
-    }
-
-    @ModelAttribute("subjectOptions")
-    public List<SubjectOutput> populateSubjectOptions() {
-        return subjectService.findSubjectsForUser();
-    }
 
     /**
      * Shows a list of assignments
@@ -55,10 +43,13 @@ public class AssignmentController {
      * Shows an empty assignment form
      *
      * @param assignmentInput AssignmentInput object used to contain details of the assignment is to be created
+     * @param model contains attributes the form works with
      * @return view 'assignment' with empty fields
      */
     @GetMapping("/assignments/new")
-    public String showEmptyForm(@ModelAttribute AssignmentInput assignmentInput) {
+    public String showEmptyForm(@ModelAttribute AssignmentInput assignmentInput, ModelMap model) {
+        model.addAttribute("typeOptions", AssignmentType.values());
+        model.addAttribute("subjectOptions", subjectService.findSubjectsForUser());
 
         return "assignment";
     }
@@ -76,6 +67,8 @@ public class AssignmentController {
         AssignmentInput assignmentInput = mapper.map(assignmentOutput);
         model.addAttribute("editing", true);
         model.addAttribute("assignmentInput", assignmentInput);
+        model.addAttribute("typeOptions", AssignmentType.values());
+        model.addAttribute("subjectOptions", subjectService.findSubjectsForUser());
 
         return "assignment";
     }
@@ -91,6 +84,8 @@ public class AssignmentController {
      */
     @PostMapping("/assignments/new")
     public String saveAssignment(@Valid AssignmentInput assignment, BindingResult bindingResult, ModelMap model) {
+        model.addAttribute("typeOptions", AssignmentType.values());
+        model.addAttribute("subjectOptions", subjectService.findSubjectsForUser());
         if (bindingResult.hasErrors()) return "assignment";
 
         assignmentService.saveAssignment(assignment);
@@ -115,6 +110,8 @@ public class AssignmentController {
                                    BindingResult bindingResult,
                                    ModelMap model) {
         model.addAttribute("editing", true);
+        model.addAttribute("typeOptions", AssignmentType.values());
+        model.addAttribute("subjectOptions", subjectService.findSubjectsForUser());
         if (bindingResult.hasErrors()) return "assignment";
 
         assignmentService.updateAssignment(id, update);

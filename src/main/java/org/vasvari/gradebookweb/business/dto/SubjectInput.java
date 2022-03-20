@@ -15,7 +15,7 @@ public class SubjectInput {
 
     private Long id;
 
-    @NotBlank(message = "A név nem lehet üres")
+//    @NotBlank(message = "A név nem lehet üres")
     @Size(min=2, max=35, message = "Adjon meg 2-35 karakter közötti nevet")
     private String name;
 

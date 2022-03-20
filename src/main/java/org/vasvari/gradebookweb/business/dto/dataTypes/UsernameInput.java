@@ -1,6 +1,5 @@
 package org.vasvari.gradebookweb.business.dto.dataTypes;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +13,5 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class UsernameInput {
     @NotBlank(message = "Username field cannot be empty")
-    @Schema(example = "johndoe72")
     private String username;
 }

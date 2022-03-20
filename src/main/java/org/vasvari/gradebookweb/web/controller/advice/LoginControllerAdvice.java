@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class LoginControllerAdvice {
 
     @ExceptionHandler(Throwable.class)
-    // TODO: use something else
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String exception(final Throwable throwable, final Model model) {
         log.error("Exception during execution of SpringSecurity application", throwable);

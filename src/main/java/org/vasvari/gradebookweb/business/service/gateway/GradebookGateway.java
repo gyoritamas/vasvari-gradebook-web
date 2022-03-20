@@ -1,7 +1,6 @@
 package org.vasvari.gradebookweb.business.service.gateway;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.hateoas.EntityModel;
@@ -75,7 +74,7 @@ public class GradebookGateway {
     }
 
     public void updateGradebookEntry(Long id, GradebookInput update) {
-        throw new NotImplementedException("Method not implemented yet");
+        throw new RuntimeException("Method not implemented yet");
     }
 
     public void deleteGradebookEntry(Long id) {

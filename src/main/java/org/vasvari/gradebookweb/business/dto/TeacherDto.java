@@ -1,14 +1,14 @@
 package org.vasvari.gradebookweb.business.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.server.core.Relation;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,11 +20,11 @@ import javax.validation.constraints.Size;
 public class TeacherDto {
     private Long id;
 
-    @NotBlank(message = "Firstname field cannot be empty")
+//    @NotBlank(message = "Firstname field cannot be empty")
     @Size(min = 2, message = "Firstname must be at least 2 characters long")
     private String firstname;
 
-    @NotBlank(message = "Lastname field cannot be empty")
+//    @NotBlank(message = "Lastname field cannot be empty")
     @Size(min = 2, message = "Lastname must be at least 2 characters long")
     private String lastname;
 
@@ -33,7 +33,6 @@ public class TeacherDto {
     private String email;
 
     @NotBlank(message = "Address field cannot be empty")
-    @Schema(example = "3982 Turnpike Drive, Birmingham, AL 35203")
     private String address;
 
     @NotBlank(message = "Phone field cannot be empty")
@@ -41,8 +40,11 @@ public class TeacherDto {
             message = "Phone must be a valid phone number")
     private String phone;
 
-    @NotBlank(message = "A születési dátum nem lehet üres")
-    private String birthdate;
+    @NotNull(message = "A születési dátum nem lehet üres")
+    @Past
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate birthdate;
 
     @JsonIgnore
     public String getName() {
