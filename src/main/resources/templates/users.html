@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <title>E-napló | Felhasználók</title>
+</head>
+<body>
+<div th:replace="fragments/navbar"></div>
+<h1>Felhasználók</h1>
+<a th:href="@{users/new}">Új felhasználó</a>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>felhasználónév</th>
+        <th>felhasználói szint</th>
+        <th th:text="#{column.operations}">műveletek</th>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.getId()}"></td>
+        <td th:text="${user.getUsername()}"></td>
+        <td th:text="${user.getRole().name()}"></td>
+        <td>
+            <div class="d-flex flex-row">
+                <!-- edit button -->
+                <div class="btn">
+                    <a th:href="@{/users/{id}/ (id = ${user.getId()})}"><i class="bi bi-pencil-square"></i></a>
+                </div>
+                <!-- delete button -->
+                <div>
+                    <form th:method="delete"
+                          th:action="@{/users/{id} (id = ${user.getId()})}">
+                        <button type="submit" class="btn btn-link" name="delete">
+                            <a class="text-danger"><i class="bi bi-x-circle"></i></a>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+<span th:if="${#lists.isEmpty(users)}">Nincsenek felhasználók</span>
+</body>
+</html>

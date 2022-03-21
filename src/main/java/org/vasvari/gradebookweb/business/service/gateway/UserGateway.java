@@ -21,8 +21,12 @@ public class UserGateway {
     private final TraversonUtil traversonUtil;
     private final RestTemplate template;
 
-    public ResponseEntity<UserOutputModel> findUserById(Long id) {
-        return template.getForEntity(baseUrl + "/users/{id}", UserOutputModel.class, id);
+    public UserDto findUserById(Long id) {
+        ResponseEntity<UserOutputModel> response = template.getForEntity(baseUrl + "/users/{id}", UserOutputModel.class, id);
+        if (response.getStatusCodeValue() != 200 || response.getBody() == null)
+            throw new RuntimeException("Failed to find user with ID " + id);
+
+        return response.getBody().getContent();
     }
 
     public Collection<UserDto> findAllUsers() {
@@ -32,8 +36,10 @@ public class UserGateway {
         return traversonUtil.getUserDtoCollection(url, linkTo);
     }
 
-    public ResponseEntity<?> save(UserDto user) {
-        return template.postForEntity(baseUrl + "/users", user, EntityModel.class);
+    public void saveUser(UserDto user) {
+        ResponseEntity<?> response = template.postForEntity(baseUrl + "/users", user, EntityModel.class);
+
+        if (response.getStatusCodeValue() != 201) throw new RuntimeException("Failed to save user");
     }
 
     public void updateUser(Long id, UserDto update) {
