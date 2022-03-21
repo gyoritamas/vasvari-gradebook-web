@@ -8,9 +8,7 @@
     <title>E-napló | Kezdőlap</title>
 </head>
 <body>
-
-<div th:text="'bejelentkezve: ' + ${userDetails}"></div>
-
+<div th:include="fragments/navbar"></div>
 <h1>Menü</h1>
 <ul>
     <li th:if="${userRole=='ADMIN' || userRole=='TEACHER'}">

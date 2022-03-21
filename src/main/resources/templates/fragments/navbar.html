@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="/" th:href="@{/}">E-napló</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/students}">Tanulók</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/teachers}">Tanárok</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/subjects}">Tantárgyak</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/assignments}">Feladatok</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/gradebook-entries}">Osztályzatok</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/users}">Felhasználók</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/profile}">
+                        <span th:text="'bejelentkezve: ' + ${@userUtil.printUserDetails()} "></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}">
+                        <span th:text="kijelentkezés"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

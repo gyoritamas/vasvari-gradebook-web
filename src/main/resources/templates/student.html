@@ -8,6 +8,7 @@
     <title th:text="${editing}? 'E-napló | Tanuló adatainak módosítása' : 'E-napló | Új tanuló'"></title>
 </head>
 <body>
+<div th:replace="fragments/navbar"></div>
 <h1 th:text="${editing}? 'Tanuló adatainak módosítása' : 'Új tanuló'"></h1>
 <form th:object="${studentDto}" th:method="${editing} ? put : post">
     <table>
