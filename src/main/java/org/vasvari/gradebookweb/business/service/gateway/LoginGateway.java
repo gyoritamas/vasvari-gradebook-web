@@ -31,6 +31,6 @@ public class LoginGateway {
     }
 
     public void logout() {
-        tokenRepository.setToken(null);
+        tokenRepository.deleteToken();
     }
 }

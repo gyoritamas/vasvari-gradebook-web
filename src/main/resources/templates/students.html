@@ -33,11 +33,16 @@
         <td>
             <div class="d-flex flex-row">
                 <!-- edit button -->
-                <div class="btn">
+                <div class="btn" title="details">
                     <a th:href="@{/students/{id}/ (id = ${student.getId()})}"><i class="bi bi-pencil-square"></i></a>
                 </div>
+                <!-- profile button -->
+                <div class="btn" title="profile">
+                    <!--    navigateToUser  -->
+                    <a th:href="@{/users/students/{id} (id = ${student.getId()})}"><i class="bi bi-person"></i></a>
+                </div>
                 <!-- delete button -->
-                <div>
+                <div title="delete">
                     <form th:method="delete"
                           th:action="@{/students/{id} (id = ${student.getId()})}">
                         <button type="submit" class="btn btn-link" name="delete">

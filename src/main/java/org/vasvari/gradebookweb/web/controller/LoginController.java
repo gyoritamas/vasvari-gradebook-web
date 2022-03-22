@@ -43,6 +43,7 @@ public class LoginController {
     @RequestMapping("/logout")
     public String logout() {
         loginGateway.logout();
+
         return "redirect:/login";
     }
 }

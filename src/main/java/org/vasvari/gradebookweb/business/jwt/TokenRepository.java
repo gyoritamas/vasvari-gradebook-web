@@ -6,11 +6,15 @@ import org.springframework.stereotype.Repository;
 public class TokenRepository {
     private JwtToken jwtToken;
 
+    public JwtToken getToken() {
+        return this.jwtToken;
+    }
+
     public void setToken(String token) {
         this.jwtToken = new JwtToken(token);
     }
 
-    public JwtToken getToken() {
-        return this.jwtToken;
+    public void deleteToken(){
+        this.jwtToken = null;
     }
 }

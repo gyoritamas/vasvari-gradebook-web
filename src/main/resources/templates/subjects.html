@@ -16,13 +16,13 @@
         <th>ID</th>
         <th>tantárgy neve</th>
         <th>tanár</th>
-        <th th:if="${userRole=='ADMIN'}">műveletek</th>
+        <th th:if="${@userUtil.userRole().name()=='ADMIN'}">műveletek</th>
     </tr>
     <tr th:each="subject : ${subjects}">
         <td th:text="${subject.getId()}"></td>
         <td th:text="${subject.getName()}"></td>
         <td th:text="${subject.getTeacher()}? ${subject.getTeacher().getName()} : '(nincs adat)'"></td>
-        <td th:if="${userRole=='ADMIN'}">
+        <td th:if="${@userUtil.userRole().name()=='ADMIN'}">
             <div class="d-flex flex-row">
                 <!-- edit button -->
                 <div class="btn">

@@ -13,6 +13,8 @@ public class UserUtil {
     private final JwtTokenUtil jwtTokenUtil;
 
     public UserRole userRole() {
+        if(isUnauthenticated()) throw new RuntimeException("Unauthenticated user");
+
         return UserRole.valueOf(
                 jwtTokenUtil.getUserRoleFromToken(tokenRepository.getToken().getTokenString())
         );
@@ -21,4 +23,13 @@ public class UserUtil {
     public String username() {
         return jwtTokenUtil.getUsernameFromToken(tokenRepository.getToken().getTokenString());
     }
+
+    public String printUserDetails() {
+        return String.format("%s (%s)", username(), userRole().name().toLowerCase());
+    }
+
+    public boolean isUnauthenticated() {
+        return tokenRepository.getToken() == null;
+    }
+
 }

@@ -1,16 +1,26 @@
 package org.vasvari.gradebookweb.business.service.gateway;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.business.dto.UserDto;
+import org.vasvari.gradebookweb.business.dto.UserRole;
+import org.vasvari.gradebookweb.business.dto.dataTypes.InitialCredentials;
+import org.vasvari.gradebookweb.business.model.InitialCredentialsModel;
 import org.vasvari.gradebookweb.business.model.UserOutputModel;
+import org.vasvari.gradebookweb.business.util.Problem;
 import org.vasvari.gradebookweb.business.util.TraversonUtil;
 
 import java.util.Collection;
+import java.util.Optional;
+
+import static org.vasvari.gradebookweb.business.dto.UserRole.STUDENT;
+import static org.vasvari.gradebookweb.business.dto.UserRole.TEACHER;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +46,50 @@ public class UserGateway {
         return traversonUtil.getUserDtoCollection(url, linkTo);
     }
 
+    public Optional<UserDto> findStudentUser(Long studentId) {
+        return findSchoolActor(STUDENT, studentId);
+    }
+
+    public Optional<UserDto> findTeacherUser(Long teacherId) {
+        return findSchoolActor(TEACHER, teacherId);
+    }
+
+    private Optional<UserDto> findSchoolActor(UserRole role, Long schoolActorId) {
+        String schoolActorType;
+        switch (role) {
+            case TEACHER:
+                schoolActorType = "teachers";
+                break;
+            case STUDENT:
+                schoolActorType = "students";
+                break;
+            default:
+                throw new RuntimeException("Unrecognised user role");
+        }
+        String url = String.format("%s/users/%s/{id}", baseUrl, schoolActorType);
+
+        UserDto user = null;
+        try {
+            ResponseEntity<UserOutputModel> response =
+                    template.getForEntity(url, UserOutputModel.class, schoolActorId);
+            user = response.getBody().getContent();
+        } catch (HttpClientErrorException ex) {
+            Problem problem = getProblemFromException(ex);
+            if (!problem.getType().equals("users/not-found"))
+                throw new RuntimeException(problem.getDetail());
+        }
+
+        return Optional.ofNullable(user);
+    }
+
+    private Problem getProblemFromException(HttpClientErrorException ex) {
+        try {
+            return Problem.fromJson(ex.getResponseBodyAsString());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     public void saveUser(UserDto user) {
         ResponseEntity<?> response = template.postForEntity(baseUrl + "/users", user, EntityModel.class);
 
@@ -44,6 +98,15 @@ public class UserGateway {
 
     public void updateUser(Long id, UserDto update) {
         template.put(baseUrl + "/users/{id}", update, id);
+    }
+
+    public InitialCredentials createStudentUser(Long studentId) {
+        ResponseEntity<InitialCredentialsModel> response =
+                template.postForEntity(baseUrl + "/users/create-student-user?studentId={id}", null, InitialCredentialsModel.class, studentId);
+        if (response.getStatusCodeValue() != 201 || response.getBody() == null)
+            throw new RuntimeException("Failed to create student user related to student " + studentId);
+
+        return response.getBody().getContent();
     }
 
     public void deleteUser(Long id) {

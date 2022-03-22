@@ -12,14 +12,12 @@ import org.vasvari.gradebookweb.business.dto.mapper.SubjectMapper;
 import org.vasvari.gradebookweb.business.service.StudentService;
 import org.vasvari.gradebookweb.business.service.SubjectService;
 import org.vasvari.gradebookweb.business.service.TeacherService;
-import org.vasvari.gradebookweb.business.util.UserUtil;
 
 import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
 public class SubjectController implements WebMvcConfigurer {
-    private final UserUtil userUtil;
     private final SubjectService subjectService;
     private final TeacherService teacherService;
     private final StudentService studentService;
@@ -27,7 +25,6 @@ public class SubjectController implements WebMvcConfigurer {
 
     @GetMapping("/subjects")
     public String listAllSubjects(ModelMap model) {
-        model.addAttribute("userRole", userUtil.userRole().name());
         model.addAttribute("subjects", subjectService.findSubjectsForUser());
 
         return "subjects";

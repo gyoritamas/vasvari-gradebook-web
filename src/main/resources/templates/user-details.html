@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <title th:text="${editing}? 'E-napló | Felhasználó módosítása' : 'E-napló | Új tanuló'"></title>
+</head>
+<body>
+<div th:replace="fragments/navbar"></div>
+<h1 th:text="${editing}? 'Felhasználó módosítása' : 'Új felhasználó'"></h1>
+<form th:object="${userDto}" th:method="${editing} ? put : post">
+    <table>
+        <!-- username -->
+        <tr>
+            <td><label for="username">Felhasználónév</label></td>
+        </tr>
+        <tr>
+            <td><input type="text" id="username" th:field="*{username}" readonly></td>
+            <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></td>
+        </tr>
+
+        <!-- role -->
+        <tr>
+            <td><label for="role">típus</label></td>
+        </tr>
+        <tr>
+            <td>
+                <select id="role" th:field="*{role}">
+                    <option th:each="role : ${roleOptions}"
+                            th:value="${role}"
+                            th:text="${role.name()}"
+                            th:selected="${userDto}">
+                    </option>
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <button type="submit">Mentés</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+</body>
+</html>

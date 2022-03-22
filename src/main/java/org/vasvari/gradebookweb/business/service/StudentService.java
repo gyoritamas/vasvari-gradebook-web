@@ -3,6 +3,7 @@ package org.vasvari.gradebookweb.business.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.vasvari.gradebookweb.business.dto.StudentDto;
+import org.vasvari.gradebookweb.business.dto.UserRole;
 import org.vasvari.gradebookweb.business.service.gateway.StudentGateway;
 import org.vasvari.gradebookweb.business.util.UserUtil;
 
