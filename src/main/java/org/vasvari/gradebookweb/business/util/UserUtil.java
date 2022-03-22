@@ -24,10 +24,6 @@ public class UserUtil {
         return jwtTokenUtil.getUsernameFromToken(tokenRepository.getToken().getTokenString());
     }
 
-    public String printUserDetails() {
-        return String.format("%s (%s)", username(), userRole().name().toLowerCase());
-    }
-
     public boolean isUnauthenticated() {
         return tokenRepository.getToken() == null;
     }

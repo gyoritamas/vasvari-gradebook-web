@@ -9,32 +9,54 @@
 </head>
 <body>
 <div th:replace="fragments/navbar"></div>
-<h1>Új felhasználó</h1>
-<span th:text="${schoolActorId}"></span>
-<span th:text="${role}"></span>
-<div th:unless="${initialCredentials}">
-    <!--    createStudentUser   -->
-    <form th:method="post"
-          th:action="@{/users/students/{id} (id = ${schoolActorId})}">
-        <button type="submit" class="btn btn-link">
-            <a class="text-decoration-none">Fiók létrehozása</a>
-        </button>
+<h1>Felhasználó létrehozása</h1>
+<div th:if="${role.name()} == 'STUDENT'">
+    <div th:include="fragments/create-student-user"></div>
+</div>
+<div th:if="${role.name()} == 'TEACHER'">
+    <div th:include="fragments/create-teacher-user"></div>
+</div>
+<div th:if="${role.name()} == 'ADMIN'">
+    <form th:action="@{/users/create-admin-user}" th:method="post" th:object="${usernameInput}">
+        <table>
+            <tr>
+                <td><label for="usernameInput">Felhasználónév</label></td>
+            </tr>
+            <tr>
+                <td><input type="text" id="usernameInput" th:field="*{username}"></td>
+                <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></td>
+            </tr>
+
+            <tr>
+                <td>
+                    <button type="submit">Fiók létrehozása</button>
+                </td>
+            </tr>
+        </table>
     </form>
 </div>
+
 <div th:if="${initialCredentials}">
     <table>
+        <thead>
+        <tr>
+            <th colspan="2">bejelentkezési adatok</th>
+        </tr>
+        </thead>
+        <tbody>
         <tr>
             <td><label for="username">felhasználónév</label></td>
             <td>
-                <span id="username" th:text="${initialCredentials.getUsername()}" readonly>felhasználónév</span>
+                <span id="username" th:text="${initialCredentials.getUsername()}">felhasználónév</span>
             </td>
         </tr>
         <tr>
             <td><label for="password">jelszó</label></td>
             <td>
-                <span id="password" th:text="${initialCredentials.getPassword()}" readonly>jelszó</span>
+                <span id="password" th:text="${initialCredentials.getPassword()}">jelszó</span>
             </td>
         </tr>
+        </tbody>
     </table>
 </div>
 </body>

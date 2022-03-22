@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.business.dto.UserDto;
 import org.vasvari.gradebookweb.business.dto.UserRole;
 import org.vasvari.gradebookweb.business.dto.dataTypes.InitialCredentials;
+import org.vasvari.gradebookweb.business.dto.dataTypes.UsernameInput;
 import org.vasvari.gradebookweb.business.model.InitialCredentialsModel;
 import org.vasvari.gradebookweb.business.model.UserOutputModel;
 import org.vasvari.gradebookweb.business.util.Problem;
@@ -72,6 +73,7 @@ public class UserGateway {
         try {
             ResponseEntity<UserOutputModel> response =
                     template.getForEntity(url, UserOutputModel.class, schoolActorId);
+            if (response.getBody() == null) throw new RuntimeException("Unauthorized");
             user = response.getBody().getContent();
         } catch (HttpClientErrorException ex) {
             Problem problem = getProblemFromException(ex);
@@ -109,8 +111,25 @@ public class UserGateway {
         return response.getBody().getContent();
     }
 
+    public InitialCredentials createTeacherUser(Long teacherId) {
+        ResponseEntity<InitialCredentialsModel> response =
+                template.postForEntity(baseUrl + "/users/create-teacher-user?teacherId={id}", null, InitialCredentialsModel.class, teacherId);
+        if (response.getStatusCodeValue() != 201 || response.getBody() == null)
+            throw new RuntimeException("Failed to create teacher user related to teacher " + teacherId);
+
+        return response.getBody().getContent();
+    }
+
+    public InitialCredentials createAdminUser(UsernameInput usernameInput) {
+        ResponseEntity<InitialCredentialsModel> response =
+                template.postForEntity(baseUrl + "/users/create-admin-user", usernameInput, InitialCredentialsModel.class);
+        if (response.getStatusCodeValue() != 201 || response.getBody() == null)
+            throw new RuntimeException("Failed to create admin user with username " + usernameInput.getUsername());
+
+        return response.getBody().getContent();
+    }
+
     public void deleteUser(Long id) {
         template.delete(baseUrl + "/users/{id}", id);
     }
-
 }

@@ -1,0 +1,32 @@
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th colspan="2">tanuló adatai</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>ID</td>
+            <td th:text="${studentDto.getId()}"></td>
+        </tr>
+        <tr>
+            <td th:text="#{column.name}"></td>
+            <td th:text="${studentDto.getName()}"></td>
+        </tr>
+        <tr>
+            <td>szerepkör</td>
+            <td th:text="#{|userRole.STUDENT|}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!--    createStudentUser   -->
+<div th:unless="${initialCredentials}">
+    <form th:method="post"
+          th:action="@{/users/students/{id} (id = ${studentDto.getId()})}">
+        <button type="submit" class="btn btn-link">
+            <a class="text-decoration-none">Fiók létrehozása</a>
+        </button>
+    </form>
+</div>

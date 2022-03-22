@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.vasvari.gradebookweb.business.dto.UserDto;
 import org.vasvari.gradebookweb.business.dto.dataTypes.InitialCredentials;
+import org.vasvari.gradebookweb.business.dto.dataTypes.UsernameInput;
 import org.vasvari.gradebookweb.business.service.gateway.UserGateway;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +44,14 @@ public class UserService {
 
     public InitialCredentials createStudentUser(Long studentId) {
         return gateway.createStudentUser(studentId);
+    }
+
+    public InitialCredentials createTeacherUser(Long teacherId) {
+        return gateway.createTeacherUser(teacherId);
+    }
+
+    public InitialCredentials createAdminUser(UsernameInput username) {
+        return gateway.createAdminUser(username);
     }
 
     public void deleteUser(Long id) {
