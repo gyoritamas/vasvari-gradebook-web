@@ -20,11 +20,9 @@ import java.time.LocalDate;
 public class TeacherDto {
     private Long id;
 
-//    @NotBlank(message = "Firstname field cannot be empty")
     @Size(min = 2, message = "Firstname must be at least 2 characters long")
     private String firstname;
 
-//    @NotBlank(message = "Lastname field cannot be empty")
     @Size(min = 2, message = "Lastname must be at least 2 characters long")
     private String lastname;
 
@@ -48,7 +46,7 @@ public class TeacherDto {
 
     @JsonIgnore
     public String getName() {
-        return firstname + " " + lastname;
+        return lastname + " " + firstname;
     }
 
 }

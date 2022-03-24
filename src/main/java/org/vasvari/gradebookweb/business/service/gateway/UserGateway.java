@@ -102,6 +102,14 @@ public class UserGateway {
         template.put(baseUrl + "/users/{id}", update, id);
     }
 
+    public void enableUser(Long userId) {
+        template.postForEntity(baseUrl + "/users/{id}/enable", null, EntityModel.class, userId);
+    }
+
+    public void disableUser(Long userId) {
+        template.postForEntity(baseUrl + "/users/{id}/disable", null, EntityModel.class, userId);
+    }
+
     public InitialCredentials createStudentUser(Long studentId) {
         ResponseEntity<InitialCredentialsModel> response =
                 template.postForEntity(baseUrl + "/users/create-student-user?studentId={id}", null, InitialCredentialsModel.class, studentId);

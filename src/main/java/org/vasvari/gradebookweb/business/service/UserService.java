@@ -42,6 +42,14 @@ public class UserService {
         gateway.updateUser(id, update);
     }
 
+    public void enableUser(Long userId) {
+        gateway.enableUser(userId);
+    }
+
+    public void disableUser(Long userId) {
+        gateway.disableUser(userId);
+    }
+
     public InitialCredentials createStudentUser(Long studentId) {
         return gateway.createStudentUser(studentId);
     }

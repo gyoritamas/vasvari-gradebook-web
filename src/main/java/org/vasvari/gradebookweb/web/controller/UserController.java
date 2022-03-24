@@ -107,4 +107,32 @@ public class UserController {
         return "user-details";
     }
 
+    @PostMapping(value = "/users/{id}", params = "disable")
+    public String disableUser(@PathVariable("id") Long userId, ModelMap model) {
+        userService.disableUser(userId);
+        model.addAttribute("editing", true);
+        model.addAttribute("roleOptions", UserRole.values());
+        model.addAttribute("userDto", userService.findUserById(userId));
+
+        return "user-details";
+    }
+
+    @PostMapping(value = "/users/{id}", params = "enable")
+    public String enableUser(@PathVariable("id") Long userId, ModelMap model) {
+        userService.enableUser(userId);
+        model.addAttribute("editing", true);
+        model.addAttribute("roleOptions", UserRole.values());
+        model.addAttribute("userDto", userService.findUserById(userId));
+
+        return "user-details";
+    }
+
+    @RequestMapping(value = "/users/{id}", params = "delete")
+    public String deleteUser(@PathVariable("id") Long userId, ModelMap model) {
+        userService.deleteUser(userId);
+        model.addAttribute("users", userService.findAllUsers());
+
+        return "users";
+    }
+
 }

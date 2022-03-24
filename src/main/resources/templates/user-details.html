@@ -36,7 +36,6 @@
                 </select>
             </td>
         </tr>
-
         <tr>
             <td>
                 <button type="submit">Mentés</button>
@@ -45,5 +44,15 @@
     </table>
 </form>
 
+<!-- enabled -->
+<form th:method="post" th:object="${userDto}"
+      th:action="@{/users/{id} (id = *{id})}">
+    <div th:if="*{enabled}">
+        <button type="submit" class="btn btn-link" name="disable">kikapcs</button>
+    </div>
+    <div th:unless="*{enabled}">
+        <button type="submit" class="btn btn-link" name="enable">bekapcs</button>
+    </div>
+</form>
 </body>
 </html>

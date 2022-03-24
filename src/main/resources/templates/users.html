@@ -16,12 +16,14 @@
         <th>ID</th>
         <th>felhasználónév</th>
         <th>felhasználói szint</th>
-        <th th:text="#{column.operations}">műveletek</th>
+        <th>aktív</th>
+        <th th:text="#{column.actions}">műveletek</th>
     </tr>
     <tr th:each="user : ${users}">
         <td th:text="${user.getId()}"></td>
         <td th:text="${user.getUsername()}"></td>
         <td th:text="${user.getRole().name()}"></td>
+        <td th:text="${user.isEnabled()}"></td>
         <td>
             <div class="d-flex flex-row">
                 <!-- edit button -->

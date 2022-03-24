@@ -20,7 +20,7 @@
     <form th:action="@{/students}" th:method="get">
         <div class="input-group mb-3 w-50">
             <label for="studentName"></label>
-            <input type="text" class="form-control" id="studentName" name="studentName" placeholder="Név"
+            <input type="search" class="form-control" id="studentName" name="studentName" placeholder="név"
                    th:value="${studentName}">
 
             <label for="gradeLevel"></label>
@@ -51,8 +51,8 @@
     <div>
         <form th:method="post"
               th:action="@{/students/reset-filter}">
-            <button type="submit" class="btn btn-link" name="delete">
-                <a>szűrők törlése</a>
+            <button type="submit" class="btn btn-link">
+                <span>szűrők törlése</span>
             </button>
         </form>
     </div>
@@ -65,7 +65,7 @@
             <th th:text="#{column.address}">cím</th>
             <th th:text="#{column.phone}">telefon</th>
             <th th:text="#{column.birthdate}">születési dátum</th>
-            <th th:text="#{column.operations}">műveletek</th>
+            <th th:text="#{column.actions}">műveletek</th>
         </tr>
         <tr th:each="student : ${students}">
             <td th:text="${student.getId()}"></td>
