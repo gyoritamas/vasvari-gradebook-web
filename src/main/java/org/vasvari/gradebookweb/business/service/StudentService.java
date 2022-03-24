@@ -3,7 +3,7 @@ package org.vasvari.gradebookweb.business.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.vasvari.gradebookweb.business.dto.StudentDto;
-import org.vasvari.gradebookweb.business.dto.UserRole;
+import org.vasvari.gradebookweb.business.model.request.StudentRequest;
 import org.vasvari.gradebookweb.business.service.gateway.StudentGateway;
 import org.vasvari.gradebookweb.business.util.UserUtil;
 
@@ -22,12 +22,12 @@ public class StudentService {
         return gateway.findStudentById(id);
     }
 
-    public List<StudentDto> findAllStudentsForUser() {
+    public List<StudentDto> findStudentsForUser(StudentRequest request) {
         switch (userUtil.userRole()) {
             case ADMIN:
-                return new ArrayList<>(gateway.findAllStudents());
+                return new ArrayList<>(gateway.searchStudents(request));
             case TEACHER:
-                return findStudentsOfCurrentUserAsTeacher();
+                return findStudentsOfCurrentUserAsTeacher(request);
             case STUDENT:
                 return Collections.emptyList();
             default:
@@ -39,8 +39,12 @@ public class StudentService {
         return new ArrayList<>(gateway.findAllStudents());
     }
 
-    private List<StudentDto> findStudentsOfCurrentUserAsTeacher() {
-        return new ArrayList<>(gateway.findStudentsOfCurrentUserAsTeacher());
+    public List<StudentDto> searchStudents(StudentRequest request) {
+        return new ArrayList<>(gateway.searchStudents(request));
+    }
+
+    private List<StudentDto> findStudentsOfCurrentUserAsTeacher(StudentRequest request) {
+        return new ArrayList<>(gateway.findStudentsOfCurrentUserAsTeacher(request));
     }
 
     public void saveStudent(StudentDto student) {

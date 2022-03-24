@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.business.dto.StudentDto;
 import org.vasvari.gradebookweb.business.model.StudentOutputModel;
+import org.vasvari.gradebookweb.business.model.request.StudentRequest;
 import org.vasvari.gradebookweb.business.util.TraversonUtil;
 
 import java.util.Collection;
@@ -37,8 +38,15 @@ public class StudentGateway {
         return traversonUtil.getStudentDtoCollection(url, linkTo);
     }
 
-    public Collection<StudentDto> findStudentsOfCurrentUserAsTeacher() {
-        String url = baseUrl + "/teacher-user/students";
+    public Collection<StudentDto> searchStudents(StudentRequest request) {
+        String url = baseUrl + "/students/search" + request.getFilter();
+        String linkTo = "students-filtered";
+
+        return traversonUtil.getStudentDtoCollection(url, linkTo);
+    }
+
+    public Collection<StudentDto> findStudentsOfCurrentUserAsTeacher(StudentRequest request) {
+        String url = baseUrl + "/teacher-user/students" + request.getFilter();
         String linkTo = "students-of-teacher";
 
         return traversonUtil.getStudentDtoCollection(url, linkTo);

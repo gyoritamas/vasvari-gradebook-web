@@ -10,9 +10,9 @@ import org.vasvari.gradebookweb.business.dto.GradebookInput;
 import org.vasvari.gradebookweb.business.dto.GradebookOutput;
 import org.vasvari.gradebookweb.business.dto.mapper.GradebookEntryMapper;
 import org.vasvari.gradebookweb.business.service.AssignmentService;
-import org.vasvari.gradebookweb.business.service.SubjectService;
 import org.vasvari.gradebookweb.business.service.GradebookService;
 import org.vasvari.gradebookweb.business.service.StudentService;
+import org.vasvari.gradebookweb.business.service.SubjectService;
 
 import javax.validation.Valid;
 

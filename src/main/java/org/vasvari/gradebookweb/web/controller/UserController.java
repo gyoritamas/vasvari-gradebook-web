@@ -32,30 +32,8 @@ public class UserController {
         return "users";
     }
 
-    @GetMapping("/users/new")
-    public String showUserCreateViewWithSchoolActorData(@RequestParam(value = "role", required = false, defaultValue = "ADMIN") UserRole role,
-                                                        @RequestParam(value = "schoolActorId", required = false) Long schoolActorId,
-                                                        @ModelAttribute UsernameInput usernameInput,
-                                                        ModelMap model) {
-        model.addAttribute("role", role);
-//        model.addAttribute("schoolActorId", schoolActorId);
-        if (role.equals(UserRole.TEACHER))
-            model.addAttribute("teacherDto", teacherService.findTeacherById(schoolActorId));
-        if (role.equals(UserRole.STUDENT))
-            model.addAttribute("studentDto", studentService.findStudentById(schoolActorId));
-
-        return "user-create";
-    }
-
-//    @GetMapping("/users/new")
-//    public String showEmptyUserCreateView(ModelMap model) {
-//        model.addAttribute("role", ADMIN);
-//
-//        return "user-create";
-//    }
-
     @GetMapping("/users/students/{id}")
-    public String navigateToStudentUserOrCreateNew(@PathVariable("id") Long studentId, ModelMap model) {
+    public String navigateToStudentUserOrUserCreation(@PathVariable("id") Long studentId, ModelMap model) {
         Optional<UserDto> userMaybe = userService.findStudentUser(studentId);
         model.addAttribute("role", UserRole.STUDENT);
         model.addAttribute("schoolActorId", studentId);
@@ -66,7 +44,7 @@ public class UserController {
     }
 
     @GetMapping("/users/teachers/{id}")
-    public String navigateToTeacherUserOrCreateNew(@PathVariable("id") Long teacherId, ModelMap model) {
+    public String navigateToTeacherUserOrUserCreation(@PathVariable("id") Long teacherId, ModelMap model) {
         Optional<UserDto> userMaybe = userService.findTeacherUser(teacherId);
         model.addAttribute("role", UserRole.TEACHER);
         model.addAttribute("schoolActorId", teacherId);
@@ -74,6 +52,21 @@ public class UserController {
         long userId = userMaybe.get().getId();
 
         return "redirect:/users/" + userId;
+    }
+
+    @GetMapping("/users/new")
+    public String showUserCreateView(@RequestParam(value = "role", required = false, defaultValue = "ADMIN") UserRole role,
+                                     @RequestParam(value = "schoolActorId", required = false) Long schoolActorId,
+                                     @ModelAttribute UsernameInput usernameInput,
+                                     ModelMap model) {
+        model.addAttribute("role", role);
+//        model.addAttribute("schoolActorId", schoolActorId);
+        if (role.equals(UserRole.TEACHER))
+            model.addAttribute("teacherDto", teacherService.findTeacherById(schoolActorId));
+        if (role.equals(UserRole.STUDENT))
+            model.addAttribute("studentDto", studentService.findStudentById(schoolActorId));
+
+        return "user-create";
     }
 
     @PostMapping("/users/create-admin-user")
@@ -106,7 +99,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public String showFormWithUser(@PathVariable("id") Long id, ModelMap model) {
+    public String showUserDetails(@PathVariable("id") Long id, ModelMap model) {
         model.addAttribute("editing", true);
         model.addAttribute("roleOptions", UserRole.values());
         model.addAttribute("userDto", userService.findUserById(id));
