@@ -3,6 +3,7 @@ package org.vasvari.gradebookweb.business.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.vasvari.gradebookweb.business.dto.TeacherDto;
+import org.vasvari.gradebookweb.business.model.request.TeacherRequest;
 import org.vasvari.gradebookweb.business.service.gateway.TeacherGateway;
 
 import java.util.ArrayList;
@@ -20,6 +21,10 @@ public class TeacherService {
 
     public List<TeacherDto> findAllTeachers() {
         return new ArrayList<>(gateway.findAllTeachers());
+    }
+
+    public List<TeacherDto> searchTeachers(TeacherRequest request){
+        return new ArrayList<>(gateway.searchTeachers(request));
     }
 
     public void saveTeacher(TeacherDto teacher) {

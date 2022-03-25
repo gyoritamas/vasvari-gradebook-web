@@ -7,6 +7,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.vasvari.gradebookweb.business.dto.TeacherDto;
+import org.vasvari.gradebookweb.business.model.request.TeacherRequest;
 import org.vasvari.gradebookweb.business.service.TeacherService;
 
 import javax.validation.Valid;
@@ -18,10 +19,22 @@ public class TeacherController {
     private final TeacherService service;
 
     @GetMapping("/teachers")
-    public String listAllTeachers(Model model) {
-        model.addAttribute("teachers", service.findAllTeachers());
+    public String listAllTeachers(@RequestParam(value = "teacherName", required = false) String teacherName,
+                                  Model model) {
+        // "remember" filters
+        model.addAttribute("teacherName", teacherName);
+
+        TeacherRequest request = new TeacherRequest(teacherName);
+        model.addAttribute("teachers", service.searchTeachers(request));
 
         return "teachers";
+    }
+
+    @PostMapping("/teachers/reset-filter")
+    public String resetFilter(ModelMap model){
+        model.clear();
+
+        return "redirect:/teachers";
     }
 
     @GetMapping("/teachers/new")

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.business.dto.TeacherDto;
 import org.vasvari.gradebookweb.business.model.TeacherOutputModel;
+import org.vasvari.gradebookweb.business.model.request.TeacherRequest;
 import org.vasvari.gradebookweb.business.util.TraversonUtil;
 
 import java.util.Collection;
@@ -37,6 +38,13 @@ public class TeacherGateway {
         return traversonUtil.getTeacherDtoCollection(url, linkTo);
     }
 
+    public Collection<TeacherDto> searchTeachers(TeacherRequest request) {
+        String url = baseUrl + "/teachers/search" + request.getFilter();
+        String linkTo = "teachers-filtered";
+
+        return traversonUtil.getTeacherDtoCollection(url, linkTo);
+    }
+
     public void saveTeacher(TeacherDto teacher) {
         ResponseEntity<?> response = template.postForEntity(baseUrl + "/teachers", teacher, EntityModel.class);
 
@@ -50,5 +58,4 @@ public class TeacherGateway {
     public void deleteTeacher(Long id) {
         template.delete(baseUrl + "/teachers/{id}", id);
     }
-
 }

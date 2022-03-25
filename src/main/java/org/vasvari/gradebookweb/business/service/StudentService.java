@@ -25,7 +25,7 @@ public class StudentService {
     public List<StudentDto> findStudentsForUser(StudentRequest request) {
         switch (userUtil.userRole()) {
             case ADMIN:
-                return new ArrayList<>(gateway.searchStudents(request));
+                return searchStudents(request);
             case TEACHER:
                 return findStudentsOfCurrentUserAsTeacher(request);
             case STUDENT:

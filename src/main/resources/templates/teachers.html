@@ -9,49 +9,80 @@
 </head>
 <body>
 <div th:replace="fragments/navbar"></div>
-<h1>Tanárok</h1>
-<a th:href="@{teachers/new}">Új tanár</a>
-<table>
-    <tr>
-        <th>ID</th>
-        <th th:text="#{column.name}"></th>
-        <th th:text="#{column.email}">email</th>
-        <th th:text="#{column.address}">cím</th>
-        <th th:text="#{column.phone}">telefon</th>
-        <th th:text="#{column.birthdate}">születési dátum</th>
-        <th th:text="#{column.actions}">műveletek</th>
-    </tr>
-    <tr th:each="teacher : ${teachers}">
-        <td th:text="${teacher.getId()}"></td>
-        <td th:text="${teacher.getName()}"></td>
-        <td th:text="${teacher.getEmail()}"></td>
-        <td th:text="${teacher.getAddress()}"></td>
-        <td th:text="${teacher.getPhone()}"></td>
-        <td th:text="${teacher.getBirthdate()}"></td>
-        <td>
-            <div class="d-flex flex-row">
-                <!-- edit button -->
-                <div class="btn">
-                    <a th:href="@{/teachers/{id}/ (id = ${teacher.getId()})}"><i class="bi bi-pencil-square"></i></a>
-                </div>
-                <!-- profile button -->
-                <div class="btn" title="profile">
-                    <!--    navigateToUser  -->
-                    <a th:href="@{/users/teachers/{id} (id = ${teacher.getId()})}"><i class="bi bi-person"></i></a>
-                </div>
-                <!-- delete button -->
-                <div>
-                    <form th:method="delete"
-                          th:action="@{/teachers/{id} (id = ${teacher.getId()})}">
-                        <button type="submit" class="btn btn-link" name="delete">
-                            <a class="text-danger"><i class="bi bi-x-circle"></i></a>
-                        </button>
-                    </form>
-                </div>
+
+<div class="container mt-5 px-2">
+    <div class="d-flex flex-row justify-content-between align-items-center">
+        <div><h1>Tanárok</h1></div>
+        <div><a th:href="@{teachers/new}">Új tanár</a></div>
+    </div>
+
+    <!--    filters     -->
+    <form th:action="@{/teachers}" th:method="get">
+        <div class="input-group mb-3 w-50">
+            <label for="teacherName"></label>
+            <input type="search" class="form-control" id="teacherName" name="teacherName" placeholder="név"
+                   th:value="${teacherName}">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">Keresés</button>
             </div>
-        </td>
-    </tr>
-</table>
-<span th:if="${#lists.isEmpty(teachers)}">Nincsenek tanárok</span>
+        </div>
+        <div class="input-group">
+
+        </div>
+    </form>
+    <div>
+        <form th:method="post"
+              th:action="@{/teachers/reset-filter}">
+            <button type="submit" class="btn btn-link">
+                <span>szűrők törlése</span>
+            </button>
+        </form>
+    </div>
+    <!--    end of filters  -->
+
+    <table class="table table-responsive">
+        <tr>
+            <th>ID</th>
+            <th th:text="#{column.name}"></th>
+            <th th:text="#{column.email}">email</th>
+            <th th:text="#{column.address}">cím</th>
+            <th th:text="#{column.phone}">telefon</th>
+            <th th:text="#{column.birthdate}">születési dátum</th>
+            <th th:text="#{column.actions}">műveletek</th>
+        </tr>
+        <tr th:each="teacher : ${teachers}">
+            <td th:text="${teacher.getId()}"></td>
+            <td th:text="${teacher.getName()}"></td>
+            <td th:text="${teacher.getEmail()}"></td>
+            <td th:text="${teacher.getAddress()}"></td>
+            <td th:text="${teacher.getPhone()}"></td>
+            <td th:text="${teacher.getBirthdate()}"></td>
+            <td>
+                <div class="d-flex flex-row">
+                    <!-- edit button -->
+                    <div class="btn">
+                        <a th:href="@{/teachers/{id}/ (id = ${teacher.getId()})}"><i
+                                class="bi bi-pencil-square"></i></a>
+                    </div>
+                    <!-- profile button -->
+                    <div class="btn" title="profile">
+                        <!--    navigateToUser  -->
+                        <a th:href="@{/users/teachers/{id} (id = ${teacher.getId()})}"><i class="bi bi-person"></i></a>
+                    </div>
+                    <!-- delete button -->
+                    <div>
+                        <form th:method="delete"
+                              th:action="@{/teachers/{id} (id = ${teacher.getId()})}">
+                            <button type="submit" class="btn btn-link" name="delete">
+                                <a class="text-danger"><i class="bi bi-x-circle"></i></a>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <span th:if="${#lists.isEmpty(teachers)}">Nincsenek tanárok</span>
+</div>
 </body>
 </html>
