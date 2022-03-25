@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -14,8 +15,10 @@ import org.vasvari.gradebookweb.business.dto.dataTypes.InitialCredentials;
 import org.vasvari.gradebookweb.business.dto.dataTypes.UsernameInput;
 import org.vasvari.gradebookweb.business.model.InitialCredentialsModel;
 import org.vasvari.gradebookweb.business.model.UserOutputModel;
+import org.vasvari.gradebookweb.business.model.request.PasswordChangeRequest;
 import org.vasvari.gradebookweb.business.util.Problem;
 import org.vasvari.gradebookweb.business.util.TraversonUtil;
+import org.vasvari.gradebookweb.business.util.UserUtil;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -29,6 +32,7 @@ public class UserGateway {
     @Value("${api.url}")
     private String baseUrl;
 
+    private final UserUtil userUtil;
     private final TraversonUtil traversonUtil;
     private final RestTemplate template;
 
@@ -100,6 +104,19 @@ public class UserGateway {
 
     public void updateUser(Long id, UserDto update) {
         template.put(baseUrl + "/users/{id}", update, id);
+    }
+
+    public boolean changePassword(PasswordChangeRequest passwordChangeRequest) {
+        String username = userUtil.username();
+        UserDto userDto = findAllUsers().stream()
+                .filter(user -> user.getUsername().equals(username))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Failed to find user with username " + username));
+        long userId = userDto.getId();
+        ResponseEntity<?> response =
+                template.postForEntity(baseUrl + "/users/" + userId, passwordChangeRequest, EntityModel.class);
+
+        return response.getStatusCode().equals(HttpStatus.OK);
     }
 
     public void enableUser(Long userId) {

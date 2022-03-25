@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.vasvari.gradebookweb.business.dto.UserDto;
 import org.vasvari.gradebookweb.business.dto.dataTypes.InitialCredentials;
 import org.vasvari.gradebookweb.business.dto.dataTypes.UsernameInput;
+import org.vasvari.gradebookweb.business.model.request.PasswordChangeRequest;
 import org.vasvari.gradebookweb.business.service.gateway.UserGateway;
 
 import javax.validation.Valid;
@@ -40,6 +41,10 @@ public class UserService {
 
     public void updateUser(Long id, UserDto update) {
         gateway.updateUser(id, update);
+    }
+
+    public boolean changePassword(PasswordChangeRequest passwordChangeRequest) {
+        return gateway.changePassword(passwordChangeRequest);
     }
 
     public void enableUser(Long userId) {
