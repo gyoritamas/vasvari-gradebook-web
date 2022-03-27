@@ -21,7 +21,7 @@
     <tr th:each="subject : ${subjects}">
         <td th:text="${subject.getId()}"></td>
         <td th:text="${subject.getName()}"></td>
-        <td th:text="${subject.getTeacher()}? ${subject.getTeacher().getName()} : '(nincs adat)'"></td>
+        <td th:text="${subject.getTeacher()}? ${teachers.get(subject.getTeacher().getId())} : '(nincs adat)'"></td>
         <td th:if="${@userUtil.userRole().name()=='ADMIN'}">
             <div class="d-flex flex-row">
                 <!-- edit button -->

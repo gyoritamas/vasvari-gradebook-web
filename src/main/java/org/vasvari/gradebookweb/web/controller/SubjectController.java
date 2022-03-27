@@ -8,12 +8,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.vasvari.gradebookweb.business.dto.SubjectInput;
 import org.vasvari.gradebookweb.business.dto.SubjectOutput;
+import org.vasvari.gradebookweb.business.dto.TeacherDto;
 import org.vasvari.gradebookweb.business.dto.mapper.SubjectMapper;
 import org.vasvari.gradebookweb.business.service.StudentService;
 import org.vasvari.gradebookweb.business.service.SubjectService;
 import org.vasvari.gradebookweb.business.service.TeacherService;
 
 import javax.validation.Valid;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,6 +30,8 @@ public class SubjectController implements WebMvcConfigurer {
     @GetMapping("/subjects")
     public String listAllSubjects(ModelMap model) {
         model.addAttribute("subjects", subjectService.findSubjectsForUser());
+        Map<Long, String> teacherNames = teacherService.findAllTeachers().stream().collect(Collectors.toMap(TeacherDto::getId, TeacherDto::getName));
+        model.addAttribute("teachers", teacherNames);
 
         return "subjects";
     }
