@@ -13,7 +13,7 @@ public class UserUtil {
     private final JwtTokenUtil jwtTokenUtil;
 
     public UserRole userRole() {
-        if(isUnauthenticated()) throw new RuntimeException("Unauthenticated user");
+        if (isUnauthenticated()) throw new RuntimeException("Unauthenticated user");
 
         return UserRole.valueOf(
                 jwtTokenUtil.getUserRoleFromToken(tokenRepository.getToken().getTokenString())
@@ -26,6 +26,15 @@ public class UserUtil {
 
     public boolean isUnauthenticated() {
         return tokenRepository.getToken() == null;
+    }
+
+    public boolean hasAnyRole(String... roles) {
+        boolean hasAnyRole = false;
+        for (String role : roles) {
+            hasAnyRole = hasAnyRole || (userRole() == UserRole.valueOf(role));
+        }
+
+        return hasAnyRole;
     }
 
 }

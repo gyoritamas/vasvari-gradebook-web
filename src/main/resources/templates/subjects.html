@@ -9,38 +9,69 @@
 </head>
 <body>
 <div th:replace="fragments/navbar"></div>
-<h1>Tantárgyak</h1>
-<a th:href="@{/subjects/new}">Új tantárgy</a>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>tantárgy neve</th>
-        <th>tanár</th>
-        <th th:if="${@userUtil.userRole().name()=='ADMIN'}">műveletek</th>
-    </tr>
-    <tr th:each="subject : ${subjects}">
-        <td th:text="${subject.getId()}"></td>
-        <td th:text="${subject.getName()}"></td>
-        <td th:text="${subject.getTeacher()}? ${teachers.get(subject.getTeacher().getId())} : '(nincs adat)'"></td>
-        <td th:if="${@userUtil.userRole().name()=='ADMIN'}">
-            <div class="d-flex flex-row">
-                <!-- edit button -->
-                <div class="btn">
-                    <a th:href="@{/subjects/{id}/ (id = ${subject.getId()})}"><i class="bi bi-pencil-square"></i></a>
-                </div>
-                <!-- delete button -->
-                <div>
-                    <form th:method="delete"
-                          th:action="@{/subjects/{id} (id = ${subject.getId()})}">
-                        <button type="submit" class="btn btn-link" name="delete">
-                            <a class="text-danger"><i class="bi bi-x-circle"></i></a>
-                        </button>
-                    </form>
-                </div>
+
+<div class="container mt-5 px-2">
+    <div class="d-flex flex-row justify-content-between align-items-center">
+        <div><h1>Tantárgyak</h1></div>
+        <div><a th:href="@{/subjects/new}">Új tantárgy</a></div>
+    </div>
+
+    <!--    filters     -->
+    <form th:action="@{/subjects}" th:method="get">
+        <div class="input-group mb-3 w-50">
+            <label for="subjectName"></label>
+            <input type="search" class="form-control" id="subjectName" name="subjectName" placeholder="név"
+                   th:value="${subjectName}">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">Keresés</button>
             </div>
-        </td>
-    </tr>
-</table>
-<span th:if="${#lists.isEmpty(subjects)}">Nincsenek tantrágyak</span>
+        </div>
+        <div class="input-group">
+
+        </div>
+    </form>
+    <div>
+        <form th:method="post"
+              th:action="@{/subjects/reset-filter}">
+            <button type="submit" class="btn btn-link">
+                <span>szűrők törlése</span>
+            </button>
+        </form>
+    </div>
+    <!--    end of filters  -->
+
+    <table class="table table-responsive">
+        <tr>
+            <th>ID</th>
+            <th>tantárgy neve</th>
+            <th>tanár</th>
+            <th>műveletek</th>
+        </tr>
+        <tr th:each="subject : ${subjects}">
+            <td th:text="${subject.getId()}"></td>
+            <td th:text="${subject.getName()}"></td>
+            <td th:text="${subject.getTeacher()}? ${teachers.get(subject.getTeacher().getId())} : '(nincs adat)'"></td>
+            <td >
+                <div class="d-flex flex-row">
+                    <!-- edit button -->
+                    <div class="btn">
+                        <a th:href="@{/subjects/{id}/ (id = ${subject.getId()})}"><i
+                                class="bi bi-pencil-square"></i></a>
+                    </div>
+                    <!-- delete button -->
+                    <div th:if="${@userUtil.userRole().name()=='ADMIN'}">
+                        <form th:method="delete"
+                              th:action="@{/subjects/{id} (id = ${subject.getId()})}">
+                            <button type="submit" class="btn btn-link" name="delete">
+                                <a class="text-danger"><i class="bi bi-x-circle"></i></a>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <span th:if="${#lists.isEmpty(subjects)}">Nincsenek tantrágyak</span>
+</div>
 </body>
 </html>

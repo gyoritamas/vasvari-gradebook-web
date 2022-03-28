@@ -4,11 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.vasvari.gradebookweb.business.dto.SubjectInput;
 import org.vasvari.gradebookweb.business.dto.SubjectOutput;
+import org.vasvari.gradebookweb.business.model.request.SubjectRequest;
 import org.vasvari.gradebookweb.business.service.gateway.SubjectGateway;
 import org.vasvari.gradebookweb.business.util.UserUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,16 +36,41 @@ public class SubjectService {
         }
     }
 
+    public List<SubjectOutput> findSubjectsForUser(SubjectRequest request) {
+        switch (userUtil.userRole()) {
+            case ADMIN:
+                return searchSubjects(request);
+            case TEACHER:
+                return findSubjectsOfTeacherUser(request);
+            case STUDENT:
+                return findSubjectsOfStudentUser(request);
+            default:
+                throw new RuntimeException("Unrecognised user role");
+        }
+    }
+
     public List<SubjectOutput> findAllSubjects() {
         return new ArrayList<>(gateway.findAllSubjects());
+    }
+
+    public List<SubjectOutput> searchSubjects(SubjectRequest request) {
+        return new ArrayList<>(gateway.searchSubjects(request));
     }
 
     private List<SubjectOutput> findSubjectsOfTeacherUser() {
         return new ArrayList<>(gateway.findSubjectsOfCurrentUserAsTeacher());
     }
 
+    private List<SubjectOutput> findSubjectsOfTeacherUser(SubjectRequest request) {
+        return new ArrayList<>(gateway.findSubjectsOfCurrentUserAsTeacher(request));
+    }
+
     private List<SubjectOutput> findSubjectsOfStudentUser() {
         return new ArrayList<>(gateway.findSubjectsOfCurrentUserAsStudent());
+    }
+
+    private List<SubjectOutput> findSubjectsOfStudentUser(SubjectRequest request) {
+        return new ArrayList<>(gateway.findSubjectsOfCurrentUserAsStudent(request));
     }
 
     public Object findStudentsOfSubject(Long subjectId) {

@@ -10,6 +10,7 @@ import org.vasvari.gradebookweb.business.dto.SubjectInput;
 import org.vasvari.gradebookweb.business.dto.SubjectOutput;
 import org.vasvari.gradebookweb.business.dto.TeacherDto;
 import org.vasvari.gradebookweb.business.dto.mapper.SubjectMapper;
+import org.vasvari.gradebookweb.business.model.request.SubjectRequest;
 import org.vasvari.gradebookweb.business.service.StudentService;
 import org.vasvari.gradebookweb.business.service.SubjectService;
 import org.vasvari.gradebookweb.business.service.TeacherService;
@@ -28,12 +29,25 @@ public class SubjectController implements WebMvcConfigurer {
     private final SubjectMapper mapper;
 
     @GetMapping("/subjects")
-    public String listAllSubjects(ModelMap model) {
-        model.addAttribute("subjects", subjectService.findSubjectsForUser());
+    public String listAllSubjects(@RequestParam(value = "subjectName", required = false) String subjectName,
+                                  ModelMap model) {
+        // "remember" filters
+        model.addAttribute("subjectName", subjectName);
+
+        SubjectRequest request = new SubjectRequest(subjectName);
+        model.addAttribute("subjects", subjectService.findSubjectsForUser(request));
+
         Map<Long, String> teacherNames = teacherService.findAllTeachers().stream().collect(Collectors.toMap(TeacherDto::getId, TeacherDto::getName));
         model.addAttribute("teachers", teacherNames);
 
         return "subjects";
+    }
+
+    @PostMapping("/subjects/reset-filter")
+    public String resetFilter(ModelMap model){
+        model.clear();
+
+        return "redirect:/subjects";
     }
 
     @GetMapping("/subjects/new")

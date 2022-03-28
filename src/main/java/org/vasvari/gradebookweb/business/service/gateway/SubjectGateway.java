@@ -11,6 +11,7 @@ import org.vasvari.gradebookweb.business.dto.SubjectInput;
 import org.vasvari.gradebookweb.business.dto.SubjectOutput;
 import org.vasvari.gradebookweb.business.dto.StudentDto;
 import org.vasvari.gradebookweb.business.model.SubjectOutputModel;
+import org.vasvari.gradebookweb.business.model.request.SubjectRequest;
 import org.vasvari.gradebookweb.business.util.TraversonUtil;
 
 import java.util.Collection;
@@ -42,6 +43,13 @@ public class SubjectGateway {
         return traversonUtil.getSubjectOutputCollection(url, linkTo);
     }
 
+    public Collection<SubjectOutput> searchSubjects(SubjectRequest request) {
+        String url = baseUrl + "/subjects/search" + request.getFilter();
+        String linkTo = "subjects-filtered";
+
+        return traversonUtil.getSubjectOutputCollection(url, linkTo);
+    }
+
     public Collection<SubjectOutput> findSubjectsOfCurrentUserAsTeacher() {
         String url = baseUrl + "/teacher-user/subjects";
         String linkTo = "subjects-of-teacher";
@@ -49,8 +57,22 @@ public class SubjectGateway {
         return traversonUtil.getSubjectOutputCollection(url, linkTo);
     }
 
+    public Collection<SubjectOutput> findSubjectsOfCurrentUserAsTeacher(SubjectRequest request) {
+        String url = baseUrl + "/teacher-user/subjects" + request.getFilter();
+        String linkTo = "subjects-of-teacher";
+
+        return traversonUtil.getSubjectOutputCollection(url, linkTo);
+    }
+
     public Collection<SubjectOutput> findSubjectsOfCurrentUserAsStudent() {
         String url = baseUrl + "/student-user/subjects";
+        String linkTo = "subjects-of-student";
+
+        return traversonUtil.getSubjectOutputCollection(url, linkTo);
+    }
+
+    public Collection<SubjectOutput> findSubjectsOfCurrentUserAsStudent(SubjectRequest request) {
+        String url = baseUrl + "/student-user/subjects" + request.getFilter();
         String linkTo = "subjects-of-student";
 
         return traversonUtil.getSubjectOutputCollection(url, linkTo);
