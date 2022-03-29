@@ -44,14 +44,14 @@
         <tr>
             <th>ID</th>
             <th>tantárgy neve</th>
-            <th>tanár</th>
+            <th th:if="${@userUtil.hasAnyRole('ADMIN')}">tanár</th>
             <th>műveletek</th>
         </tr>
         <tr th:each="subject : ${subjects}">
             <td th:text="${subject.getId()}"></td>
             <td th:text="${subject.getName()}"></td>
-            <td th:text="${subject.getTeacher()}? ${teachers.get(subject.getTeacher().getId())} : '(nincs adat)'"></td>
-            <td >
+            <td th:if="${@userUtil.hasAnyRole('ADMIN', 'STUDENT')}" th:text="${subject.getTeacher().getName()}"></td>
+            <td>
                 <div class="d-flex flex-row">
                     <!-- edit button -->
                     <div class="btn">

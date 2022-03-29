@@ -14,10 +14,10 @@ import org.vasvari.gradebookweb.business.model.request.SubjectRequest;
 import org.vasvari.gradebookweb.business.service.StudentService;
 import org.vasvari.gradebookweb.business.service.SubjectService;
 import org.vasvari.gradebookweb.business.service.TeacherService;
+import org.vasvari.gradebookweb.business.util.UserUtil;
 
 import javax.validation.Valid;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Controller
@@ -26,6 +26,7 @@ public class SubjectController implements WebMvcConfigurer {
     private final SubjectService subjectService;
     private final TeacherService teacherService;
     private final StudentService studentService;
+    private final UserUtil userUtil;
     private final SubjectMapper mapper;
 
     @GetMapping("/subjects")
@@ -37,14 +38,18 @@ public class SubjectController implements WebMvcConfigurer {
         SubjectRequest request = new SubjectRequest(subjectName);
         model.addAttribute("subjects", subjectService.findSubjectsForUser(request));
 
-        Map<Long, String> teacherNames = teacherService.findAllTeachers().stream().collect(Collectors.toMap(TeacherDto::getId, TeacherDto::getName));
-        model.addAttribute("teachers", teacherNames);
+        // temp solution
+//        if (userUtil.hasAnyRole("ADMIN")) {
+//            Map<Long, String> teacherNames = teacherService.findAllTeachers().stream()
+//                    .collect(Collectors.toMap(TeacherDto::getId, TeacherDto::getName));
+//            model.addAttribute("teachers", teacherNames);
+//        }
 
         return "subjects";
     }
 
     @PostMapping("/subjects/reset-filter")
-    public String resetFilter(ModelMap model){
+    public String resetFilter(ModelMap model) {
         model.clear();
 
         return "redirect:/subjects";

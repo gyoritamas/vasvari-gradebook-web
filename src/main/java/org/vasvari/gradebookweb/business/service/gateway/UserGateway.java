@@ -18,7 +18,6 @@ import org.vasvari.gradebookweb.business.model.UserOutputModel;
 import org.vasvari.gradebookweb.business.model.request.PasswordChangeRequest;
 import org.vasvari.gradebookweb.business.util.Problem;
 import org.vasvari.gradebookweb.business.util.TraversonUtil;
-import org.vasvari.gradebookweb.business.util.UserUtil;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -32,7 +31,6 @@ public class UserGateway {
     @Value("${api.url}")
     private String baseUrl;
 
-    private final UserUtil userUtil;
     private final TraversonUtil traversonUtil;
     private final RestTemplate template;
 
@@ -107,14 +105,8 @@ public class UserGateway {
     }
 
     public boolean changePassword(PasswordChangeRequest passwordChangeRequest) {
-        String username = userUtil.username();
-        UserDto userDto = findAllUsers().stream()
-                .filter(user -> user.getUsername().equals(username))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Failed to find user with username " + username));
-        long userId = userDto.getId();
         ResponseEntity<?> response =
-                template.postForEntity(baseUrl + "/users/" + userId, passwordChangeRequest, EntityModel.class);
+                template.postForEntity(baseUrl + "/users/password-change", passwordChangeRequest, EntityModel.class);
 
         return response.getStatusCode().equals(HttpStatus.OK);
     }
