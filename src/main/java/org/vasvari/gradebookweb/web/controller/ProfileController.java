@@ -20,7 +20,9 @@ public class ProfileController {
     private final UserService userService;
 
     @GetMapping("/profile")
-    public String showProfile(@ModelAttribute PasswordChangeRequest passwordChangeRequest) {
+    public String showProfile(PasswordChangeRequest passwordChangeRequest, ModelMap model) {
+        model.addAttribute("passwordChangeRequest", passwordChangeRequest);
+
         return "profile";
     }
 
