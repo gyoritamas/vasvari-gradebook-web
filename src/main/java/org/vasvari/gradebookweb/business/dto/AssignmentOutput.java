@@ -28,4 +28,8 @@ public class AssignmentOutput {
 
     private SimpleData subject;
 
+    public Boolean isExpired(){
+        return LocalDate.now().isAfter(deadline);
+    }
+
 }

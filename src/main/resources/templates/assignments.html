@@ -9,44 +9,109 @@
 </head>
 <body>
 <div th:replace="fragments/navbar"></div>
-<h1>Feladatok</h1>
-<a th:href="@{/assignments/new}">Új feladat</a>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>téma</th>
-        <th>típus</th>
-        <th>leírás</th>
-        <th>határidő</th>
-        <th>tantárgy</th>
-        <th>műveletek</th>
-    </tr>
-    <tr th:each="assignment : ${assignments}">
-        <td th:text="${assignment.getId()}"></td>
-        <td th:text="${assignment.getName()}"></td>
-        <td th:text="#{|assignmentType.${assignment.getType()}|}"></td>
-        <td th:text="${assignment.getDescription()}"></td>
-        <td th:text="${assignment.getDeadline()}"></td>
-        <td th:text="${assignment.getSubject().getName()}"></td>
-        <td>
-            <div class="d-flex flex-row">
-                <!-- edit button -->
-                <div class="btn">
-                    <a th:href="@{/assignments/{id}/ (id = ${assignment.getId()})}"><i class="bi bi-pencil-square"></i></a>
+
+<div class="container mt-5 px-2">
+    <div class="d-flex flex-row justify-content-between align-items-center">
+        <div><h1>Feladatok</h1></div>
+        <div th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}">
+            <a th:href="@{/assignments/new}">Új feladat</a>
+        </div>
+    </div>
+
+    <!--    filters     -->
+    <div class="d-flex flex-row justify-content-between align-items-center">
+        <form th:action="@{/assignments}" th:method="get">
+            <div class="input-group mb-3">
+
+                <label for="title"></label>
+                <input type="search" class="form-control" id="title" name="title" placeholder="cím" th:value="${title}">
+
+                <label for="type"></label>
+                <select class="form-select" id="type" name="type">
+                    <option th:value="null">Minden típus</option>
+                    <option th:each="typeOption : ${typeOptions}"
+                            th:value="${typeOption}"
+                            th:text="#{|assignmentType.${typeOption}|}"
+                            th:selected="${typeOption == type}">
+                    </option>
+                </select>
+
+                <label for="subject"></label>
+                <select class="form-select" id="subject" name="subjectId">
+                    <option th:value="null">Minden tantárgy</option>
+                    <option th:each="subject : ${subjectOptions}"
+                            th:value="${subject.getId()}"
+                            th:text="${subject.getName()}"
+                            th:selected="${subjectId == subject.getId()}">
+                    </option>
+                </select>
+
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit">Keresés</button>
                 </div>
-                <!-- delete button -->
-                <div>
-                    <form th:method="delete"
-                          th:action="@{/assignments/{id} (id = ${assignment.getId()})}">
-                        <button type="submit" class="btn btn-link" name="delete">
-                            <a class="text-danger"><i class="bi bi-x-circle"></i></a>
-                        </button>
-                    </form>
-                </div>
+
             </div>
-        </td>
-    </tr>
-</table>
-<span th:if="${#lists.isEmpty(assignments)}">Nincsenek feladatok</span>
+        </form>
+        <!-- enabled -->
+        <form th:method="post"
+              th:action="@{/assignments/change-expired-visibility}">
+            <div class="mb-3">
+                <input type="hidden" name="title" th:value="${title}">
+                <input type="hidden" name="type" th:value="${type}">
+                <input type="hidden" name="subjectId" th:value="${subjectId}">
+                <button type="submit" class="btn btn-secondary" name="includeExpired" th:value="${includeExpired}">
+                    <span th:text="${includeExpired}? 'lejártak&nbsp;elrejtése':'lejártak&nbsp;megjelenítése'"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+    <div>
+        <form th:method="post"
+              th:action="@{/assignments/reset-filter}">
+            <button type="submit" class="btn btn-link">
+                <span>szűrők törlése</span>
+            </button>
+        </form>
+    </div>
+    <!--    end of filters  -->
+
+    <table class="table table-responsive">
+        <tr>
+            <th>ID</th>
+            <th>téma</th>
+            <th>típus</th>
+            <th>határidő</th>
+            <th>tantárgy</th>
+            <th th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}">műveletek</th>
+        </tr>
+        <tr th:each="assignment : ${assignments}" th:class="${assignment.isExpired()}? 'text-secondary'">
+            <td th:text="${assignment.getId()}"></td>
+            <td th:text="${assignment.getName()}"></td>
+            <td th:text="#{|assignmentType.${assignment.getType()}|}"></td>
+            <td th:text="${assignment.getDeadline()}"></td>
+            <td th:text="${assignment.getSubject().getName()}"></td>
+            <td th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}">
+                <div class="d-flex flex-row">
+                    <!-- details button -->
+                    <div class="btn" th:title="#{action.details}">
+                        <a th:href="@{/assignments/{id}/ (id = ${assignment.getId()})}">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    </div>
+                    <!-- delete button -->
+                    <div th:title="#{action.delete}">
+                        <form th:method="delete"
+                              th:action="@{/assignments/{id} (id = ${assignment.getId()})}">
+                            <button type="submit" class="btn btn-link" name="delete">
+                                <a class="text-danger"><i class="bi bi-x-circle"></i></a>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <span th:if="${#lists.isEmpty(assignments)}">Nincsenek feladatok</span>
+</div>
 </body>
 </html>

@@ -42,7 +42,8 @@
             <td><label for="description">leírás</label></td>
         </tr>
         <tr>
-            <td><input type="text" id="description" th:field="*{description}"></td>
+<!--            <td><input type="text" id="description" th:field="*{description}"></td>-->
+            <td><textarea id="description" th:field="*{description}"></textarea></td>
             <td th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></td>
         </tr>
 

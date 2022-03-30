@@ -13,7 +13,9 @@
 <div class="container mt-5 px-2">
     <div class="d-flex flex-row justify-content-between align-items-center">
         <div><h1>Tantárgyak</h1></div>
-        <div><a th:href="@{/subjects/new}">Új tantárgy</a></div>
+        <div th:if="${@userUtil.hasAnyRole('ADMIN')}">
+            <a th:href="@{/subjects/new}">Új tantárgy</a>
+        </div>
     </div>
 
     <!--    filters     -->
@@ -25,9 +27,6 @@
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="submit">Keresés</button>
             </div>
-        </div>
-        <div class="input-group">
-
         </div>
     </form>
     <div>
@@ -44,22 +43,26 @@
         <tr>
             <th>ID</th>
             <th>tantárgy neve</th>
-            <th th:if="${@userUtil.hasAnyRole('ADMIN')}">tanár</th>
+            <th th:if="${@userUtil.hasAnyRole('ADMIN', 'STUDENT')}">tanár</th>
+            <th>tanulók</th>
             <th>műveletek</th>
         </tr>
         <tr th:each="subject : ${subjects}">
             <td th:text="${subject.getId()}"></td>
             <td th:text="${subject.getName()}"></td>
             <td th:if="${@userUtil.hasAnyRole('ADMIN', 'STUDENT')}" th:text="${subject.getTeacher().getName()}"></td>
+            <td><a th:href="@{/students?subjectId={subjectId} (subjectId = ${subject.getId()})}">
+                <span th:text="${#lists.size(subject.getStudents())} + ' fő'"></span>
+            </a></td>
             <td>
                 <div class="d-flex flex-row">
-                    <!-- edit button -->
-                    <div class="btn">
+                    <!-- details button -->
+                    <div class="btn" th:title="#{action.details}">
                         <a th:href="@{/subjects/{id}/ (id = ${subject.getId()})}"><i
                                 class="bi bi-pencil-square"></i></a>
                     </div>
                     <!-- delete button -->
-                    <div th:if="${@userUtil.userRole().name()=='ADMIN'}">
+                    <div th:if="${@userUtil.userRole().name()=='ADMIN'}" th:title="#{action.delete}">
                         <form th:method="delete"
                               th:action="@{/subjects/{id} (id = ${subject.getId()})}">
                             <button type="submit" class="btn btn-link" name="delete">

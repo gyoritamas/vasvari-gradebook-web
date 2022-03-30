@@ -26,9 +26,6 @@
                 <button class="btn btn-outline-secondary" type="submit">Keresés</button>
             </div>
         </div>
-        <div class="input-group">
-
-        </div>
     </form>
     <div>
         <form th:method="post"
@@ -59,18 +56,18 @@
             <td th:text="${teacher.getBirthdate()}"></td>
             <td>
                 <div class="d-flex flex-row">
-                    <!-- edit button -->
-                    <div class="btn">
+                    <!-- details button -->
+                    <div class="btn" th:title="#{action.details}">
                         <a th:href="@{/teachers/{id}/ (id = ${teacher.getId()})}"><i
                                 class="bi bi-pencil-square"></i></a>
                     </div>
                     <!-- profile button -->
-                    <div class="btn" title="profile">
+                    <div class="btn" th:title="#{action.profile}">
                         <!--    navigateToUser  -->
                         <a th:href="@{/users/teachers/{id} (id = ${teacher.getId()})}"><i class="bi bi-person"></i></a>
                     </div>
                     <!-- delete button -->
-                    <div>
+                    <div th:title="#{action.delete}">
                         <form th:method="delete"
                               th:action="@{/teachers/{id} (id = ${teacher.getId()})}">
                             <button type="submit" class="btn btn-link" name="delete">

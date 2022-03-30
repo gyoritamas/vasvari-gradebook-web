@@ -7,9 +7,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.vasvari.gradebookweb.business.dto.StudentDto;
+import org.vasvari.gradebookweb.business.dto.UserRole;
 import org.vasvari.gradebookweb.business.model.request.StudentRequest;
 import org.vasvari.gradebookweb.business.service.StudentService;
 import org.vasvari.gradebookweb.business.service.SubjectService;
+import org.vasvari.gradebookweb.business.util.UserUtil;
 
 import javax.validation.Valid;
 
@@ -19,6 +21,7 @@ public class StudentController {
 
     private final StudentService studentService;
     private final SubjectService subjectService;
+    private final UserUtil userUtil;
 
     @GetMapping("/students")
     public String listAllStudents(@RequestParam(value = "studentName", required = false) String studentName,
@@ -48,6 +51,8 @@ public class StudentController {
 
     @GetMapping("/students/new")
     public String showEmptyForm(@ModelAttribute StudentDto studentDto) {
+        if(!userUtil.userRole().equals(UserRole.ADMIN)) return "redirect:/students";
+
         return "student";
     }
 

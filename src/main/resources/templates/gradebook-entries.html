@@ -36,12 +36,12 @@
         <td th:text="${entry.getGrade()}"></td>
         <td>
             <div class="d-flex flex-row">
-                <!-- edit button -->
-                <div class="btn">
+                <!-- details button -->
+                <div class="btn" th:title="#{action.details}">
                     <a th:href="@{/gradebook-entries/{id}/ (id = ${entry.getId()})}"><i class="bi bi-pencil-square"></i></a>
                 </div>
                 <!-- delete button -->
-                <div>
+                <div th:title="#{action.delete}">
                     <form th:method="delete"
                           th:action="@{/gradebook-entries/{id} (id = ${entry.getId()})}">
                         <button type="submit" class="btn btn-link" name="delete">

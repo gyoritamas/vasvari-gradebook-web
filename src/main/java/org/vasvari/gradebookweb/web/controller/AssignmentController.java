@@ -9,11 +9,15 @@ import org.springframework.web.bind.annotation.*;
 import org.vasvari.gradebookweb.business.dto.AssignmentInput;
 import org.vasvari.gradebookweb.business.dto.AssignmentOutput;
 import org.vasvari.gradebookweb.business.dto.AssignmentType;
+import org.vasvari.gradebookweb.business.dto.UserRole;
 import org.vasvari.gradebookweb.business.dto.mapper.AssignmentMapper;
+import org.vasvari.gradebookweb.business.model.request.AssignmentRequest;
 import org.vasvari.gradebookweb.business.service.AssignmentService;
 import org.vasvari.gradebookweb.business.service.SubjectService;
+import org.vasvari.gradebookweb.business.util.UserUtil;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * Handles 'assignment' and 'assignments' views
@@ -25,6 +29,7 @@ public class AssignmentController {
     private final AssignmentService assignmentService;
     private final SubjectService subjectService;
     private final AssignmentMapper mapper;
+    private final UserUtil userUtil;
 
     /**
      * Shows a list of assignments
@@ -33,10 +38,51 @@ public class AssignmentController {
      * @return view 'assignments' with all assignments
      */
     @GetMapping("/assignments")
-    public String findAllAssignments(ModelMap model) {
-        model.addAttribute("assignments", assignmentService.findAssignmentsForUser());
+    public String findAllAssignments(@RequestParam(value = "title", required = false) String title,
+                                     @RequestParam(value = "type", required = false) AssignmentType type,
+                                     @RequestParam(value = "subjectId", required = false) Long subjectId,
+                                     @RequestParam(value = "includeExpired", defaultValue = "false") Boolean includeExpired,
+                                     ModelMap model) {
+
+        model.addAttribute("typeOptions", AssignmentType.values());
+        model.addAttribute("subjectOptions", subjectService.findSubjectsForUser());
+
+        // "remember" filters
+        model.addAttribute("title", title);
+        model.addAttribute("type", type);
+        model.addAttribute("subjectId", subjectId);
+        model.addAttribute("includeExpired", includeExpired);
+
+        AssignmentRequest request = new AssignmentRequest(title, type, subjectId);
+        List<AssignmentOutput> assignmentsFiltered =
+                includeExpired ? assignmentService.findAssignmentsForUserIncludeExpired(request) : assignmentService.findAssignmentsForUser(request);
+        model.addAttribute("assignments", assignmentsFiltered);
 
         return "assignments";
+    }
+
+    @PostMapping("/assignments/change-expired-visibility")
+    public String changeExpiredVisibility(@RequestParam(value = "includeExpired") Boolean includeExpired,
+                                          @RequestParam(value = "title", required = false) String title,
+                                          @RequestParam(value = "type", required = false) AssignmentType type,
+                                          @RequestParam(value = "subjectId", required = false) Long subjectId,
+                                          ModelMap model) {
+        if (!includeExpired)
+            model.addAttribute("includeExpired", true);
+
+        // "remember" filters
+        model.addAttribute("title", title);
+        model.addAttribute("type", type);
+        model.addAttribute("subjectId", subjectId);
+
+        return "redirect:/assignments";
+    }
+
+    @PostMapping("/assignments/reset-filter")
+    public String resetFilter(ModelMap model) {
+        model.clear();
+
+        return "redirect:/assignments";
     }
 
     /**
@@ -48,6 +94,8 @@ public class AssignmentController {
      */
     @GetMapping("/assignments/new")
     public String showEmptyForm(@ModelAttribute AssignmentInput assignmentInput, ModelMap model) {
+        if (!userUtil.hasAnyRole("ADMIN", "TEACHER")) return "redirect:/assignments";
+
         model.addAttribute("typeOptions", AssignmentType.values());
         model.addAttribute("subjectOptions", subjectService.findSubjectsForUser());
 

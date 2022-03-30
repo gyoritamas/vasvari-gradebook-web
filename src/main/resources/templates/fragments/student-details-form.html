@@ -1,0 +1,85 @@
+<form th:object="${studentDto}" th:method="${editing} ? put : post">
+    <!-- lastname -->
+    <div class="row mb-2">
+        <label for="lastname" class="col-sm-4 col-form-label">vezetéknév</label>
+        <input class="col-sm-8" type="text" id="lastname" th:field="*{lastname}">
+    </div>
+    <div class="row mb-4">
+        <div class="col-sm-4"></div>
+        <div class="form-text col-sm-8" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></div>
+    </div>
+
+    <!-- firstname -->
+    <div class="row mb-2">
+        <label for="firstname" class="col-sm-4 col-form-label">keresztnév</label>
+        <input class="col-sm-8" type="text" id="firstname" th:field="*{firstname}">
+    </div>
+    <div class="row mb-4">
+        <div class="col-sm-4"></div>
+        <div class="form-text col-sm-8" th:if="${#fields.hasErrors('firstname')}"
+             th:errors="*{firstname}"></div>
+    </div>
+
+    <!-- gradeLevel -->
+    <div class="row mb-2">
+        <label for="grade-level" class="col-sm-4 col-form-label">évfolyam</label>
+        <select class="col-sm-8" id="grade-level" name="gradeLevel">
+            <option th:each="i : ${#numbers.sequence(1,12)}"
+                    th:value="${i}"
+                    th:text="${i}"
+                    th:field="*{gradeLevel}">
+            </option>
+        </select>
+    </div>
+    <div class="row mb-4">
+        <div class="col-sm-4"></div>
+        <div class="form-text col-sm-8" th:if="${#fields.hasErrors('gradeLevel')}"
+             th:errors="*{gradeLevel}"></div>
+    </div>
+
+    <!-- email -->
+    <div class="row mb-2">
+        <label for="email" class="col-sm-4 col-form-label">e-mail cím</label>
+        <input class="col-sm-8" type="email" id="email" th:field="*{email}">
+    </div>
+    <div class="row mb-4">
+        <div class="col-sm-4"></div>
+        <div class="form-text col-sm-8" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+    </div>
+
+    <!-- address -->
+    <div class="row mb-2">
+        <label for="address" class="col-sm-4 col-form-label">lakcím</label>
+        <textarea class="col-sm-8" rows="3" id="address" th:field="*{address}"></textarea>
+    </div>
+    <div class="row mb-4">
+        <div class="col-sm-4"></div>
+        <div class="form-text col-sm-8" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
+    </div>
+
+    <!-- phone -->
+    <div class="row mb-2">
+        <label for="phone" class="col-sm-4 col-form-label">telefonszám</label>
+        <input class="col-sm-8" type="text" id="phone" th:field="*{phone}">
+    </div>
+    <div class="row mb-4">
+        <div class="col-sm-4"></div>
+        <div class="form-text col-sm-8" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+    </div>
+
+    <!-- birthdate -->
+    <div class="row mb-2">
+        <label for="birthdate" class="col-sm-4 col-form-label">születési dátum</label>
+        <input class="col-sm-8" type="date" id="birthdate" th:field="*{birthdate}">
+
+    </div>
+    <div class="row mb-4">
+        <div class="col-sm-4"></div>
+        <div class="form-text col-sm-8" th:if="${#fields.hasErrors('birthdate')}"
+             th:errors="*{birthdate}"></div>
+    </div>
+
+    <div class="d-flex flex-row-reverse">
+        <button type="submit" class="btn btn-block btn-secondary col-3">Mentés</button>
+    </div>
+</form>

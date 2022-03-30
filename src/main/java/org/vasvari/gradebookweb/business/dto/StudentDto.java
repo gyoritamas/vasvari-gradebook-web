@@ -18,11 +18,9 @@ import java.time.LocalDate;
 public class StudentDto {
     private Long id;
 
-    @NotBlank(message = "A keresztnév nem lehet üres")
     @Size(min = 2, message = "A keresztnév legalább 2 karakter hosszú kell legyen")
     private String firstname;
 
-    @NotBlank(message = "A vezetéknév nem lehet üres")
     @Size(min = 2, message = "A vezetéknév legalább 2 karakter hosszú kell legyen")
     private String lastname;
 

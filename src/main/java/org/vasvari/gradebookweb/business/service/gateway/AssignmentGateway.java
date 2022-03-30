@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.business.dto.AssignmentInput;
 import org.vasvari.gradebookweb.business.dto.AssignmentOutput;
 import org.vasvari.gradebookweb.business.model.AssignmentOutputModel;
+import org.vasvari.gradebookweb.business.model.request.AssignmentRequest;
 import org.vasvari.gradebookweb.business.util.TraversonUtil;
 
 import java.util.Collection;
@@ -41,6 +42,13 @@ public class AssignmentGateway {
         return traversonUtil.getAssignmentOutputCollection(url, linkTo);
     }
 
+    public Collection<AssignmentOutput> searchAssignments(AssignmentRequest request) {
+        String url = baseUrl + "/assignments/search" + request.getFilter();
+        String linkTo = "assignments-filtered";
+
+        return traversonUtil.getAssignmentOutputCollection(url, linkTo);
+    }
+
     public Collection<AssignmentOutput> findAssignmentsOfCurrentUserAsTeacher() {
         String url = baseUrl + "/teacher-user/assignments";
         String linkTo = "assignments-of-teacher";
@@ -48,8 +56,22 @@ public class AssignmentGateway {
         return traversonUtil.getAssignmentOutputCollection(url, linkTo);
     }
 
+    public Collection<AssignmentOutput> findAssignmentsOfCurrentUserAsTeacher(AssignmentRequest request) {
+        String url = baseUrl + "/teacher-user/assignments" + request.getFilter();
+        String linkTo = "assignments-of-teacher";
+
+        return traversonUtil.getAssignmentOutputCollection(url, linkTo);
+    }
+
     public Collection<AssignmentOutput> findAssignmentsOfCurrentUserAsStudent() {
         String url = baseUrl + "/student-user/assignments";
+        String linkTo = "assignments-of-student";
+
+        return traversonUtil.getAssignmentOutputCollection(url, linkTo);
+    }
+
+    public Collection<AssignmentOutput> findAssignmentsOfCurrentUserAsStudent(AssignmentRequest request) {
+        String url = baseUrl + "/student-user/assignments" + request.getFilter();
         String linkTo = "assignments-of-student";
 
         return traversonUtil.getAssignmentOutputCollection(url, linkTo);

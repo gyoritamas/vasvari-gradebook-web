@@ -1,0 +1,34 @@
+<form th:object="${subjectInput}" th:method="${editing} ? put : post">
+    <table>
+
+        <!-- name -->
+        <tr>
+            <td><label for="course">Kurzus neve</label></td>
+        </tr>
+        <tr>
+            <td><input type="text" id="course" th:field="*{name}"></td>
+            <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Hiba a kurzus nevében</td>
+        </tr>
+
+        <!-- teacher -->
+        <tr>
+            <td><label for="teacher">tanár</label></td>
+        </tr>
+        <tr>
+            <td>
+                <select id="teacher" th:field="*{teacherId}">
+                    <option th:each="teacher : ${teacherOptions}"
+                            th:value="${teacher.getId()}"
+                            th:text="${teacher.getName()}">
+                    </option>
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <button type="submit">Mentés</button>
+            </td>
+        </tr>
+    </table>
+</form>

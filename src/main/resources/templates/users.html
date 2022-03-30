@@ -23,15 +23,15 @@
         <td th:text="${user.getId()}"></td>
         <td th:text="${user.getUsername()}"></td>
         <td th:text="${user.getRole().name()}"></td>
-        <td th:text="${user.isEnabled()}"></td>
+        <td th:text="#{|bool.${user.isEnabled()}|}"></td>
         <td>
             <div class="d-flex flex-row">
-                <!-- edit button -->
-                <div class="btn">
+                <!-- details button -->
+                <div class="btn" th:title="#{action.details}">
                     <a th:href="@{/users/{id}/ (id = ${user.getId()})}"><i class="bi bi-pencil-square"></i></a>
                 </div>
                 <!-- delete button -->
-                <div>
+                <div th:title="#{action.delete}">
                     <form th:method="delete"
                           th:action="@{/users/{id} (id = ${user.getId()})}">
                         <button type="submit" class="btn btn-link" name="delete">

@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.vasvari.gradebookweb.business.dto.SubjectInput;
 import org.vasvari.gradebookweb.business.dto.SubjectOutput;
 import org.vasvari.gradebookweb.business.dto.TeacherDto;
+import org.vasvari.gradebookweb.business.dto.UserRole;
 import org.vasvari.gradebookweb.business.dto.mapper.SubjectMapper;
 import org.vasvari.gradebookweb.business.model.request.SubjectRequest;
 import org.vasvari.gradebookweb.business.service.StudentService;
@@ -38,13 +39,6 @@ public class SubjectController implements WebMvcConfigurer {
         SubjectRequest request = new SubjectRequest(subjectName);
         model.addAttribute("subjects", subjectService.findSubjectsForUser(request));
 
-        // temp solution
-//        if (userUtil.hasAnyRole("ADMIN")) {
-//            Map<Long, String> teacherNames = teacherService.findAllTeachers().stream()
-//                    .collect(Collectors.toMap(TeacherDto::getId, TeacherDto::getName));
-//            model.addAttribute("teachers", teacherNames);
-//        }
-
         return "subjects";
     }
 
@@ -57,6 +51,7 @@ public class SubjectController implements WebMvcConfigurer {
 
     @GetMapping("/subjects/new")
     public String showEmptyForm(@ModelAttribute SubjectInput subjectInput, ModelMap model) {
+        if (!userUtil.userRole().equals(UserRole.ADMIN)) return "redirect:/subjects";
         model.addAttribute("teacherOptions", teacherService.findAllTeachers());
 
         return "subject";
@@ -67,8 +62,12 @@ public class SubjectController implements WebMvcConfigurer {
         SubjectOutput subjectOutput = subjectService.findSubjectById(subjectId);
         SubjectInput subjectInput = mapper.map(subjectOutput);
         model.addAttribute("editing", true);
-        model.addAttribute("subjectInput", subjectInput);
-        model.addAttribute("teacherOptions", teacherService.findAllTeachers());
+        if (userUtil.userRole().equals(UserRole.ADMIN)) {
+            model.addAttribute("subjectInput", subjectInput);
+            model.addAttribute("teacherOptions", teacherService.findAllTeachers());
+        } else {
+            model.addAttribute("subjectInput", subjectOutput);
+        }
         model.addAttribute("studentOptions", studentService.findAllStudents());
         model.addAttribute("studentsOfCourse", subjectService.findStudentsOfSubject(subjectId));
 
