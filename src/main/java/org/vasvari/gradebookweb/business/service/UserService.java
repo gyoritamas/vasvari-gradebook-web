@@ -6,6 +6,7 @@ import org.vasvari.gradebookweb.business.dto.UserDto;
 import org.vasvari.gradebookweb.business.dto.dataTypes.InitialCredentials;
 import org.vasvari.gradebookweb.business.dto.dataTypes.UsernameInput;
 import org.vasvari.gradebookweb.business.model.request.PasswordChangeRequest;
+import org.vasvari.gradebookweb.business.model.request.UserRequest;
 import org.vasvari.gradebookweb.business.service.gateway.UserGateway;
 
 import javax.validation.Valid;
@@ -25,6 +26,10 @@ public class UserService {
 
     public List<UserDto> findAllUsers() {
         return new ArrayList<>(gateway.findAllUsers());
+    }
+
+    public List<UserDto> searchUsers(UserRequest request) {
+        return new ArrayList<>(gateway.searchUsers(request));
     }
 
     public Optional<UserDto> findStudentUser(Long studentId) {

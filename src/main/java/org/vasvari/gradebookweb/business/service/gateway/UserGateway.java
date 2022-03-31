@@ -16,6 +16,7 @@ import org.vasvari.gradebookweb.business.dto.dataTypes.UsernameInput;
 import org.vasvari.gradebookweb.business.model.InitialCredentialsModel;
 import org.vasvari.gradebookweb.business.model.UserOutputModel;
 import org.vasvari.gradebookweb.business.model.request.PasswordChangeRequest;
+import org.vasvari.gradebookweb.business.model.request.UserRequest;
 import org.vasvari.gradebookweb.business.util.Problem;
 import org.vasvari.gradebookweb.business.util.TraversonUtil;
 
@@ -45,6 +46,13 @@ public class UserGateway {
     public Collection<UserDto> findAllUsers() {
         String url = baseUrl + "/users";
         String linkTo = "self";
+
+        return traversonUtil.getUserDtoCollection(url, linkTo);
+    }
+
+    public Collection<UserDto> searchUsers(UserRequest request) {
+        String url = baseUrl + "/users/search" + request.getFilter();
+        String linkTo = "users-filtered";
 
         return traversonUtil.getUserDtoCollection(url, linkTo);
     }

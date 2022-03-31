@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.vasvari.gradebookweb.business.dto.UserDto;
 import org.vasvari.gradebookweb.business.dto.UserRole;
 import org.vasvari.gradebookweb.business.dto.dataTypes.UsernameInput;
+import org.vasvari.gradebookweb.business.model.request.UserRequest;
 import org.vasvari.gradebookweb.business.service.StudentService;
 import org.vasvari.gradebookweb.business.service.TeacherService;
 import org.vasvari.gradebookweb.business.service.UserService;
@@ -26,10 +27,29 @@ public class UserController {
     private final TeacherService teacherService;
 
     @GetMapping("/users")
-    public String listAllUsers(ModelMap model) {
-        model.addAttribute("users", userService.findAllUsers());
+    public String listAllUsers(@RequestParam(value = "username", required = false) String username,
+                               @RequestParam(value = "role", required = false) UserRole role,
+                               @RequestParam(value = "enabled", required = false) Boolean enabled,
+                               ModelMap model) {
+
+        model.addAttribute("roleOptions", UserRole.values());
+
+        // "remember" filters
+        model.addAttribute("username", username);
+        model.addAttribute("role", role);
+        model.addAttribute("enabled", enabled);
+
+        UserRequest request = new UserRequest(username, role, enabled);
+        model.addAttribute("users", userService.searchUsers(request));
 
         return "users";
+    }
+
+    @PostMapping("/users/reset-filter")
+    public String resetFilter(ModelMap model) {
+        model.clear();
+
+        return "redirect:/users";
     }
 
     @GetMapping("/users/students/{id}")

@@ -14,40 +14,85 @@
 </head>
 <body>
 <div th:replace="fragments/navbar"></div>
-<h1>Felhasználók</h1>
-<a th:href="@{/users/new}">Új felhasználó</a>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>felhasználónév</th>
-        <th>felhasználói szint</th>
-        <th>aktív</th>
-        <th th:text="#{column.actions}">műveletek</th>
-    </tr>
-    <tr th:each="user : ${users}">
-        <td th:text="${user.getId()}"></td>
-        <td th:text="${user.getUsername()}"></td>
-        <td th:text="${user.getRole().name()}"></td>
-        <td th:text="#{|bool.${user.isEnabled()}|}"></td>
-        <td>
-            <div class="d-flex flex-row">
-                <!-- details button -->
-                <div class="btn" th:title="#{action.details}">
-                    <a th:href="@{/users/{id}/ (id = ${user.getId()})}"><i class="bi bi-pencil-square"></i></a>
-                </div>
-                <!-- delete button -->
-                <div th:title="#{action.delete}">
-                    <form th:method="delete"
-                          th:action="@{/users/{id} (id = ${user.getId()})}">
-                        <button type="submit" class="btn btn-link" name="delete">
-                            <a class="text-danger"><i class="bi bi-x-circle"></i></a>
-                        </button>
-                    </form>
-                </div>
+
+<div class="container mt-5 px-2">
+    <div class="d-flex flex-row justify-content-between mb-4">
+        <h1>Felhasználók</h1>
+        <div th:if="${@userUtil.hasAnyRole('ADMIN')}"><a th:href="@{/users/new}">Új felhasználó</a></div>
+    </div>
+
+    <!--    filters     -->
+    <form th:action="@{/users}" th:method="get">
+        <div class="input-group mb-3 w-75">
+            <label for="username"></label>
+            <input type="search" class="form-control" id="username" name="username" placeholder="felhasználónév"
+                   th:value="${username}">
+
+            <label for="role"></label>
+            <select class="form-select" id="role" name="role">
+                <option th:value="null">minden szerepkör</option>
+                <option th:each="roleOption : ${roleOptions}"
+                        th:value="${roleOption}"
+                        th:text="${roleOption.name()}"
+                        th:selected="${role == roleOption}">
+                </option>
+            </select>
+
+            <label for="enabled"></label>
+            <select class="form-select" id="enabled" name="enabled">
+                <option th:value="null" th:selected="${enabled==null}">aktív és inaktív</option>
+                <option th:value="true" th:selected="${enabled==true}">aktív</option>
+                <option th:value="false" th:selected="${enabled==false}">inaktív</option>
+            </select>
+
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">Keresés</button>
             </div>
-        </td>
-    </tr>
-</table>
-<span th:if="${#lists.isEmpty(users)}">Nincsenek felhasználók</span>
+        </div>
+    </form>
+    <div>
+        <form th:method="post"
+              th:action="@{/users/reset-filter}">
+            <button type="submit" class="btn btn-link">
+                <span>szűrők törlése</span>
+            </button>
+        </form>
+    </div>
+    <!--    end of filters  -->
+
+    <table class="table table-responsive align-middle">
+        <tr>
+            <th>ID</th>
+            <th>felhasználónév</th>
+            <th>szerepkör</th>
+            <th>aktív</th>
+            <th th:text="#{column.actions}">műveletek</th>
+        </tr>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.getId()}"></td>
+            <td th:text="${user.getUsername()}"></td>
+            <td th:text="${user.getRole().name()}"></td>
+            <td th:text="#{|bool.${user.isEnabled()}|}"></td>
+            <td>
+                <div class="d-flex flex-row">
+                    <!-- details button -->
+                    <div class="btn" th:title="#{action.details}">
+                        <a th:href="@{/users/{id}/ (id = ${user.getId()})}"><i class="bi bi-pencil-square"></i></a>
+                    </div>
+                    <!-- delete button -->
+                    <div th:title="#{action.delete}">
+                        <form th:method="delete"
+                              th:action="@{/users/{id} (id = ${user.getId()})}">
+                            <button type="submit" class="btn btn-link" name="delete">
+                                <a class="text-danger"><i class="bi bi-x-circle"></i></a>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <span th:if="${#lists.isEmpty(users)}">Nincsenek felhasználók</span>
+</div>
 </body>
 </html>
