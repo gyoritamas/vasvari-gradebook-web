@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.vasvari.gradebookweb.business.dto.GradebookInput;
 import org.vasvari.gradebookweb.business.dto.GradebookOutput;
 import org.vasvari.gradebookweb.business.dto.mapper.GradebookEntryMapper;
+import org.vasvari.gradebookweb.business.model.request.GradebookRequest;
 import org.vasvari.gradebookweb.business.service.AssignmentService;
 import org.vasvari.gradebookweb.business.service.GradebookService;
 import org.vasvari.gradebookweb.business.service.StudentService;
@@ -26,25 +27,48 @@ public class GradebookController {
     private final GradebookEntryMapper mapper;
 
     @GetMapping("/gradebook-entries")
-    public String findAllGradebookEntries(Model model) {
-        model.addAttribute("entries", gradebookService.findGradebookEntriesForUser());
+    public String listGradebookEntries(
+            @RequestParam(value = "studentId", required = false) Long studentId,
+            @RequestParam(value = "subjectId", required = false) Long subjectId,
+            @RequestParam(value = "assignmentId", required = false) Long assignmentId,
+            Model model) {
+
+        model.addAttribute("studentOptions", studentService.findStudentsForUser());
+        model.addAttribute("subjectOptions", subjectService.findSubjectsForUser());
+        model.addAttribute("assignmentOptions", assignmentService.findAssignmentsForUser());
+
+        // "remember" filters
+        model.addAttribute("studentId", studentId);
+        model.addAttribute("subjectId", subjectId);
+        model.addAttribute("assignmentId", assignmentId);
+
+        GradebookRequest request = new GradebookRequest(studentId, subjectId, assignmentId);
+
+        model.addAttribute("entries", gradebookService.findGradebookEntriesForUser(request));
 
         return "gradebook-entries";
     }
 
-    @GetMapping("/student_gradebook/{student}")
-    public String findGradebookEntriesOfStudent(@PathVariable("student") Long studentId, Model model) {
-        model.addAttribute("entries", gradebookService.findGradebookEntriesOfStudent(studentId));
+    @PostMapping("/gradebook-entries/reset-filter")
+    public String resetFilter(ModelMap model) {
+        model.clear();
 
-        return "gradebook-entries";
+        return "redirect:/gradebook-entries";
     }
 
-    @GetMapping("/subject_gradebook/{subject}")
-    public String findGradebookEntriesOfSubject(@PathVariable("subject") Long subjectId, Model model) {
-        model.addAttribute("entries", gradebookService.findGradebookEntriesOfSubject(subjectId));
-
-        return "gradebook-entries";
-    }
+//    @GetMapping("/student_gradebook/{student}")
+//    public String findGradebookEntriesOfStudent(@PathVariable("student") Long studentId, Model model) {
+//        model.addAttribute("entries", gradebookService.findGradebookEntriesOfStudent(studentId));
+//
+//        return "gradebook-entries";
+//    }
+//
+//    @GetMapping("/subject_gradebook/{subject}")
+//    public String findGradebookEntriesOfSubject(@PathVariable("subject") Long subjectId, Model model) {
+//        model.addAttribute("entries", gradebookService.findGradebookEntriesOfSubject(subjectId));
+//
+//        return "gradebook-entries";
+//    }
 
     @GetMapping("gradebook-entries/new")
     public String showEmptyForm(@ModelAttribute GradebookInput gradebookInput, ModelMap model) {

@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import org.vasvari.gradebookweb.business.dto.GradebookOutput;
 import org.vasvari.gradebookweb.business.dto.GradebookInput;
 import org.vasvari.gradebookweb.business.model.GradebookOutputModel;
+import org.vasvari.gradebookweb.business.model.request.GradebookRequest;
 import org.vasvari.gradebookweb.business.util.TraversonUtil;
 
 import java.util.Collection;
@@ -41,6 +42,13 @@ public class GradebookGateway {
         return traversonUtil.getGradebookOutputCollection(url, linkTo);
     }
 
+    public Collection<GradebookOutput> searchGradebookEntries(GradebookRequest request) {
+        String url = baseUrl + "/gradebook/search" + request.getFilter();
+        String linkTo = "entries-filtered";
+
+        return traversonUtil.getGradebookOutputCollection(url, linkTo);
+    }
+
     public Collection<GradebookOutput> findGradebookEntriesOfCurrentUserAsTeacher() {
         String url = baseUrl + "/teacher-user/gradebook-entries";
         String linkTo = "gradebook-entries-of-teacher";
@@ -48,8 +56,22 @@ public class GradebookGateway {
         return traversonUtil.getGradebookOutputCollection(url, linkTo);
     }
 
+    public Collection<GradebookOutput> findGradebookEntriesOfCurrentUserAsTeacher(GradebookRequest request) {
+        String url = baseUrl + "/teacher-user/gradebook-entries" + request.getFilter();
+        String linkTo = "gradebook-entries-of-teacher";
+
+        return traversonUtil.getGradebookOutputCollection(url, linkTo);
+    }
+
     public Collection<GradebookOutput> findGradebookEntriesOfCurrentUserAsStudent() {
         String url = baseUrl + "/student-user/gradebook-entries";
+        String linkTo = "gradebook-entries-of-student";
+
+        return traversonUtil.getGradebookOutputCollection(url, linkTo);
+    }
+
+    public Collection<GradebookOutput> findGradebookEntriesOfCurrentUserAsStudent(GradebookRequest request) {
+        String url = baseUrl + "/student-user/gradebook-entries" + request.getFilter();
         String linkTo = "gradebook-entries-of-student";
 
         return traversonUtil.getGradebookOutputCollection(url, linkTo);
@@ -80,5 +102,4 @@ public class GradebookGateway {
     public void deleteGradebookEntry(Long id) {
         template.delete(String.format("%s/gradebook/%s", baseUrl, id));
     }
-
 }

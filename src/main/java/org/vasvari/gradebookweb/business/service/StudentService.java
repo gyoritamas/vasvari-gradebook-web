@@ -22,6 +22,23 @@ public class StudentService {
         return gateway.findStudentById(id);
     }
 
+    public List<StudentDto> findAllStudents() {
+        return new ArrayList<>(gateway.findAllStudents());
+    }
+
+    public List<StudentDto> findStudentsForUser() {
+        switch (userUtil.userRole()) {
+            case ADMIN:
+                return findAllStudents();
+            case TEACHER:
+                return findStudentsOfCurrentUserAsTeacher();
+            case STUDENT:
+                return Collections.emptyList();
+            default:
+                throw new RuntimeException("Unrecognised user role");
+        }
+    }
+
     public List<StudentDto> findStudentsForUser(StudentRequest request) {
         switch (userUtil.userRole()) {
             case ADMIN:
@@ -35,12 +52,12 @@ public class StudentService {
         }
     }
 
-    public List<StudentDto> findAllStudents() {
-        return new ArrayList<>(gateway.findAllStudents());
-    }
-
     public List<StudentDto> searchStudents(StudentRequest request) {
         return new ArrayList<>(gateway.searchStudents(request));
+    }
+
+    private List<StudentDto> findStudentsOfCurrentUserAsTeacher() {
+        return new ArrayList<>(gateway.findStudentsOfCurrentUserAsTeacher());
     }
 
     private List<StudentDto> findStudentsOfCurrentUserAsTeacher(StudentRequest request) {

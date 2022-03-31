@@ -45,6 +45,13 @@ public class StudentGateway {
         return traversonUtil.getStudentDtoCollection(url, linkTo);
     }
 
+    public Collection<StudentDto> findStudentsOfCurrentUserAsTeacher() {
+        String url = baseUrl + "/teacher-user/students";
+        String linkTo = "students-of-teacher";
+
+        return traversonUtil.getStudentDtoCollection(url, linkTo);
+    }
+
     public Collection<StudentDto> findStudentsOfCurrentUserAsTeacher(StudentRequest request) {
         String url = baseUrl + "/teacher-user/students" + request.getFilter();
         String linkTo = "students-of-teacher";

@@ -3,6 +3,7 @@ package org.vasvari.gradebookweb.business.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.vasvari.gradebookweb.business.dto.GradebookOutput;
+import org.vasvari.gradebookweb.business.model.request.GradebookRequest;
 import org.vasvari.gradebookweb.business.service.gateway.GradebookGateway;
 import org.vasvari.gradebookweb.business.dto.GradebookInput;
 import org.vasvari.gradebookweb.business.util.UserUtil;
@@ -34,16 +35,41 @@ public class GradebookService {
         }
     }
 
+    public List<GradebookOutput> findGradebookEntriesForUser(GradebookRequest request) {
+        switch (userUtil.userRole()) {
+            case ADMIN:
+                return searchGradebookEntries(request);
+            case TEACHER:
+                return findGradebookEntriesOfTeacherUser(request);
+            case STUDENT:
+                return findGradebookEntriesOfStudentUser(request);
+            default:
+                throw new RuntimeException("Unrecognised user role");
+        }
+    }
+
     public List<GradebookOutput> findAllGradebookEntries() {
         return new ArrayList<>(gateway.findAllGradebookEntries());
+    }
+
+    public List<GradebookOutput> searchGradebookEntries(GradebookRequest request) {
+        return new ArrayList<>(gateway.searchGradebookEntries(request));
     }
 
     private List<GradebookOutput> findGradebookEntriesOfTeacherUser() {
         return new ArrayList<>(gateway.findGradebookEntriesOfCurrentUserAsTeacher());
     }
 
+    private List<GradebookOutput> findGradebookEntriesOfTeacherUser(GradebookRequest request) {
+        return new ArrayList<>(gateway.findGradebookEntriesOfCurrentUserAsTeacher(request));
+    }
+
     private List<GradebookOutput> findGradebookEntriesOfStudentUser() {
         return new ArrayList<>(gateway.findGradebookEntriesOfCurrentUserAsStudent());
+    }
+
+    private List<GradebookOutput> findGradebookEntriesOfStudentUser(GradebookRequest request) {
+        return new ArrayList<>(gateway.findGradebookEntriesOfCurrentUserAsStudent(request));
     }
 
     public List<GradebookOutput> findGradebookEntriesOfStudent(Long studentId) {

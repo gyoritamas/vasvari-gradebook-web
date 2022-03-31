@@ -14,50 +14,117 @@
 </head>
 <body>
 <div th:replace="fragments/navbar"></div>
-<h1>Naplóbejegyzések</h1>
-<a th:href="@{/gradebook-entries/new}">Új bejegyzés</a>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>tanuló</th>
-        <th>óra</th>
-        <th>feladat</th>
-        <th>osztályzat</th>
-        <th th:text="#{column.actions}">műveletek</th>
-    </tr>
-    <tr th:each="entry : ${entries}">
-        <td th:text="${entry.getId()}"></td>
-        <td>
-            <a th:href="@{/student_gradebook/{student} (student = ${entry.getStudent().getId()})}">
-                <span th:text="${entry.getStudent().getName()}"></span>
-            </a>
-        </td>
-        <td>
-            <a th:href="@{/subject_gradebook/{subject} (subject = ${entry.getSubject().getId()})}">
-                <span th:text="${entry.getSubject().getName()}"></span>
-            </a>
-        </td>
-        <td th:text="${entry.getAssignment().getName()}"></td>
-        <td th:text="${entry.getGrade()}"></td>
-        <td>
-            <div class="d-flex flex-row">
-                <!-- details button -->
-                <div class="btn" th:title="#{action.details}">
-                    <a th:href="@{/gradebook-entries/{id}/ (id = ${entry.getId()})}"><i class="bi bi-pencil-square"></i></a>
+
+<div class="container mt-5 px-2">
+    <div class="d-flex flex-row justify-content-between mb-4">
+        <h1>Naplóbejegyzések</h1>
+        <a th:href="@{/gradebook-entries/new}">Új bejegyzés</a>
+    </div>
+
+    <!-- filters    -->
+    <div class="d-flex flex-row justify-content-between align-items-center">
+        <form th:action="@{/gradebook-entries}" th:method="get">
+            <div class="input-group mb-3">
+
+                <div th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}">
+                    <select class="form-select" id="student" name="studentId">
+                        <option th:value="null">minden tanuló</option>
+                        <option th:each="student : ${studentOptions}"
+                                th:value="${student.getId()}"
+                                th:text="${student.getName()}"
+                                th:selected="${studentId == student.getId()}">
+                        </option>
+                    </select>
                 </div>
-                <!-- delete button -->
-                <div th:title="#{action.delete}">
-                    <form th:method="delete"
-                          th:action="@{/gradebook-entries/{id} (id = ${entry.getId()})}">
-                        <button type="submit" class="btn btn-link" name="delete">
-                            <a class="text-danger"><i class="bi bi-x-circle"></i></a>
-                        </button>
-                    </form>
+
+                    <label for="subject"></label>
+                    <select class="form-select" id="subject" name="subjectId">
+                        <option th:value="null">minden tantárgy</option>
+                        <option th:each="subject : ${subjectOptions}"
+                                th:value="${subject.getId()}"
+                                th:text="${subject.getName()}"
+                                th:selected="${subjectId == subject.getId()}">
+                        </option>
+                    </select>
+
+                    <label for="assignment"></label>
+                    <select class="form-select" id="assignment" name="assignmentId">
+                        <option th:value="null">minden feladat</option>
+                        <option th:each="assignment : ${assignmentOptions}"
+                                th:value="${assignment.getId()}"
+                                th:text="${assignment.getName()}"
+                                th:selected="${assignmentId == assignment.getId()}">
+                        </option>
+                    </select>
+
+                <div class="input-group-append">
+                    <input type="hidden" name="includeExpired" th:value="${includeExpired}">
+                    <button class="btn btn-outline-secondary" type="submit">Keresés</button>
                 </div>
+
             </div>
-        </td>
-    </tr>
-</table>
-<span th:if="${#lists.isEmpty(entries)}">Nincsenek bejegyzések</span>
+        </form>
+
+    </div>
+    <div>
+        <form th:method="post"
+              th:action="@{/assignments/reset-filter}">
+            <button type="submit" class="btn btn-link">
+                <span>szűrők törlése</span>
+            </button>
+        </form>
+    </div>
+    <!-- end of filters    -->
+
+    <table class="table table-responsive align-middle">
+        <tr>
+            <th>#</th>
+            <th th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}">tanuló</th>
+            <th>tantárgy</th>
+            <th>feladat</th>
+            <th>osztályzat</th>
+            <th th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}" th:text="#{column.actions}">műveletek</th>
+        </tr>
+        <tr th:each="entry : ${entries}">
+            <td th:text="${entry.getId()}"></td>
+            <td th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}">
+                <a th:href="@{/students/{studentId} (studentId = ${entry.getStudent().getId()})}">
+                    <span th:text="${entry.getStudent().getName()}"></span>
+                </a>
+            </td>
+            <td>
+                <a th:href="@{/subjects/{subjectId} (subjectId = ${entry.getSubject().getId()})}">
+                    <span th:text="${entry.getSubject().getName()}"></span>
+                </a>
+            </td>
+            <td>
+                <a th:href="@{/assignments/{assignmentId} (assignmentId = ${entry.getAssignment().getId()})}">
+                    <span th:text="${entry.getAssignment().getName()}"></span>
+                </a>
+            </td>
+            <td th:text="${entry.getGrade()}"></td>
+            <td th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}">
+                <div class="d-flex flex-row">
+                    <!-- details button -->
+                    <div class="btn" th:title="#{action.details}">
+                        <a th:href="@{/gradebook-entries/{id}/ (id = ${entry.getId()})}">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    </div>
+                    <!-- delete button -->
+                    <div th:title="#{action.delete}">
+                        <form th:method="delete"
+                              th:action="@{/gradebook-entries/{id} (id = ${entry.getId()})}">
+                            <button type="submit" class="btn btn-link" name="delete">
+                                <a class="text-danger"><i class="bi bi-x-circle"></i></a>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <span th:if="${#lists.isEmpty(entries)}">Nincsenek bejegyzések</span>
+</div>
 </body>
 </html>
