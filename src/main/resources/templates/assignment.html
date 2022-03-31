@@ -5,79 +5,18 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap-5.0.2/bootstrap.min.css}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script th:src="@{/js/bootstrap-5.0.2/bootstrap.js}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
     <title th:text="${editing}? 'E-napló | Feladat módosítása':'E-napló | Új feladat'"></title>
 </head>
 <body>
 <div th:replace="fragments/navbar"></div>
-<h1 th:text="${editing}? 'Feladat módosítása' : 'Új feladat'"></h1>
-<form th:object="${assignmentInput}" th:method="${editing} ? put : post">
-    <table>
-        <!-- name -->
-        <tr>
-            <td><label for="name">Feladat neve</label></td>
-        </tr>
-        <tr>
-            <td><input type="text" id="name" th:field="*{name}"></td>
-            <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></td>
-        </tr>
-
-        <!-- type -->
-        <tr>
-            <td><label for="type">típus</label></td>
-        </tr>
-        <tr>
-            <td>
-                <select id="type" th:field="*{type}">
-                    <option th:each="type : ${typeOptions}"
-                            th:value="${type}"
-                            th:text="#{|assignmentType.${type}|}"
-                            th:selected="${assignmentInput}">
-                    </option>
-                </select>
-            </td>
-        </tr>
-
-        <!-- description -->
-        <tr>
-            <td><label for="description">leírás</label></td>
-        </tr>
-        <tr>
-<!--            <td><input type="text" id="description" th:field="*{description}"></td>-->
-            <td><textarea id="description" th:field="*{description}"></textarea></td>
-            <td th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></td>
-        </tr>
-
-        <!-- deadline -->
-        <tr>
-            <td><label for="deadline">határidő</label></td>
-        </tr>
-        <tr>
-            <td><input type="date" id="deadline" th:field="*{deadline}"></td>
-            <td th:if="${#fields.hasErrors('deadline')}" th:errors="*{deadline}"></td>
-        </tr>
-
-        <!-- subject -->
-        <tr>
-            <td><label for="subject">tantárgy</label></td>
-        </tr>
-        <tr>
-            <td>
-                <select id="subject" th:field="*{subjectId}">
-                    <option th:each="subject : ${subjectOptions}"
-                            th:value="${subject.getId()}"
-                            th:text="${subject.getName()}"
-                            th:selected="${assignmentInput}">
-                    </option>
-                </select>
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                <button type="submit">Mentés</button>
-            </td>
-        </tr>
-    </table>
-</form>
+<div class="col-xl-4 col-lg-6 col-md-10 container-fluid mt-5 px-2">
+    <h1 th:text="${editing}? 'Feladat módosítása' : 'Új feladat'" class="mb-4"></h1>
+    <div th:replace="fragments/assignment-details-form"></div>
+</div>
 </body>
 </html>

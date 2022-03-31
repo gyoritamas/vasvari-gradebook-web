@@ -5,66 +5,84 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap-5.0.2/bootstrap.min.css}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script th:src="@{/js/bootstrap-5.0.2/bootstrap.js}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
     <title>E-napló | Új tantárgy</title>
 </head>
 <body>
 <div th:replace="fragments/navbar"></div>
-<h1 th:text="${editing}? 'Tantárgy adatai' : 'Új tantárgy'">placeholder</h1>
-<div th:if="${@userUtil.hasAnyRole('ADMIN')}">
-    <div th:replace="fragments/subject-details-form"></div>
+<div class="col-lg-8 container-fluid mt-5 mb-5 px-2">
+    <h1 th:text="${editing}? 'Tantárgy adatai' : 'Új tantárgy'" class="mb-4"></h1>
+    <div th:if="${@userUtil.hasAnyRole('ADMIN')}">
+        <div th:replace="fragments/subject-details-form"></div>
+    </div>
+    <div th:if="${@userUtil.hasAnyRole('TEACHER')}">
+        <div th:replace="fragments/subject-details-table"></div>
+    </div>
 </div>
-<div th:if="${@userUtil.hasAnyRole('TEACHER')}">
-    <div th:replace="fragments/subject-details-table"></div>
-</div>
 
+<div class="col-lg-8 container-fluid px-2">
+    <div th:if="${editing}">
+        <div class="mb-5">
+            <h2 class="mb-4">Tanulók</h2>
 
-<div th:if="${editing}">
-    <h2>Tanulók</h2>
+            <table class="table table-sm table-responsive align-middle">
+                <tr>
+                    <th>ID</th>
+                    <th th:text="#{column.name}"></th>
+                    <th th:text="#{column.gradelevel}"></th>
+                    <th th:text="#{column.email}">email</th>
+                    <th th:text="#{column.address}">cím</th>
+                    <th th:text="#{column.phone}">telefon</th>
+                    <!--                    <th th:text="#{column.birthdate}">születési dátum</th>-->
+                    <th>szül.&nbsp;dátum</th>
+                    <th th:text="#{column.actions}">műveletek</th>
+                </tr>
+                <tr th:each="student : ${studentsOfCourse}">
+                    <td th:text="${student.getId()}"></td>
+                    <td th:text="${student.getName()}"></td>
+                    <td th:text="${student.getGradeLevel()}"></td>
+                    <td th:text="${student.getEmail()}"></td>
+                    <td th:text="${student.getAddress()}"></td>
+                    <td th:text="${student.getPhone()}"></td>
+                    <td th:text="${student.getBirthdate()}"></td>
+                    <td>
+                        <!-- delete button -->
+                        <form th:method="post"
+                              th:action="@{/subjects/{subjectId}/remove-student (subjectId=${subjectInput.getId()})}">
+                            <button type="submit" class="btn btn-link" th:name="studentId" th:title="#{action.delete}"
+                                    th:value="${student.getId()}">
+                                <a class="text-danger"><i class="bi bi-x-circle"></i></a>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+            <span th:if="${#lists.isEmpty(studentsOfCourse)}">Nincsenek tanulók</span>
+        </div>
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th th:text="#{column.name}"></th>
-            <th th:text="#{column.gradelevel}"></th>
-            <th th:text="#{column.email}">email</th>
-            <th th:text="#{column.address}">cím</th>
-            <th th:text="#{column.phone}">telefon</th>
-            <th th:text="#{column.birthdate}">születési dátum</th>
-            <th th:text="#{column.actions}">műveletek</th>
-        </tr>
-        <tr th:each="student : ${studentsOfCourse}">
-            <td th:text="${student.getId()}"></td>
-            <td th:text="${student.getName()}"></td>
-            <td th:text="${student.getGradeLevel()}"></td>
-            <td th:text="${student.getEmail()}"></td>
-            <td th:text="${student.getAddress()}"></td>
-            <td th:text="${student.getPhone()}"></td>
-            <td th:text="${student.getBirthdate()}"></td>
-            <td>
-                <!-- delete button -->
-                <form th:method="post"
-                      th:action="@{/subjects/{subjectId}/remove-student (subjectId=${subjectInput.getId()})}">
-                    <button type="submit" class="btn btn-link" th:name="studentId" th:value="${student.getId()}">
-                        <a class="text-danger"><i class="bi bi-x-circle"></i></a>
-                    </button>
-                </form>
-            </td>
-        </tr>
-    </table>
-    <span th:if="${#lists.isEmpty(studentsOfCourse)}">Nincsenek tanulók</span>
-
-
-    <h2>Tanuló hozzáadása</h2>
-    <form th:method="post" th:action="@{/subjects/{subjectId}/add-student (subjectId=${subjectInput.getId()})}">
-        <label for="student">tanuló</label>
-        <select id="student" th:name="studentId">
-            <option th:each="student : ${studentOptions}"
-                    th:value="${student.getId()}"
-                    th:text="${student.getName()}">
-            </option>
-        </select>
-        <button th:type="submit">OK</button>
-    </form>
+        <div class="mb-5">
+            <h2 class="mb-4">Tanuló hozzáadása</h2>
+            <form th:method="post" th:action="@{/subjects/{subjectId}/add-student (subjectId=${subjectInput.getId()})}">
+                <div class="d-inline-flex w-100">
+                    <div class="col-4">
+                        <select class="form-select" id="student" th:name="studentId">
+                            <option th:each="student : ${studentOptions}"
+                                    th:value="${student.getId()}"
+                                    th:text="${student.getName()}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-block btn-secondary">Hozzáadás</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 </html>

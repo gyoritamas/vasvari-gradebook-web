@@ -5,7 +5,7 @@
         <input class="col-md-8" type="text" id="lastname" th:field="*{lastname}">
     </div>
     <div class="row mb-4">
-        <div class="form-text col-md-8 offset-sm-4" th:if="${#fields.hasErrors('lastname')}"
+        <div class="form-text col-md-8 offset-md-4" th:if="${#fields.hasErrors('lastname')}"
              th:errors="*{lastname}"></div>
     </div>
 
@@ -15,7 +15,7 @@
         <input class="col-md-8" type="text" id="firstname" th:field="*{firstname}">
     </div>
     <div class="row mb-4">
-        <div class="form-text col-md-8 offset-sm-4" th:if="${#fields.hasErrors('firstname')}"
+        <div class="form-text col-md-8 offset-md-4" th:if="${#fields.hasErrors('firstname')}"
              th:errors="*{firstname}"></div>
     </div>
 
@@ -31,7 +31,7 @@
         </select>
     </div>
     <div class="row mb-4">
-        <div class="form-text col-md-8 offset-sm-4" th:if="${#fields.hasErrors('gradeLevel')}"
+        <div class="form-text col-md-8 offset-md-4" th:if="${#fields.hasErrors('gradeLevel')}"
              th:errors="*{gradeLevel}"></div>
     </div>
 
@@ -41,7 +41,7 @@
         <input class="col-md-8" type="email" id="email" th:field="*{email}">
     </div>
     <div class="row mb-4">
-        <div class="form-text col-md-8 offset-sm-4" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        <div class="form-text col-md-8 offset-md-4" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
     </div>
 
     <!-- address -->
@@ -50,7 +50,7 @@
         <textarea class="col-md-8" rows="3" id="address" th:field="*{address}"></textarea>
     </div>
     <div class="row mb-4">
-        <div class="form-text col-md-8 offset-sm-4" th:if="${#fields.hasErrors('address')}"
+        <div class="form-text col-md-8 offset-md-4" th:if="${#fields.hasErrors('address')}"
              th:errors="*{address}"></div>
     </div>
 
@@ -60,7 +60,7 @@
         <input class="col-md-8" type="text" id="phone" th:field="*{phone}">
     </div>
     <div class="row mb-4">
-        <div class="form-text col-md-8 offset-sm-4" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+        <div class="form-text col-md-8 offset-md-4" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
     </div>
 
     <!-- birthdate -->
@@ -69,7 +69,7 @@
         <input class="col-md-8" type="date" id="birthdate" th:field="*{birthdate}">
     </div>
     <div class="row mb-4">
-        <div class="form-text col-md-8 offset-sm-4" th:if="${#fields.hasErrors('birthdate')}"
+        <div class="form-text col-md-8 offset-md-4" th:if="${#fields.hasErrors('birthdate')}"
              th:errors="*{birthdate}"></div>
     </div>
 
