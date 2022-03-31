@@ -16,8 +16,8 @@
 <div th:replace="fragments/navbar"></div>
 
 <div class="container mt-5 px-2">
-    <div class="d-flex flex-row justify-content-between align-items-center">
-        <div><h1>Tanulók</h1></div>
+    <div class="d-flex flex-row justify-content-between mb-4">
+        <h1>Tanulók</h1>
         <div th:if="${@userUtil.hasAnyRole('ADMIN')}"><a th:href="@{students/new}">Új tanuló</a></div>
     </div>
 
@@ -30,7 +30,7 @@
 
             <label for="gradeLevel"></label>
             <select class="form-select" id="gradeLevel" name="gradeLevel">
-                <option th:value="null">Minden évfolyam</option>
+                <option th:value="null">minden évfolyam</option>
                 <option th:each="i : ${#numbers.sequence(1,12)}" th:value="${i}" th:text="${i}"
                         th:selected="${i == gradeLevel}">
                 </option>
@@ -38,7 +38,7 @@
 
             <label for="subject"></label>
             <select class="form-select" id="subject" name="subjectId">
-                <option th:value="null">Minden tantárgy</option>
+                <option th:value="null">minden tantárgy</option>
                 <option th:each="subject : ${subjectOptions}"
                         th:value="${subject.getId()}"
                         th:text="${subject.getName()}"
@@ -86,8 +86,8 @@
                         <a th:href="@{/students/{id}/ (id = ${student.getId()})}"><i
                                 class="bi bi-pencil-square"></i></a>
                     </div>
-                    <!-- profile button -->
-                    <div th:if="${@userUtil.hasAnyRole('ADMIN')}" class="btn" th:title="#{action.profile}">
+                    <!-- account button -->
+                    <div th:if="${@userUtil.hasAnyRole('ADMIN')}" class="btn" th:title="#{action.account}">
                         <!--    navigateToUser  -->
                         <a th:href="@{/users/students/{id} (id = ${student.getId()})}"><i class="bi bi-person"></i></a>
                     </div>

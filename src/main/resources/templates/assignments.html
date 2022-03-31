@@ -33,7 +33,7 @@
 
                 <label for="type"></label>
                 <select class="form-select" id="type" name="type">
-                    <option th:value="null">Minden típus</option>
+                    <option th:value="null">minden típus</option>
                     <option th:each="typeOption : ${typeOptions}"
                             th:value="${typeOption}"
                             th:text="#{|assignmentType.${typeOption}|}"
@@ -43,7 +43,7 @@
 
                 <label for="subject"></label>
                 <select class="form-select" id="subject" name="subjectId">
-                    <option th:value="null">Minden tantárgy</option>
+                    <option th:value="null">minden tantárgy</option>
                     <option th:each="subject : ${subjectOptions}"
                             th:value="${subject.getId()}"
                             th:text="${subject.getName()}"

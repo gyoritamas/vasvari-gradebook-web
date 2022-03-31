@@ -33,7 +33,7 @@
                 <option th:value="null">minden szerepkör</option>
                 <option th:each="roleOption : ${roleOptions}"
                         th:value="${roleOption}"
-                        th:text="${roleOption.name()}"
+                        th:text="#{|userRole.${roleOption.name()}|}"
                         th:selected="${role == roleOption}">
                 </option>
             </select>
@@ -71,7 +71,7 @@
         <tr th:each="user : ${users}">
             <td th:text="${user.getId()}"></td>
             <td th:text="${user.getUsername()}"></td>
-            <td th:text="${user.getRole().name()}"></td>
+            <td th:text="#{|userRole.${user.getRole()}|}"></td>
             <td th:text="#{|bool.${user.isEnabled()}|}"></td>
             <td>
                 <div class="d-flex flex-row">

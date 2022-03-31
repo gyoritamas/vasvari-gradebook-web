@@ -13,50 +13,53 @@
     <title>E-napló | Profil</title>
 </head>
 <body>
+
 <div th:replace="fragments/navbar"></div>
-<h1>Jelszó megváltoztatása</h1>
-<div th:unless="${response}">
-    <form th:object="${passwordChangeRequest}" th:method="post" id="password-change-form">
-        <table>
-            <tr>
-                <td><label for="old-password">régi jelszó:</label></td>
-            </tr>
-            <tr>
-                <td><input type="password" id="old-password" th:field="*{oldPassword}"></td>
-                <td th:if="${#fields.hasErrors('oldPassword')}" th:errors="*{oldPassword}"></td>
-            </tr>
 
-            <tr>
-                <td><label for="new-password">új jelszó:</label></td>
-            </tr>
-            <tr>
-                <td><input type="password" id="new-password" name="new-password" th:field="*{newPassword}" required>
-                </td>
-                <td th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></td>
-            </tr>
+<div class="col-xl-4 col-lg-6 col-md-10 container-fluid mt-5 px-2">
 
-            <tr>
-                <td><label for="new-password-again">új jelszó még egyszer:</label></td>
-            </tr>
-            <tr>
-                <td><input type="password" id="new-password-again" name="new-password-again" required></td>
-            </tr>
-            <tr>
-                <td><span class="text-danger" id="error"></span></td>
-            </tr>
+    <h1 class="mb-4">Jelszó&nbsp;megváltoztatása</h1>
+    <div th:unless="${response}">
+        <form th:object="${passwordChangeRequest}" th:method="post" id="password-change-form">
 
-            <tr>
-                <td>
-                    <button type="submit">Mentés</button>
-                </td>
-            </tr>
-        </table>
-    </form>
+            <div class="row mb-2">
+                <label for="old-password" class="col-md-5 col-form-label">régi jelszó:</label>
+                <input type="password" id="old-password" class="col-md-7" th:field="*{oldPassword}">
+            </div>
+            <div class="row mb-4">
+                <div class="form-text col-md-8 offset-md-5" th:if="${#fields.hasErrors('oldPassword')}"
+                     th:errors="*{oldPassword}"></div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="new-password" class="col-md-5 col-form-label">új jelszó:</label>
+                <input type="password" id="new-password" name="new-password" class="col-md-7" th:field="*{newPassword}"
+                       required>
+            </div>
+            <div class="row mb-4">
+                <div class="form-text col-md-8 offset-md-5" th:if="${#fields.hasErrors('newPassword')}"
+                     th:errors="*{newPassword}"></div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="new-password-again"
+                       class="col-md-5 col-form-label">új&nbsp;jelszó&nbsp;még&nbsp;egyszer:</label>
+                <input type="password" id="new-password-again" name="new-password-again" class="col-md-7" required>
+            </div>
+            <div class="row mb-4">
+                <span class="form-text col-md-8 offset-md-5" id="error"></span>
+            </div>
+
+            <button type="submit" class="btn btn-block btn-secondary col-3 offset-9">Mentés</button>
+        </form>
+    </div>
+
+    <div th:if="${response}">
+        <span>A jelszó sikeresen megváltozott.</span>
+    </div>
+
 </div>
 
-<div th:if="${response}">
-    <span>A jelszó sikeresen megváltozott.</span>
-</div>
 <script th:src="@{/js/jquery-3.6.0/jquery-3.6.0.min.js}"></script>
 <script th:inline="javascript">
     $(document).ready(function () {

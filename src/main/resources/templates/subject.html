@@ -13,7 +13,9 @@
     <title>E-napló | Új tantárgy</title>
 </head>
 <body>
+
 <div th:replace="fragments/navbar"></div>
+
 <div class="col-lg-8 container-fluid mt-5 mb-5 px-2">
     <h1 th:text="${editing}? 'Tantárgy adatai' : 'Új tantárgy'" class="mb-4"></h1>
     <div th:if="${@userUtil.hasAnyRole('ADMIN')}">

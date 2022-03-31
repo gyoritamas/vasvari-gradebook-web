@@ -14,55 +14,49 @@
 </head>
 <body>
 <div th:replace="fragments/navbar"></div>
-<h1>Felhasználó létrehozása</h1>
-<div th:if="${role.name()} == 'STUDENT'">
-    <div th:include="fragments/create-student-user"></div>
-</div>
-<div th:if="${role.name()} == 'TEACHER'">
-    <div th:include="fragments/create-teacher-user"></div>
-</div>
-<div th:if="${role.name()} == 'ADMIN'">
-    <form th:action="@{/users/create-admin-user}" th:method="post" th:object="${usernameInput}">
-        <table>
-            <tr>
-                <td><label for="usernameInput">Felhasználónév</label></td>
-            </tr>
-            <tr>
-                <td><input type="text" id="usernameInput" th:field="*{username}"></td>
-                <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></td>
-            </tr>
 
+<div class="col-xl-4 col-lg-6 col-md-10 container-fluid mt-5 px-2">
+    <h1 class="mb-4">Új felhasználó</h1>
+    <div th:if="${role.name()} == 'STUDENT'" th:include="fragments/create-student-user"></div>
+    <div th:if="${role.name()} == 'TEACHER'" th:include="fragments/create-teacher-user"></div>
+    <div th:if="${role.name()} == 'ADMIN'">
+        <form th:action="@{/users/create-admin-user}" th:method="post" th:object="${usernameInput}">
+            <div class="row mb-2">
+                <label for="usernameInput" class="col-md-4 col-form-label">felhasználónév</label>
+                <input type="text" id="usernameInput" class="col-md-8" th:field="*{username}">
+            </div>
+            <div class="row mb-4">
+                <div class="form-text col-md-8 offset-md-4" th:if="${#fields.hasErrors('username')}"
+                     th:errors="*{username}"></div>
+            </div>
+
+            <button type="submit" class="btn btn-block btn-secondary col-3 offset-9">Létrehozás</button>
+        </form>
+    </div>
+
+    <div th:if="${initialCredentials}">
+        <table class="table table-responsive table-sm">
+            <thead>
             <tr>
+                <th colspan="2">bejelentkezési adatok</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><label for="username">felhasználónév</label></td>
                 <td>
-                    <button type="submit">Fiók létrehozása</button>
+                    <span id="username" th:text="${initialCredentials.getUsername()}">felhasználónév</span>
                 </td>
             </tr>
+            <tr>
+                <td><label for="password">jelszó</label></td>
+                <td>
+                    <span id="password" th:text="${initialCredentials.getPassword()}">jelszó</span>
+                </td>
+            </tr>
+            </tbody>
         </table>
-    </form>
-</div>
-
-<div th:if="${initialCredentials}">
-    <table>
-        <thead>
-        <tr>
-            <th colspan="2">bejelentkezési adatok</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><label for="username">felhasználónév</label></td>
-            <td>
-                <span id="username" th:text="${initialCredentials.getUsername()}">felhasználónév</span>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="password">jelszó</label></td>
-            <td>
-                <span id="password" th:text="${initialCredentials.getPassword()}">jelszó</span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    </div>
 </div>
 </body>
 </html>

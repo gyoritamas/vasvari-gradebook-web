@@ -1,5 +1,5 @@
-<div>
-    <table>
+<div class="mb-4">
+    <table class="table table-sm">
         <thead>
         <tr>
             <th colspan="2">tanuló adatai</th>
@@ -25,8 +25,6 @@
 <div th:unless="${initialCredentials}">
     <form th:method="post"
           th:action="@{/users/students/{id} (id = ${studentDto.getId()})}">
-        <button type="submit" class="btn btn-link">
-            <a class="text-decoration-none">Fiók létrehozása</a>
-        </button>
+        <button type="submit" class="btn btn-block btn-secondary col-3 offset-9">Létrehozás</button>
     </form>
 </div>
