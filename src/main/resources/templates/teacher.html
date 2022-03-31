@@ -9,70 +9,69 @@
 </head>
 <body>
 <div th:replace="fragments/navbar"></div>
-<h1 th:text="${editing}? 'Tanár adatainak módosítása' : 'Új tanár'"></h1>
-<form th:object="${teacherDto}" th:method="${editing} ? put : post">
-    <table>
+<div class="col-lg-6 container-fluid mt-5 px-2">
+    <h1 th:text="${editing}? 'Tanár adatai' : 'Új tanár'"></h1>
+    <form th:object="${teacherDto}" th:method="${editing} ? put : post">
         <!-- lastname -->
-        <tr>
-            <td><label for="lastname">Vezetéknév</label></td>
-        </tr>
-        <tr>
-            <td><input type="text" id="lastname" th:field="*{lastname}"></td>
-            <td th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></td>
-        </tr>
+        <div class="row mb-2">
+            <label for="lastname" class="col-md-4 col-form-label">vezetéknév</label>
+            <input class="col-md-8" type="text" id="lastname" th:field="*{lastname}">
+        </div>
+        <div class="row mb-4">
+            <div class="form-text col-md-8 offset-sm-4" th:if="${#fields.hasErrors('lastname')}"
+                 th:errors="*{lastname}"></div>
+        </div>
 
         <!-- firstname -->
-        <tr>
-            <td><label for="firstname">Keresztnév</label></td>
-        </tr>
-        <tr>
-            <td><input type="text" id="firstname" th:field="*{firstname}"></td>
-            <td th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}"></td>
-        </tr>
+        <div class="row mb-2">
+            <label for="firstname" class="col-md-4 col-form-label">keresztnév</label>
+            <input class="col-md-8" type="text" id="firstname" th:field="*{firstname}">
+        </div>
+        <div class="row mb-4">
+            <div class="form-text col-md-8 offset-sm-4" th:if="${#fields.hasErrors('firstname')}"
+                 th:errors="*{firstname}"></div>
+        </div>
 
         <!-- email -->
-        <tr>
-            <td><label for="email">E-mail cím</label></td>
-        </tr>
-        <tr>
-            <td><input type="text" id="email" th:field="*{email}"></td>
-            <td th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></td>
-        </tr>
+        <div class="row mb-2">
+            <label for="email" class="col-md-4 col-form-label">e-mail cím</label>
+            <input class="col-md-8" type="email" id="email" th:field="*{email}">
+        </div>
+        <div class="row mb-4">
+            <div class="form-text col-md-8 offset-sm-4" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        </div>
 
         <!-- address -->
-        <tr>
-            <td><label for="address">Lakcím</label></td>
-        </tr>
-        <tr>
-            <td><input type="text" id="address" th:field="*{address}"></td>
-            <td th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></td>
-        </tr>
+        <div class="row mb-2">
+            <label for="address" class="col-md-4 col-form-label">lakcím</label>
+            <textarea class="col-md-8" rows="3" id="address" th:field="*{address}"></textarea>
+        </div>
+        <div class="row mb-4">
+            <div class="form-text col-md-8 offset-sm-4" th:if="${#fields.hasErrors('address')}"
+                 th:errors="*{address}"></div>
+        </div>
 
         <!-- phone -->
-        <tr>
-            <td><label for="phone">Telefonszám</label></td>
-        </tr>
-        <tr>
-            <td><input type="text" id="phone" th:field="*{phone}"></td>
-            <td th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></td>
-        </tr>
+        <div class="row mb-2">
+            <label for="phone" class="col-md-4 col-form-label">telefonszám</label>
+            <input class="col-md-8" type="text" id="phone" th:field="*{phone}">
+        </div>
+        <div class="row mb-4">
+            <div class="form-text col-md-8 offset-sm-4" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+        </div>
 
         <!-- birthdate -->
-        <tr>
-            <td><label for="birthdate">Születési dátum</label></td>
-        </tr>
-        <tr>
-            <td><input type="date" id="birthdate" th:field="*{birthdate}"></td>
-            <td th:if="${#fields.hasErrors('birthdate')}" th:errors="*{birthdate}"></td>
-        </tr>
+        <div class="row mb-2">
+            <label for="birthdate" class="col-md-4 col-form-label">születési dátum</label>
+            <input class="col-md-8" type="date" id="birthdate" th:field="*{birthdate}">
+        </div>
+        <div class="row mb-4">
+            <div class="form-text col-md-8 offset-sm-4" th:if="${#fields.hasErrors('birthdate')}"
+                 th:errors="*{birthdate}"></div>
+        </div>
 
-        <tr>
-            <td>
-                <button type="submit">Mentés</button>
-            </td>
-        </tr>
-    </table>
-</form>
-
+        <button type="submit" class="btn btn-block btn-secondary col-3 offset-9">Mentés</button>
+    </form>
+</div>
 </body>
 </html>
