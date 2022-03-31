@@ -15,8 +15,9 @@
 <body>
 <div th:replace="fragments/navbar"></div>
 <div class="col-xl-4 col-lg-6 col-md-10 container-fluid mt-5 px-2">
-    <h1 th:text="${editing}? 'Feladat módosítása' : 'Új feladat'" class="mb-4"></h1>
-    <div th:replace="fragments/assignment-details-form"></div>
+    <h1 th:text="${editing}? 'Feladat részletei' : 'Új feladat'" class="mb-4"></h1>
+    <div th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}" th:include="fragments/assignment-details-form"></div>
+    <div th:unless="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}" th:include="fragments/assignment-details-table"></div>
 </div>
 </body>
 </html>

@@ -1,0 +1,31 @@
+<div>
+    <!-- name -->
+    <div class="row mb-2">
+        <p class="col-3">cím</p>
+        <p class="col-9" th:text="${assignmentOutput.getName()}">
+    </div>
+
+    <!-- type -->
+    <div class="row mb-2">
+        <p class="col-3">típus</p>
+        <p class="col-9" th:text="#{|assignmentType.${assignmentOutput.getType()}|}"></p>
+    </div>
+
+    <!-- description -->
+    <div class="row mb-2">
+        <p class="col-3">leírás</p>
+        <p class="col-9" th:text="${assignmentOutput.getDescription()}"></p>
+    </div>
+
+    <!-- deadline -->
+    <div class="row mb-2">
+        <p class="col-3">határidő</p>
+        <p class="col-9" th:text="${assignmentOutput.getDeadline()}"></p>
+    </div>
+
+    <!-- subject -->
+    <div class="row mb-2">
+        <p class="col-3">tantárgy</p>
+        <p class="col-9" th:text="${assignmentOutput.getSubject().getName()}"></p>
+    </div>
+</div>

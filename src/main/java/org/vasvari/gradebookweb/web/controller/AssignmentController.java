@@ -67,13 +67,12 @@ public class AssignmentController {
                                           @RequestParam(value = "type", required = false) AssignmentType type,
                                           @RequestParam(value = "subjectId", required = false) Long subjectId,
                                           ModelMap model) {
-        if (!includeExpired)
-            model.addAttribute("includeExpired", true);
 
         // "remember" filters
         model.addAttribute("title", title);
         model.addAttribute("type", type);
         model.addAttribute("subjectId", subjectId);
+        model.addAttribute("includeExpired", !includeExpired);
 
         return "redirect:/assignments";
     }
@@ -115,6 +114,7 @@ public class AssignmentController {
         AssignmentInput assignmentInput = mapper.map(assignmentOutput);
         model.addAttribute("editing", true);
         model.addAttribute("assignmentInput", assignmentInput);
+        model.addAttribute("assignmentOutput", assignmentOutput);
         model.addAttribute("typeOptions", AssignmentType.values());
         model.addAttribute("subjectOptions", subjectService.findSubjectsForUser());
 
