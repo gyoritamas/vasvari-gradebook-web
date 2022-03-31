@@ -2,6 +2,7 @@ package org.vasvari.gradebookweb.business.dto;
 
 import lombok.*;
 import org.vasvari.gradebookweb.business.dto.dataTypes.SimpleData;
+import org.vasvari.gradebookweb.business.dto.dataTypes.SimpleStudent;
 
 @Getter
 @Setter
@@ -10,7 +11,7 @@ import org.vasvari.gradebookweb.business.dto.dataTypes.SimpleData;
 @Builder
 public class GradebookOutput {
     private Long id;
-    private SimpleData student;
+    private SimpleStudent student;
     private SimpleData subject;
     private SimpleData assignment;
     private Integer grade;
