@@ -25,12 +25,11 @@
                 <option th:each="subjectOption : ${subjectOptions}"
                         th:value="${subjectOption.getId()}"
                         th:text="${subjectOption.getName()}"
-                        th:selected="${subjectOption.getId() ==selectedSubject}">
+                        th:selected="${subjectOption.getId() == selectedSubject}">
                 </option>
             </select>
         </div>
     </form>
-
 
     <div th:if="${selectedSubject}">
         <form method=post th:object="${gradebookInput}">

@@ -96,7 +96,7 @@ public class GradebookGateway {
     }
 
     public void updateGradebookEntry(Long id, GradebookInput update) {
-        throw new RuntimeException("Method not implemented yet");
+        template.put(baseUrl + "/gradebook/{id}", update, id);
     }
 
     public void deleteGradebookEntry(Long id) {
