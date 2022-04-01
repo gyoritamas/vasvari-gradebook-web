@@ -89,10 +89,10 @@ public class AssignmentService {
     }
 
     public Map<Long, Integer> mapAssignmentNumbersToSubjects() {
-        Set<Long> subjectIds = findAssignmentsForUser().stream()
+        List<Long> subjectIds = findAssignmentsForUser().stream()
                 .map(assignment -> assignment.getSubject().getId())
-                .collect(Collectors.toSet());
-        Map<Long, Integer> map = subjectIds.stream()
+                .collect(Collectors.toList());
+        Map<Long, Integer> map = subjectIds.stream().distinct()
                 .collect(Collectors.toMap(subjectId -> subjectId, subjectId -> 0));
         for (Long subjectId : subjectIds) {
             Integer counter = map.get(subjectId);
