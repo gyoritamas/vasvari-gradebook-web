@@ -7,8 +7,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.vasvari.gradebookweb.business.dto.TeacherDto;
+import org.vasvari.gradebookweb.business.dto.UserRole;
 import org.vasvari.gradebookweb.business.model.request.TeacherRequest;
 import org.vasvari.gradebookweb.business.service.TeacherService;
+import org.vasvari.gradebookweb.business.util.UserUtil;
 
 import javax.validation.Valid;
 
@@ -17,6 +19,7 @@ import javax.validation.Valid;
 public class TeacherController {
 
     private final TeacherService service;
+    private final UserUtil userUtil;
 
     @GetMapping("/teachers")
     public String listAllTeachers(@RequestParam(value = "teacherName", required = false) String teacherName,
@@ -31,7 +34,7 @@ public class TeacherController {
     }
 
     @PostMapping("/teachers/reset-filter")
-    public String resetFilter(ModelMap model){
+    public String resetFilter(ModelMap model) {
         model.clear();
 
         return "redirect:/teachers";
@@ -39,6 +42,8 @@ public class TeacherController {
 
     @GetMapping("/teachers/new")
     public String showEmptyForm(@ModelAttribute TeacherDto teacherDto) {
+        if (!userUtil.userRole().equals(UserRole.ADMIN)) return "redirect:/teachers";
+
         return "teacher";
     }
 

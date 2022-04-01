@@ -14,6 +14,7 @@ import org.vasvari.gradebookweb.business.service.AssignmentService;
 import org.vasvari.gradebookweb.business.service.GradebookService;
 import org.vasvari.gradebookweb.business.service.StudentService;
 import org.vasvari.gradebookweb.business.service.SubjectService;
+import org.vasvari.gradebookweb.business.util.UserUtil;
 
 import javax.validation.Valid;
 
@@ -25,6 +26,7 @@ public class GradebookController {
     private final SubjectService subjectService;
     private final AssignmentService assignmentService;
     private final GradebookEntryMapper mapper;
+    private final UserUtil userUtil;
 
     @GetMapping("/gradebook-entries")
     public String listGradebookEntries(
@@ -33,7 +35,9 @@ public class GradebookController {
             @RequestParam(value = "assignmentId", required = false) Long assignmentId,
             Model model) {
 
-        model.addAttribute("studentOptions", studentService.findStudentsForUser());
+        if (userUtil.hasAnyRole("ADMIN", "TEACHER")) {
+            model.addAttribute("studentOptions", studentService.findStudentsForUser());
+        }
         model.addAttribute("subjectOptions", subjectService.findSubjectsForUser());
         model.addAttribute("assignmentOptions", assignmentService.findAssignmentsForUser());
 
@@ -56,25 +60,11 @@ public class GradebookController {
         return "redirect:/gradebook-entries";
     }
 
-//    @GetMapping("/student_gradebook/{student}")
-//    public String findGradebookEntriesOfStudent(@PathVariable("student") Long studentId, Model model) {
-//        model.addAttribute("entries", gradebookService.findGradebookEntriesOfStudent(studentId));
-//
-//        return "gradebook-entries";
-//    }
-//
-//    @GetMapping("/subject_gradebook/{subject}")
-//    public String findGradebookEntriesOfSubject(@PathVariable("subject") Long subjectId, Model model) {
-//        model.addAttribute("entries", gradebookService.findGradebookEntriesOfSubject(subjectId));
-//
-//        return "gradebook-entries";
-//    }
-
     @GetMapping("gradebook-entries/new")
     public String showEmptyForm(@ModelAttribute GradebookInput gradebookInput, ModelMap model) {
-        model.addAttribute("studentList", studentService.findAllStudents());
+        model.addAttribute("studentList", studentService.findStudentsForUser());
         model.addAttribute("subjectList", subjectService.findSubjectsForUser());
-        model.addAttribute("assignmentList", assignmentService.findAllAssignments());
+        model.addAttribute("assignmentList", assignmentService.findAssignmentsForUser());
 
         return "gradebook-entry";
     }
@@ -84,9 +74,9 @@ public class GradebookController {
         GradebookOutput gradebookOutput = gradebookService.findGradebookEntryById(entryId);
         GradebookInput gradebookInput = mapper.map(gradebookOutput);
         model.addAttribute("gradebookInput", gradebookInput);
-        model.addAttribute("studentList", studentService.findAllStudents());
+        model.addAttribute("studentList", studentService.findStudentsForUser());
         model.addAttribute("subjectList", subjectService.findSubjectsForUser());
-        model.addAttribute("assignmentList", assignmentService.findAllAssignments());
+        model.addAttribute("assignmentList", assignmentService.findAssignmentsForUser());
         model.addAttribute("editing", true);
 
         return "gradebook-entry";
@@ -107,9 +97,9 @@ public class GradebookController {
                                        BindingResult bindingResult,
                                        ModelMap model) {
         model.addAttribute("editing", true);
-        model.addAttribute("studentList", studentService.findAllStudents());
+        model.addAttribute("studentList", studentService.findStudentsForUser());
         model.addAttribute("subjectList", subjectService.findSubjectsForUser());
-        model.addAttribute("assignmentList", assignmentService.findAllAssignments());
+        model.addAttribute("assignmentList", assignmentService.findAssignmentsForUser());
         if (bindingResult.hasErrors()) return "gradebook-entry";
         gradebookService.updateEntry(id, update);
         model.clear();

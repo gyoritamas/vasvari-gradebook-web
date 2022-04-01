@@ -33,7 +33,8 @@ public class StudentService {
             case TEACHER:
                 return findStudentsOfCurrentUserAsTeacher();
             case STUDENT:
-                return Collections.emptyList();
+//                return Collections.emptyList();
+                throw new RuntimeException("Unauthorized");
             default:
                 throw new RuntimeException("Unrecognised user role");
         }
@@ -46,7 +47,8 @@ public class StudentService {
             case TEACHER:
                 return findStudentsOfCurrentUserAsTeacher(request);
             case STUDENT:
-                return Collections.emptyList();
+//                return Collections.emptyList();
+                throw new RuntimeException("Unauthorized");
             default:
                 throw new RuntimeException("Unrecognised user role");
         }

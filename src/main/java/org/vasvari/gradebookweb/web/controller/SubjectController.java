@@ -8,18 +8,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.vasvari.gradebookweb.business.dto.SubjectInput;
 import org.vasvari.gradebookweb.business.dto.SubjectOutput;
-import org.vasvari.gradebookweb.business.dto.TeacherDto;
 import org.vasvari.gradebookweb.business.dto.UserRole;
 import org.vasvari.gradebookweb.business.dto.mapper.SubjectMapper;
 import org.vasvari.gradebookweb.business.model.request.SubjectRequest;
+import org.vasvari.gradebookweb.business.service.AssignmentService;
 import org.vasvari.gradebookweb.business.service.StudentService;
 import org.vasvari.gradebookweb.business.service.SubjectService;
 import org.vasvari.gradebookweb.business.service.TeacherService;
 import org.vasvari.gradebookweb.business.util.UserUtil;
 
 import javax.validation.Valid;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,12 +25,16 @@ public class SubjectController implements WebMvcConfigurer {
     private final SubjectService subjectService;
     private final TeacherService teacherService;
     private final StudentService studentService;
+    private final AssignmentService assignmentService;
     private final UserUtil userUtil;
     private final SubjectMapper mapper;
 
     @GetMapping("/subjects")
     public String listAllSubjects(@RequestParam(value = "subjectName", required = false) String subjectName,
                                   ModelMap model) {
+
+        model.addAttribute("assignmentCounter", assignmentService.mapAssignmentNumbersToSubjects());
+
         // "remember" filters
         model.addAttribute("subjectName", subjectName);
 

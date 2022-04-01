@@ -12,6 +12,7 @@ import org.vasvari.gradebookweb.business.model.request.UserRequest;
 import org.vasvari.gradebookweb.business.service.StudentService;
 import org.vasvari.gradebookweb.business.service.TeacherService;
 import org.vasvari.gradebookweb.business.service.UserService;
+import org.vasvari.gradebookweb.business.util.UserUtil;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -25,6 +26,7 @@ public class UserController {
     private final UserService userService;
     private final StudentService studentService;
     private final TeacherService teacherService;
+    private final UserUtil userUtil;
 
     @GetMapping("/users")
     public String listAllUsers(@RequestParam(value = "username", required = false) String username,
@@ -79,8 +81,10 @@ public class UserController {
                                      @RequestParam(value = "schoolActorId", required = false) Long schoolActorId,
                                      @ModelAttribute UsernameInput usernameInput,
                                      ModelMap model) {
+        if(!userUtil.userRole().equals(UserRole.ADMIN)) return "redirect:/";
+
         model.addAttribute("role", role);
-//        model.addAttribute("schoolActorId", schoolActorId);
+
         if (role.equals(UserRole.TEACHER))
             model.addAttribute("teacherDto", teacherService.findTeacherById(schoolActorId));
         if (role.equals(UserRole.STUDENT))

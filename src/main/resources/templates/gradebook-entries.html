@@ -26,7 +26,8 @@
         <form th:action="@{/gradebook-entries}" th:method="get">
             <div class="input-group mb-3">
 
-                <div th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}">
+                <!--                <div th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}">-->
+                <div th:if="${studentOptions}">
                     <select class="form-select" id="student" name="studentId">
                         <option th:value="null">minden tanuló</option>
                         <option th:each="student : ${studentOptions}"
@@ -37,25 +38,25 @@
                     </select>
                 </div>
 
-                    <label for="subject"></label>
-                    <select class="form-select" id="subject" name="subjectId">
-                        <option th:value="null">minden tantárgy</option>
-                        <option th:each="subject : ${subjectOptions}"
-                                th:value="${subject.getId()}"
-                                th:text="${subject.getName()}"
-                                th:selected="${subjectId == subject.getId()}">
-                        </option>
-                    </select>
+                <label for="subject"></label>
+                <select class="form-select" id="subject" name="subjectId">
+                    <option th:value="null">minden tantárgy</option>
+                    <option th:each="subject : ${subjectOptions}"
+                            th:value="${subject.getId()}"
+                            th:text="${subject.getName()}"
+                            th:selected="${subjectId == subject.getId()}">
+                    </option>
+                </select>
 
-                    <label for="assignment"></label>
-                    <select class="form-select" id="assignment" name="assignmentId">
-                        <option th:value="null">minden feladat</option>
-                        <option th:each="assignment : ${assignmentOptions}"
-                                th:value="${assignment.getId()}"
-                                th:text="${assignment.getName()}"
-                                th:selected="${assignmentId == assignment.getId()}">
-                        </option>
-                    </select>
+                <label for="assignment"></label>
+                <select class="form-select" id="assignment" name="assignmentId">
+                    <option th:value="null">minden feladat</option>
+                    <option th:each="assignment : ${assignmentOptions}"
+                            th:value="${assignment.getId()}"
+                            th:text="${assignment.getName()}"
+                            th:selected="${assignmentId == assignment.getId()}">
+                    </option>
+                </select>
 
                 <div class="input-group-append">
                     <input type="hidden" name="includeExpired" th:value="${includeExpired}">

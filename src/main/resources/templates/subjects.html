@@ -49,17 +49,29 @@
             <th>#</th>
             <th>tantárgy neve</th>
             <th th:if="${@userUtil.hasAnyRole('ADMIN', 'STUDENT')}">tanár</th>
-            <th>tanulók</th>
-            <th>műveletek</th>
+            <th th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}">tanulók</th>
+            <th>feladatok</th>
+            <th th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}">műveletek</th>
         </tr>
         <tr th:each="subject : ${subjects}">
             <td th:text="${subject.getId()}"></td>
             <td th:text="${subject.getName()}"></td>
             <td th:if="${@userUtil.hasAnyRole('ADMIN', 'STUDENT')}" th:text="${subject.getTeacher().getName()}"></td>
-            <td><a th:href="@{/students?subjectId={subjectId} (subjectId = ${subject.getId()})}">
-                <span th:text="${#lists.size(subject.getStudents())} + ' fő'"></span>
-            </a></td>
+            <td th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}">
+                <span th:if="${#lists.size(subject.getStudents())==0}">nincsenek tanulók</span>
+                <a th:unless="${#lists.size(subject.getStudents())==0}"
+                   th:href="@{/students?subjectId={subjectId} (subjectId = ${subject.getId()})}">
+                    <span th:text="${#lists.size(subject.getStudents())} + ' fő'"></span>
+                </a>
+            </td>
             <td>
+                <span th:unless="${assignmentCounter.get(subject.getId())}">nincsenek feladatok</span>
+                <a th:if="${assignmentCounter.get(subject.getId())}"
+                   th:href="@{/assignments?subjectId={subjectId} (subjectId = ${subject.getId()})}">
+                    <span th:text="${assignmentCounter.get(subject.getId())} + ' feladat'">feladatok</span>
+                </a>
+            </td>
+            <td th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}">
                 <div class="d-flex flex-row">
                     <!-- details button -->
                     <div class="btn" th:title="#{action.details}">

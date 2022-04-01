@@ -8,8 +8,7 @@ import org.vasvari.gradebookweb.business.model.request.AssignmentRequest;
 import org.vasvari.gradebookweb.business.service.gateway.AssignmentGateway;
 import org.vasvari.gradebookweb.business.util.UserUtil;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,10 +19,20 @@ public class AssignmentService {
     private final UserUtil userUtil;
 
     public AssignmentOutput findAssignmentById(Long id) {
-        return gateway.findAssignmentById(id);
+        AssignmentOutput assignmentFound = gateway.findAssignmentById(id);
+        if (!findAssignmentsForUserIncludeExpired().contains(assignmentFound))
+            throw new RuntimeException("Unauthorized");
+
+        return assignmentFound;
     }
 
     public List<AssignmentOutput> findAssignmentsForUser() {
+        return findAssignmentsForUserIncludeExpired().stream()
+                .filter(assignment -> assignment.isExpired().equals(false))
+                .collect(Collectors.toList());
+    }
+
+    public List<AssignmentOutput> findAssignmentsForUserIncludeExpired() {
         switch (userUtil.userRole()) {
             case ADMIN:
                 return findAllAssignments();
@@ -77,6 +86,20 @@ public class AssignmentService {
 
     public List<AssignmentOutput> findAssignmentsOfStudentUser(AssignmentRequest request) {
         return new ArrayList<>(gateway.findAssignmentsOfCurrentUserAsStudent(request));
+    }
+
+    public Map<Long, Integer> mapAssignmentNumbersToSubjects() {
+        Set<Long> subjectIds = findAssignmentsForUser().stream()
+                .map(assignment -> assignment.getSubject().getId())
+                .collect(Collectors.toSet());
+        Map<Long, Integer> map = subjectIds.stream()
+                .collect(Collectors.toMap(subjectId -> subjectId, subjectId -> 0));
+        for (Long subjectId : subjectIds) {
+            Integer counter = map.get(subjectId);
+            map.put(subjectId, counter + 1);
+        }
+
+        return map;
     }
 
     public void saveAssignment(AssignmentInput assignment) {
