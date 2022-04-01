@@ -18,7 +18,9 @@
 <div class="container mt-5 px-2">
     <div class="d-flex flex-row justify-content-between mb-4">
         <h1>Naplóbejegyzések</h1>
-        <a th:href="@{/gradebook-entries/new}">Új bejegyzés</a>
+        <div th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}">
+            <a th:href="@{/gradebook-entries/new}">Új bejegyzés</a>
+        </div>
     </div>
 
     <!-- filters    -->
@@ -89,14 +91,10 @@
         <tr th:each="entry : ${entries}">
             <td th:text="${entry.getId()}"></td>
             <td th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}">
-                <a th:href="@{/students/{studentId} (studentId = ${entry.getStudent().getId()})}">
-                    <span th:text="${entry.getStudent().getName()}"></span>
-                </a>
+                <span th:text="${entry.getStudent().getName()}"></span>
             </td>
             <td>
-                <a th:href="@{/subjects/{subjectId} (subjectId = ${entry.getSubject().getId()})}">
-                    <span th:text="${entry.getSubject().getName()}"></span>
-                </a>
+                <span th:text="${entry.getSubject().getName()}"></span>
             </td>
             <td>
                 <a th:href="@{/assignments/{assignmentId} (assignmentId = ${entry.getAssignment().getId()})}">

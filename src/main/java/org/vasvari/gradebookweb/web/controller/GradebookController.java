@@ -66,6 +66,8 @@ public class GradebookController {
     public String showEntryCreateForm(@RequestParam(value = "subjectId", required = false) Long subjectId,
                                       @ModelAttribute GradebookInput gradebookInput,
                                       ModelMap model) {
+        if (!userUtil.hasAnyRole("ADMIN", "TEACHER")) return "redirect:/gradebook-entries";
+
         model.addAttribute("subjectOptions", subjectService.findSubjectsForUser());
         if (subjectId != null) {
             model.addAttribute("selectedSubject", subjectId);
