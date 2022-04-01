@@ -12,36 +12,37 @@
             crossorigin="anonymous"></script>
     <title>E-napló | Hiba</title>
 </head>
-<!--<body th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">-->
-<!--<h1 th:text="|${httpStatus} - ${httpStatus.reasonPhrase}|">404</h1>-->
 
 <body>
-<div class="container-fluid col-3 mt-5">
-    <h1 th:if="${#response.status == 404}" class="mb-4">Az oldal nem található</h1>
-    <h1 th:if="${#response.status==500}" class="mb-4">Hiba történt</h1>
-    <div th:if="${problem}">
-        <table class="table table-responsive-sm">
-            <tr>
-                <td>status</td>
-                <td th:text="${T(org.springframework.http.HttpStatus).valueOf(problem.getStatus())}"></td>
-            </tr>
-            <tr>
-                <td>title</td>
-                <td th:text="${problem.getTitle()}"></td>
-            </tr>
-            <tr>
-                <td>type</td>
-                <td th:text="${problem.getType()}"></td>
-            </tr>
-            <tr>
-                <td>detail</td>
-                <td th:text="${problem.getDetail()}"></td>
-            </tr>
-        </table>
-    </div>
+<div th:include="fragments/navbar"></div>
+<div class="container-fluid mt-5 px-2 p-5">
+    <div class="offset-2 col-8">
+        <h1 th:if="${#response.status == 404}" class="mb-4">Az oldal nem található</h1>
+        <h1 th:if="${#response.status==500}" class="mb-4">Hiba történt</h1>
+        <div th:if="${problem}">
+            <table class="table table-responsive-sm">
+                <tr>
+                    <td>status</td>
+                    <td th:text="${T(org.springframework.http.HttpStatus).valueOf(problem.getStatus())}"></td>
+                </tr>
+                <tr>
+                    <td>title</td>
+                    <td th:text="${problem.getTitle()}"></td>
+                </tr>
+                <tr>
+                    <td>type</td>
+                    <td th:text="${problem.getType()}"></td>
+                </tr>
+                <tr>
+                    <td>detail</td>
+                    <td th:text="${problem.getDetail()}"></td>
+                </tr>
+            </table>
+        </div>
 
-    <p th:if="${errorMessage}" th:utext="${errorMessage}"></p>
-    <a href="index.html" th:href="@{/}">Vissza a kezdőoldalra</a>
+        <p th:if="${errorMessage}" th:utext="${errorMessage}"></p>
+        <a href="index.html" th:href="@{/}">Vissza a kezdőoldalra</a>
+    </div>
 </div>
 </body>
 </html>
