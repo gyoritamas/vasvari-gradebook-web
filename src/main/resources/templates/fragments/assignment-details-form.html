@@ -1,4 +1,20 @@
 <form th:object="${assignmentInput}" th:method="${editing} ? put : post">
+    <!-- subject -->
+    <div class="row mb-2">
+        <label for="subject" class="col-3 col-form-label">tantárgy</label>
+        <select class="col-9" id="subject" th:field="*{subjectId}">
+            <option th:each="subject : ${subjectOptions}"
+                    th:value="${subject.getId()}"
+                    th:text="${subject.getName()}"
+                    th:selected="${assignmentInput}">
+            </option>
+        </select>
+    </div>
+    <div class="row mb-4">
+        <div class="form-text col-9 offset-md-3" th:if="${#fields.hasErrors('subjectId')}"
+             th:errors="*{subjectId}"></div>
+    </div>
+
     <!-- name -->
     <div class="row mb-2">
         <label for="name" class="col-3 col-form-label">cím</label>
@@ -45,17 +61,6 @@
              th:errors="*{deadline}"></div>
     </div>
 
-    <!-- subject -->
-    <div class="row mb-2">
-        <label for="subject" class="col-3 col-form-label">tantárgy</label>
-        <select class="col-9" id="subject" th:field="*{subjectId}">
-            <option th:each="subject : ${subjectOptions}"
-                    th:value="${subject.getId()}"
-                    th:text="${subject.getName()}"
-                    th:selected="${assignmentInput}">
-            </option>
-        </select>
-    </div>
     <div class="row mb-4">
         <div class="form-text col-9 offset-md-3" th:if="${#fields.hasErrors('subjectId')}"
              th:errors="*{subjectId}"></div>

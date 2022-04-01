@@ -15,12 +15,12 @@
 <body>
 <div th:replace="fragments/navbar"></div>
 
-<div class="col-lg-6 container-fluid mt-5 mb-5 px-2">
-    <h1 class="mb-4">Új naplóbejegyzés</h1>
+<div class="col-xl-4 col-lg-6 col-md-10 container-fluid mt-5 px-2">
+    <h1 class="mb-4" th:text="${editing}? 'Naplóbejegyzés módosítása':'Új naplóbejegyzés'"></h1>
     <!-- subject -->
     <div class="row mb-2">
-        <p class="col-sm-2">tantárgy neve</p>
-        <p class="col-sm-8" th:text="${subjectName}"></p>
+        <p class="col-4">tantárgy</p>
+        <p class="col-8" th:text="${subjectName}"></p>
     </div>
 
     <form method=post th:object="${gradebookInput}">
@@ -29,14 +29,14 @@
 
         <!-- assignment -->
         <div th:if="${#lists.isEmpty(assignmentOptions)}" class="row mb-2">
-            <label class="col-2 col-form-label" for="empty-assignment">feladat</label>
-            <select id="empty-assignment" class="col-10">
+            <label class="col-4 col-form-label" for="empty-assignment">feladat</label>
+            <select id="empty-assignment" class="col-8">
                 <option th:value="null">-- nincsenek feladatok --</option>
             </select>
         </div>
         <div th:unless="${#lists.isEmpty(assignmentOptions)}" class="row mb-2">
-            <label class="col-2 col-form-label" for="assignment">feladat</label>
-            <select id="assignment" class="col-10" th:field="*{assignmentId}">
+            <label class="col-4 col-form-label" for="assignment">feladat</label>
+            <select id="assignment" class="col-8" th:field="*{assignmentId}">
                 <option th:each="assignment : ${assignmentOptions}"
                         th:value="${assignment.getId()}"
                         th:text="${assignment.getName()}">
@@ -46,14 +46,14 @@
 
         <!-- student -->
         <div th:if="${#lists.isEmpty(studentOptions)}" class="row mb-2">
-            <label class="col-2 col-form-label" for="empty-student">tanuló</label>
-            <select id="empty-student" class="col-10">
+            <label class="col-4 col-form-label" for="empty-student">tanuló</label>
+            <select id="empty-student" class="col-8">
                 <option th:value="null">-- nincsenek tanulók --</option>
             </select>
         </div>
         <div th:unless="${#lists.isEmpty(studentOptions)}" class="row mb-2">
-            <label class="col-2 col-form-label" for="student">tanuló</label>
-            <select id="student" class="col-10" th:field="*{studentId}">
+            <label class="col-4 col-form-label" for="student">tanuló</label>
+            <select id="student" class="col-8" th:field="*{studentId}">
                 <option th:each="student : ${studentOptions}"
                         th:value="${student.getId()}"
                         th:text="${student.getName()}">
@@ -62,15 +62,15 @@
         </div>
 
         <!-- grade -->
-        <div class="row mb-2">
-            <label class="col-2 col-form-label" for="grade">osztályzat</label>
-            <select id="grade" class="col-10" th:field="*{grade}">
+        <div class="row mb-4">
+            <label class="col-4 col-form-label" for="grade">osztályzat</label>
+            <select id="grade" class="col-8" th:field="*{grade}">
                 <option th:each="i : ${#numbers.sequence(5,1)}" th:value="${i}" th:text="${i}">
             </select>
         </div>
 
         <button th:disabled="${#lists.isEmpty(studentOptions) || #lists.isEmpty(assignmentOptions)}"
-                class="btn btn-block btn-secondary col-3 offset-9"
+                class="btn btn-block btn-secondary col-4 offset-8"
                 type="submit">Mentés
         </button>
     </form>
