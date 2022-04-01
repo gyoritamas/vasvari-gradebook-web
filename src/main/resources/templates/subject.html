@@ -31,15 +31,12 @@
         <div class="mb-5">
             <h2 class="mb-4">Tanulók</h2>
 
-            <table class="table table-sm table-responsive align-middle">
+            <table class="table table-sm table-responsive-sm align-middle">
                 <tr>
-                    <th>ID</th>
+                    <th>#</th>
                     <th th:text="#{column.name}"></th>
                     <th th:text="#{column.gradelevel}"></th>
                     <th th:text="#{column.email}">email</th>
-                    <th th:text="#{column.address}">cím</th>
-                    <th th:text="#{column.phone}">telefon</th>
-                    <!--                    <th th:text="#{column.birthdate}">születési dátum</th>-->
                     <th>szül.&nbsp;dátum</th>
                     <th th:text="#{column.actions}">műveletek</th>
                 </tr>
@@ -48,8 +45,6 @@
                     <td th:text="${student.getName()}"></td>
                     <td th:text="${student.getGradeLevel()}"></td>
                     <td th:text="${student.getEmail()}"></td>
-                    <td th:text="${student.getAddress()}"></td>
-                    <td th:text="${student.getPhone()}"></td>
                     <td th:text="${student.getBirthdate()}"></td>
                     <td>
                         <!-- delete button -->
