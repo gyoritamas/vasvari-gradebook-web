@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-5.0.2/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script th:src="@{/js/bootstrap-5.0.2/bootstrap.js}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <title>E-napló | Új bejegyzés</title>
+</head>
+<body>
+<div th:replace="fragments/navbar"></div>
+
+<div class="col-lg-6 container-fluid mt-5 mb-5 px-2">
+    <h1 class="mb-4">Új naplóbejegyzés</h1>
+    <form th:method="get" th:action="@{/gradebook-entries/new}">
+        <div class="row mb-2">
+            <label class="col-2 col-form-label" for="subject">tantárgy</label>
+            <select class="col-10" id="subject" th:name="subjectId">
+                <option th:value="null">-- válasszon tantárgyat --</option>
+                <option th:each="subjectOption : ${subjectOptions}"
+                        th:value="${subjectOption.getId()}"
+                        th:text="${subjectOption.getName()}"
+                        th:selected="${subjectOption.getId() ==selectedSubject}">
+                </option>
+            </select>
+        </div>
+    </form>
+
+
+    <div th:if="${selectedSubject}">
+        <form method=post th:object="${gradebookInput}">
+            <!-- assignment -->
+            <div th:if="${#lists.isEmpty(assignmentOptions)}" class="row mb-2">
+                <label class="col-2 col-form-label" for="empty-assignment">feladat</label>
+                <select id="empty-assignment" class="col-10">
+                    <option th:value="null">-- nincsenek feladatok --</option>
+                </select>
+            </div>
+            <div th:unless="${#lists.isEmpty(assignmentOptions)}" class="row mb-2">
+                <label class="col-2 col-form-label" for="assignment">feladat</label>
+                <select id="assignment" class="col-10" th:field="*{assignmentId}">
+                    <option th:each="assignment : ${assignmentOptions}"
+                            th:value="${assignment.getId()}"
+                            th:text="${assignment.getName()}">
+                    </option>
+                </select>
+            </div>
+
+            <!-- student -->
+            <div th:if="${#lists.isEmpty(studentOptions)}" class="row mb-2">
+                <label class="col-2 col-form-label" for="empty-student">tanuló</label>
+                <select id="empty-student" class="col-10">
+                    <option th:value="null">-- nincsenek tanulók --</option>
+                </select>
+            </div>
+            <div th:unless="${#lists.isEmpty(studentOptions)}" class="row mb-2">
+                <label class="col-2 col-form-label" for="student">tanuló</label>
+                <select id="student" class="col-10" th:field="*{studentId}">
+                    <option th:each="student : ${studentOptions}"
+                            th:value="${student.getId()}"
+                            th:text="${student.getName()}">
+                    </option>
+                </select>
+            </div>
+
+            <!-- grade -->
+            <div class="row mb-2">
+                <label class="col-2 col-form-label" for="grade">osztályzat</label>
+                <select id="grade" class="col-10" th:field="*{grade}">
+                    <option th:each="i : ${#numbers.sequence(5,1)}" th:value="${i}" th:text="${i}">
+                </select>
+            </div>
+
+            <input type="hidden" th:name="subjectId" th:value="${subjectSelected}">
+
+            <button th:disabled="${#lists.isEmpty(studentOptions) || #lists.isEmpty(assignmentOptions)}"
+                    class="btn btn-block btn-secondary col-3 offset-9"
+                    type="submit">Mentés
+            </button>
+        </form>
+    </div>
+</div>
+<script th:src="@{/js/jquery-3.6.0/jquery-3.6.0.min.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $(function () {
+            $('#subject').change(function () {
+                this.form.submit();
+            });
+        });
+    });
+</script>
+</body>
+</html>

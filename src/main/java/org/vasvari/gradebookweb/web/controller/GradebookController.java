@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import org.vasvari.gradebookweb.business.dto.GradebookInput;
 import org.vasvari.gradebookweb.business.dto.GradebookOutput;
 import org.vasvari.gradebookweb.business.dto.mapper.GradebookEntryMapper;
+import org.vasvari.gradebookweb.business.model.request.AssignmentRequest;
 import org.vasvari.gradebookweb.business.model.request.GradebookRequest;
+import org.vasvari.gradebookweb.business.model.request.StudentRequest;
 import org.vasvari.gradebookweb.business.service.AssignmentService;
 import org.vasvari.gradebookweb.business.service.GradebookService;
 import org.vasvari.gradebookweb.business.service.StudentService;
@@ -60,13 +62,24 @@ public class GradebookController {
         return "redirect:/gradebook-entries";
     }
 
-    @GetMapping("gradebook-entries/new")
-    public String showEmptyForm(@ModelAttribute GradebookInput gradebookInput, ModelMap model) {
-        model.addAttribute("studentList", studentService.findStudentsForUser());
-        model.addAttribute("subjectList", subjectService.findSubjectsForUser());
-        model.addAttribute("assignmentList", assignmentService.findAssignmentsForUser());
+    @GetMapping(value = "gradebook-entries/new")
+    public String showEntryCreateForm(@RequestParam(value = "subjectId", required = false) Long subjectId,
+                                              @ModelAttribute GradebookInput gradebookInput,
+                                              ModelMap model) {
+        model.addAttribute("subjectOptions", subjectService.findSubjectsForUser());
+        if (subjectId != null) {
+            model.addAttribute("selectedSubject", subjectId);
 
-        return "gradebook-entry";
+            StudentRequest studentRequest = new StudentRequest();
+            studentRequest.setSubjectId(subjectId);
+            model.addAttribute("studentOptions", studentService.findStudentsForUser(studentRequest));
+
+            AssignmentRequest assignmentRequest = new AssignmentRequest();
+            assignmentRequest.setSubjectId(subjectId);
+            model.addAttribute("assignmentOptions", assignmentService.findAssignmentsForUser(assignmentRequest));
+        }
+
+        return "entry-create";
     }
 
     @GetMapping("/gradebook-entries/{id}")
@@ -79,7 +92,7 @@ public class GradebookController {
         model.addAttribute("assignmentList", assignmentService.findAssignmentsForUser());
         model.addAttribute("editing", true);
 
-        return "gradebook-entry";
+        return "entry-details";
     }
 
     @PostMapping(value = "gradebook-entries/new")
@@ -91,21 +104,21 @@ public class GradebookController {
         return "redirect:/gradebook-entries";
     }
 
-    @RequestMapping("/gradebook-entries/{id}")
-    public String updateGradebookEntry(@PathVariable("id") Long id,
-                                       @Valid GradebookInput update,
-                                       BindingResult bindingResult,
-                                       ModelMap model) {
-        model.addAttribute("editing", true);
-        model.addAttribute("studentList", studentService.findStudentsForUser());
-        model.addAttribute("subjectList", subjectService.findSubjectsForUser());
-        model.addAttribute("assignmentList", assignmentService.findAssignmentsForUser());
-        if (bindingResult.hasErrors()) return "gradebook-entry";
-        gradebookService.updateEntry(id, update);
-        model.clear();
-
-        return "redirect:/gradebook-entries";
-    }
+//    @RequestMapping("/gradebook-entries/{id}")
+//    public String updateGradebookEntry(@PathVariable("id") Long id,
+//                                       @Valid GradebookInput update,
+//                                       BindingResult bindingResult,
+//                                       ModelMap model) {
+//        model.addAttribute("editing", true);
+//        model.addAttribute("studentList", studentService.findStudentsForUser());
+//        model.addAttribute("subjectList", subjectService.findSubjectsForUser());
+//        model.addAttribute("assignmentList", assignmentService.findAssignmentsForUser());
+//        if (bindingResult.hasErrors()) return "gradebook-entry";
+//        gradebookService.updateEntry(id, update);
+//        model.clear();
+//
+//        return "redirect:/gradebook-entries";
+//    }
 
     @RequestMapping(value = "/gradebook-entries/{id}", params = "delete")
     public String deleteEntry(@PathVariable("id") Long id) {
