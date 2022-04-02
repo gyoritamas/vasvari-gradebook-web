@@ -28,7 +28,7 @@
         <form th:action="@{/gradebook-entries}" th:method="get">
             <div class="input-group mb-3">
 
-                <!--                <div th:if="${@userUtil.hasAnyRole('ADMIN', 'TEACHER')}">-->
+                <!-- student -->
                 <div th:if="${studentOptions}">
                     <select class="form-select" id="student" name="studentId">
                         <option th:value="null">minden tanuló</option>
@@ -40,6 +40,7 @@
                     </select>
                 </div>
 
+                <!-- subject -->
                 <label for="subject"></label>
                 <select class="form-select" id="subject" name="subjectId">
                     <option th:value="null">minden tantárgy</option>
@@ -50,18 +51,19 @@
                     </option>
                 </select>
 
-                <label for="assignment"></label>
-                <select class="form-select" id="assignment" name="assignmentId">
-                    <option th:value="null">minden feladat</option>
-                    <option th:each="assignment : ${assignmentOptions}"
-                            th:value="${assignment.getId()}"
-                            th:text="${assignment.getName()}"
-                            th:selected="${assignmentId == assignment.getId()}">
-                    </option>
-                </select>
+                <!-- assignment -->
+                <div th:if="${assignmentOptions}">
+                    <select class="form-select" id="assignment" name="assignmentId">
+                        <option th:value="null">minden feladat</option>
+                        <option th:each="assignment : ${assignmentOptions}"
+                                th:value="${assignment.getId()}"
+                                th:text="${assignment.getName()}"
+                                th:selected="${assignmentId == assignment.getId()}">
+                        </option>
+                    </select>
+                </div>
 
                 <div class="input-group-append">
-                    <input type="hidden" name="includeExpired" th:value="${includeExpired}">
                     <button class="btn btn-outline-secondary" type="submit">Keresés</button>
                 </div>
 
@@ -71,7 +73,7 @@
     </div>
     <div>
         <form th:method="post"
-              th:action="@{/assignments/reset-filter}">
+              th:action="@{/gradebook-entries/reset-filter}">
             <button type="submit" class="btn btn-link">
                 <span>szűrők törlése</span>
             </button>

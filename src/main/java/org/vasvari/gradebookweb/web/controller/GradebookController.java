@@ -37,11 +37,11 @@ public class GradebookController {
             @RequestParam(value = "assignmentId", required = false) Long assignmentId,
             Model model) {
 
+        model.addAttribute("subjectOptions", subjectService.findSubjectsForUser());
         if (userUtil.hasAnyRole("ADMIN", "TEACHER")) {
             model.addAttribute("studentOptions", studentService.findStudentsForUser());
+            model.addAttribute("assignmentOptions", assignmentService.findAssignmentsForUser());
         }
-        model.addAttribute("subjectOptions", subjectService.findSubjectsForUser());
-        model.addAttribute("assignmentOptions", assignmentService.findAssignmentsForUser());
 
         // "remember" filters
         model.addAttribute("studentId", studentId);
