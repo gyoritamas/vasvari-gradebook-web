@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.vasvari.gradebookweb.business.dto.dataTypes.SimpleData;
+import org.vasvari.gradebookweb.business.dto.dataTypes.SimpleStudent;
 import org.vasvari.gradebookweb.business.dto.dataTypes.SimpleTeacher;
 
 import java.util.List;
@@ -17,6 +17,6 @@ public class SubjectOutput {
     private Long id;
     private String name;
     private SimpleTeacher teacher;
-    private List<SimpleData> students;
+    private List<SimpleStudent> students;
 
 }
