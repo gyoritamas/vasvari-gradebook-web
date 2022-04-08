@@ -40,7 +40,7 @@ public class GradebookController {
         model.addAttribute("subjectOptions", subjectService.findSubjectsForUser());
         if (userUtil.hasAnyRole("ADMIN", "TEACHER")) {
             model.addAttribute("studentOptions", studentService.findStudentsForUser());
-            model.addAttribute("assignmentOptions", assignmentService.findAssignmentsForUser());
+            model.addAttribute("assignmentOptions", assignmentService.findAssignmentsForUserIncludeExpired());
         }
 
         // "remember" filters
