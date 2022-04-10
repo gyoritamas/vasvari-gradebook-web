@@ -1,0 +1,70 @@
+<form th:object="${assignmentInput}" th:method="${editing} ? put : post">
+    <!-- subject -->
+    <div class="row mb-2">
+        <label for="subject" class="col-3 col-form-label">tantárgy</label>
+        <select class="col-9" id="subject" th:field="*{subjectId}">
+            <option th:each="subject : ${subjectOptions}"
+                    th:value="${subject.getId()}"
+                    th:text="${subject.getName()}"
+                    th:selected="${assignmentInput}">
+            </option>
+        </select>
+    </div>
+    <div class="row mb-4">
+        <div class="form-text col-9 offset-md-3" th:if="${#fields.hasErrors('subjectId')}"
+             th:errors="*{subjectId}"></div>
+    </div>
+
+    <!-- name -->
+    <div class="row mb-2">
+        <label for="name" class="col-3 col-form-label">cím</label>
+        <input class="col-9" type="text" id="name" th:field="*{name}">
+    </div>
+    <div class="row mb-4">
+        <div class="form-text col-9 offset-md-3" th:if="${#fields.hasErrors('name')}"
+             th:errors="*{name}"></div>
+    </div>
+
+    <!-- type -->
+    <div class="row mb-2">
+        <label class="col-3 col-form-label" for="type">típus</label>
+        <select class="col-9" id="type" th:field="*{type}">
+            <option th:each="type : ${typeOptions}"
+                    th:value="${type}"
+                    th:text="#{|assignmentType.${type}|}"
+                    th:selected="${assignmentInput}">
+            </option>
+        </select>
+    </div>
+    <div class="row mb-4">
+        <div class="form-text col-9 offset-md-3" th:if="${#fields.hasErrors('type')}"
+             th:errors="*{type}"></div>
+    </div>
+
+    <!-- description -->
+    <div class="row mb-2">
+        <label for="description" class="col-3 col-form-label">leírás</label>
+        <textarea class="col-9" id="description" th:field="*{description}"></textarea>
+    </div>
+    <div class="row mb-4">
+        <div class="form-text col-9 offset-md-3" th:if="${#fields.hasErrors('description')}"
+             th:errors="*{description}"></div>
+    </div>
+
+    <!-- deadline -->
+    <div class="row mb-2">
+        <label for="deadline" class="col-3 col-form-label">határidő</label>
+        <input class="col-9" type="date" id="deadline" th:field="*{deadline}">
+    </div>
+    <div class="row mb-4">
+        <div class="form-text col-9 offset-md-3" th:if="${#fields.hasErrors('deadline')}"
+             th:errors="*{deadline}"></div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="form-text col-9 offset-md-3" th:if="${#fields.hasErrors('subjectId')}"
+             th:errors="*{subjectId}"></div>
+    </div>
+
+    <button type="submit" class="btn btn-block btn-secondary col-4 offset-8">Mentés</button>
+</form>

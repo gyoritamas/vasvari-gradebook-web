@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-5.0.2/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script th:src="@{/js/bootstrap-5.0.2/bootstrap.js}"></script>
+    <title th:text="${editing}? 'E-napló | Tanár adatainak módosítása' : 'E-napló | Új tanár'"></title>
+</head>
+<body>
+<div th:replace="fragments/navbar"></div>
+<div class="col-xl-4 col-lg-6 col-md-10 container-fluid mt-5 px-2">
+    <h1 th:text="${editing}? 'Tanár adatai' : 'Új tanár'" class="mb-4"></h1>
+    <form th:object="${teacherDto}" th:method="${editing} ? put : post">
+        <!-- lastname -->
+        <div class="row mb-2">
+            <label for="lastname" class="col-md-4 col-form-label">vezetéknév</label>
+            <input class="col-md-8" type="text" id="lastname" th:field="*{lastname}">
+        </div>
+        <div class="row mb-4">
+            <div class="form-text col-md-8 offset-md-4" th:if="${#fields.hasErrors('lastname')}"
+                 th:errors="*{lastname}"></div>
+        </div>
+
+        <!-- firstname -->
+        <div class="row mb-2">
+            <label for="firstname" class="col-md-4 col-form-label">keresztnév</label>
+            <input class="col-md-8" type="text" id="firstname" th:field="*{firstname}">
+        </div>
+        <div class="row mb-4">
+            <div class="form-text col-md-8 offset-md-4" th:if="${#fields.hasErrors('firstname')}"
+                 th:errors="*{firstname}"></div>
+        </div>
+
+        <!-- email -->
+        <div class="row mb-2">
+            <label for="email" class="col-md-4 col-form-label">e-mail cím</label>
+            <input class="col-md-8" type="email" id="email" th:field="*{email}">
+        </div>
+        <div class="row mb-4">
+            <div class="form-text col-md-8 offset-md-4" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        </div>
+
+        <!-- address -->
+        <div class="row mb-2">
+            <label for="address" class="col-md-4 col-form-label">lakcím</label>
+            <textarea class="col-md-8" rows="3" id="address" th:field="*{address}"></textarea>
+        </div>
+        <div class="row mb-4">
+            <div class="form-text col-md-8 offset-md-4" th:if="${#fields.hasErrors('address')}"
+                 th:errors="*{address}"></div>
+        </div>
+
+        <!-- phone -->
+        <div class="row mb-2">
+            <label for="phone" class="col-md-4 col-form-label">telefonszám</label>
+            <input class="col-md-8" type="text" id="phone" th:field="*{phone}">
+        </div>
+        <div class="row mb-4">
+            <div class="form-text col-md-8 offset-md-4" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+        </div>
+
+        <!-- birthdate -->
+        <div class="row mb-2">
+            <label for="birthdate" class="col-md-4 col-form-label">születési dátum</label>
+            <input class="col-md-8" type="date" id="birthdate" th:field="*{birthdate}">
+        </div>
+        <div class="row mb-4">
+            <div class="form-text col-md-8 offset-md-4" th:if="${#fields.hasErrors('birthdate')}"
+                 th:errors="*{birthdate}"></div>
+        </div>
+
+        <button type="submit" class="btn btn-block btn-secondary col-3 offset-9">Mentés</button>
+    </form>
+</div>
+</body>
+</html>

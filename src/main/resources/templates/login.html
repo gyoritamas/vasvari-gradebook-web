@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-5.0.2/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script th:src="@{/js/bootstrap-5.0.2/bootstrap.js}"></script>
+    <title>E-napló | Bejelentkezés</title>
+</head>
+<body>
+<div class="offset-xl-4 offset-md-2 col-xl-4 col-md-8 container-fluid mt-5 px-2 p-5">
+    <h1 class="mb-4">E-napló bejelentkezés</h1>
+    <form th:method="post" th:action="@{login}">
+        <div class="mb-2">
+            <label class="form-label" for="username"></label>
+            <input class="form-control" type="text" id="username" name="username" placeholder="felhasználónév"
+                   autofocus="autofocus"/>
+        </div>
+        <div class="mb-2">
+            <label class="form-label" for="password"></label>
+            <input class="form-control" type="password" id="password" name="password" placeholder="jelszó"/> <br/>
+        </div>
+        <div>
+            <p th:class="text-danger" th:if="${loginError}" class="error">Hibás felhasználónév vagy jelszó.</p>
+        </div>
+        <input type="submit" class="btn btn-secondary offset-8 col-4" value="Bejelentkezés"/>
+    </form>
+</div>
+</body>
+</html>

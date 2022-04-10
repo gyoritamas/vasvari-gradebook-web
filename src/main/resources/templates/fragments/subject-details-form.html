@@ -1,0 +1,28 @@
+<form th:object="${subjectInput}" th:method="${editing} ? put : post">
+
+    <!-- name -->
+    <div class="row mb-2">
+        <label for="course" class="col-md-2 col-form-label">tantárgy&nbsp;neve</label>
+        <input type="text" id="course" class="col-md-4" th:field="*{name}">
+    </div>
+    <div class="row mb-4">
+        <div class="form-text col-md-4 offset-md-2" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+    </div>
+
+    <!-- teacher -->
+    <div class="row mb-2">
+        <label for="teacher" class="col-md-2 col-form-label">tanár</label>
+        <select id="teacher" th:field="*{teacherId}" class="col-md-4">
+            <option th:each="teacher : ${teacherOptions}"
+                    th:value="${teacher.getId()}"
+                    th:text="${teacher.getName()}">
+            </option>
+        </select>
+    </div>
+    <div class="row mb-4">
+        <div class="form-text col-md-4 offset-md-2" th:if="${#fields.hasErrors('teacherId')}"
+             th:errors="*{teacherId}"></div>
+    </div>
+
+    <button type="submit" class="btn btn-block btn-secondary col-3 offset-md-3 ">Mentés</button>
+</form>

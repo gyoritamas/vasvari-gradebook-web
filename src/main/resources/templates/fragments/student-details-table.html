@@ -1,0 +1,44 @@
+<div>
+    <!-- lastname -->
+    <div class="row mb-2">
+        <p class="col-sm-4">vezetéknév</p>
+        <p class="col-sm-8" th:text="${studentDto.getLastname()}"></p>
+    </div>
+
+    <!-- firstname -->
+    <div class="row mb-2">
+        <p class="col-sm-4">keresztnév</p>
+        <p class="col-sm-8" th:text="${studentDto.getFirstname()}"></p>
+    </div>
+
+    <!-- gradeLevel -->
+    <div class="row mb-2">
+        <p class="col-sm-4">évfolyam</p>
+        <p class="col-sm-8" th:text="${studentDto.getGradeLevel()}"></p>
+    </div>
+
+    <!-- email -->
+    <div class="row mb-2">
+        <p class="col-sm-4">e-mail cím</p>
+        <p class="col-sm-8" th:text="${studentDto.getEmail()}">
+    </div>
+
+    <!-- address -->
+    <div class="row mb-2">
+        <p class="col-sm-4">lakcím</p>
+        <p class="col-sm-8" th:text="${studentDto.getAddress()}"></p>
+    </div>
+
+    <!-- phone -->
+    <div class="row mb-2">
+        <p class="col-sm-4">telefonszám</p>
+        <p class="col-sm-8" th:text="${studentDto.getPhone()}">
+    </div>
+
+    <!-- birthdate -->
+    <div class="row mb-2">
+        <p class="col-sm-4">születési dátum</p>
+        <p class="col-sm-8" th:text="${studentDto.getBirthdate()}">
+    </div>
+
+</div>

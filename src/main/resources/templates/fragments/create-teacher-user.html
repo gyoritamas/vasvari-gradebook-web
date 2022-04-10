@@ -1,0 +1,30 @@
+<div class="mb-4">
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th colspan="2">tanár adatai</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>ID</td>
+            <td th:text="${teacherDto.getId()}"></td>
+        </tr>
+        <tr>
+            <td th:text="#{column.name}"></td>
+            <td th:text="${teacherDto.getName()}"></td>
+        </tr>
+        <tr>
+            <td>szerepkör</td>
+            <td th:text="#{|userRole.TEACHER|}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!--    createTeacherUser   -->
+<div th:unless="${initialCredentials}">
+    <form th:method="post"
+          th:action="@{/users/teachers/{id} (id = ${teacherDto.getId()})}">
+        <button type="submit" class="btn btn-block btn-secondary col-3 offset-9">Létrehozás</button>
+    </form>
+</div>

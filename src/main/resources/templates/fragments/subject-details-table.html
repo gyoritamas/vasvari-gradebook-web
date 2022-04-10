@@ -1,0 +1,14 @@
+<div>
+    <!-- name -->
+    <div class="row mb-2">
+        <p class="col-sm-2">tantárgy neve</p>
+        <p class="col-sm-8" th:text="${subjectInput.getName()}"></p>
+    </div>
+
+    <!-- teacher -->
+    <div class="row mb-2">
+        <p class="col-sm-2">tanár</p>
+        <p class="col-sm-8" th:text="${subjectInput.getTeacher().getName()}"></p>
+    </div>
+
+</div>

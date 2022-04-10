@@ -2,45 +2,104 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="hu">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-5.0.2/bootstrap.min.css}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script th:src="@{/js/bootstrap-5.0.2/bootstrap.js}"></script>
     <title>E-napló | Tanulók</title>
 </head>
 <body>
-<h1>Tanulók</h1>
-<a th:href="@{students/new}">Új tanuló</a>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>név</th>
-        <th>évfolyam</th>
-        <th>email</th>
-        <th>cím</th>
-        <th>telefon</th>
-        <th>születési dátum</th>
-        <th>műveletek</th>
-    </tr>
-    <tr th:each="student : ${students}">
-        <td th:text="${student.getId()}"></td>
-        <td th:text="${student.getName()}"></td>
-        <td th:text="${student.getGradeLevel()}"></td>
-        <td th:text="${student.getEmail()}"></td>
-        <td th:text="${student.getAddress()}"></td>
-        <td th:text="${student.getPhone()}"></td>
-        <td th:text="${student.getBirthdate()}"></td>
-        <td>
-            <!-- edit button -->
-            <div class="btn">
-                <a th:href="@{/students/{id}/ (id = ${student.getId()})}"><i class="bi bi-pencil-square"></i></a>
+<div th:replace="fragments/navbar"></div>
+
+<div class="container mt-5 px-2">
+    <div class="d-flex flex-row justify-content-between mb-4">
+        <h1>Tanulók</h1>
+        <div th:if="${@userUtil.hasAnyRole('ADMIN')}"><a th:href="@{students/new}">Új tanuló</a></div>
+    </div>
+
+    <!--    filters     -->
+    <form th:action="@{/students}" th:method="get">
+        <div class="input-group mb-3 w-75">
+            <label for="studentName"></label>
+            <input type="search" class="form-control" id="studentName" name="studentName" placeholder="név"
+                   th:value="${studentName}">
+
+            <label for="gradeLevel"></label>
+            <select class="form-select" id="gradeLevel" name="gradeLevel">
+                <option th:value="null">minden évfolyam</option>
+                <option th:each="i : ${#numbers.sequence(1,12)}" th:value="${i}" th:text="${i}"
+                        th:selected="${i == gradeLevel}">
+                </option>
+            </select>
+
+            <label for="subject"></label>
+            <select class="form-select" id="subject" name="subjectId">
+                <option th:value="null">minden tantárgy</option>
+                <option th:each="subject : ${subjectOptions}"
+                        th:value="${subject.getId()}"
+                        th:text="${subject.getName()}"
+                        th:selected="${subjectId == subject.getId()}">
+                </option>
+            </select>
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">Keresés</button>
             </div>
-            <!-- delete button -->
-            <form th:method="delete"
-                  th:action="@{/students/{id} (id = ${student.getId()})}">
-                <button type="submit" class="btn btn-link"><a><i class="bi bi-trash"></i></a></button>
-            </form>
-        </td>
-    </tr>
-</table>
+        </div>
+    </form>
+    <div>
+        <form th:method="post"
+              th:action="@{/students/reset-filter}">
+            <button type="submit" class="btn btn-link">
+                <span>szűrők törlése</span>
+            </button>
+        </form>
+    </div>
+    <!--    end of filters  -->
+
+    <table class="table table-responsive align-middle">
+        <tr>
+            <th>#</th>
+            <th th:text="#{column.name}"></th>
+            <th th:text="#{column.gradelevel}"></th>
+            <th th:text="#{column.email}">email</th>
+            <th th:text="#{column.address}">cím</th>
+            <th th:text="#{column.phone}">telefon</th>
+            <th th:text="#{column.birthdate}">születési dátum</th>
+            <th th:text="#{column.actions}">műveletek</th>
+        </tr>
+        <tr th:each="student : ${students}">
+            <td th:text="${student.getId()}"></td>
+            <td th:text="${student.getName()}"></td>
+            <td th:text="${student.getGradeLevel()}"></td>
+            <td th:text="${student.getEmail()}"></td>
+            <td th:text="${student.getAddress()}"></td>
+            <td th:text="${student.getPhone()}"></td>
+            <td th:text="${student.getBirthdate()}"></td>
+            <td>
+                <div class="d-flex flex-row">
+                    <!-- details button -->
+                    <div class="btn" th:title="#{action.details}">
+                        <a th:href="@{/students/{id}/ (id = ${student.getId()})}"><i
+                                class="bi bi-pencil-square"></i></a>
+                    </div>
+                    <!-- account button -->
+                    <div th:if="${@userUtil.hasAnyRole('ADMIN')}" class="btn" th:title="#{action.account}">
+                        <!--    navigateToUser  -->
+                        <a th:href="@{/users/students/{id} (id = ${student.getId()})}"><i class="bi bi-person"></i></a>
+                    </div>
+                    <!-- delete button -->
+                    <div th:if="${@userUtil.hasAnyRole('ADMIN')}" th:title="#{action.delete}">
+                        <form th:method="delete"
+                              th:action="@{/students/{id} (id = ${student.getId()})}">
+                            <button type="submit" class="btn btn-link" name="delete">
+                                <a class="text-danger"><i class="bi bi-x-circle"></i></a>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <span th:if="${#lists.isEmpty(students)}">Nincsenek tanulók</span>
+</div>
 </body>
 </html>
