@@ -7,15 +7,15 @@ hozzáférjen az elektronikus napló tartalmához.
 ## Az alkalmazás indítása
 A gradebook-web projekt gyökérkönyvtárából adjuk ki az 
 ```
-mvn install
+mvn clean install -DskipTests
 ```
-majd az
+majd a
 ```
-mvn exec:java -D exec.mainClass=org.vasvari.gradebookweb.GradebookWebApplication
+java -jar target/gradebook-web-0.0.1-SNAPSHOT.jar
 ```
-parancsot. Az első futtatást követően elegendő az utóbbi parancsot használni vagy a *gradebook-web.bat* állományt futtatni.
+parancsot.
 
-A parancs használatához Apache Maven szükséges, a telepítés lépései [itt](https://maven.apache.org/install.html) találhatók.
+(A parancs használatához Apache Maven szükséges, a telepítés lépései [itt](https://maven.apache.org/install.html) találhatók.)
 ## Az alkalmazás használata
 
 Miután a Gradebook API alkalmazást is elindítottuk, használjuk a böngészőt a következő oldalak elérésére.
