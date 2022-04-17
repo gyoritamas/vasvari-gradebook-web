@@ -99,7 +99,7 @@ public class GradebookController {
 
         AssignmentRequest assignmentRequest = new AssignmentRequest();
         assignmentRequest.setSubjectId(subjectId);
-        model.addAttribute("assignmentOptions", assignmentService.findAssignmentsForUser(assignmentRequest));
+        model.addAttribute("assignmentOptions", assignmentService.findAssignmentsForUserIncludeExpired(assignmentRequest));
 
         model.addAttribute("editing", true);
 
