@@ -24,13 +24,13 @@ public class TraversonUtil {
                 };
 
         try {
-            CollectionModel<StudentDto> courseResource = traverson
+            CollectionModel<StudentDto> studentResource = traverson
                     .follow(String.format("$._links.%s.href", linkTo))
                     .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
                     .toObject(collectionModelType);
 
-            if (courseResource != null)
-                return courseResource.getContent();
+            if (studentResource != null)
+                return studentResource.getContent();
             else
                 return Collections.emptyList();
         } catch (IllegalStateException e) {
@@ -67,13 +67,13 @@ public class TraversonUtil {
                 };
 
         try {
-            CollectionModel<SubjectOutput> courseResource = traverson
+            CollectionModel<SubjectOutput> subjectResource = traverson
                     .follow(String.format("$._links.%s.href", linkTo))
                     .withHeaders(jwtTokenUtil.getAuthorizationHeaderWithToken())
                     .toObject(collectionModelType);
 
-            if (courseResource != null)
-                return courseResource.getContent();
+            if (subjectResource != null)
+                return subjectResource.getContent();
             else
                 return Collections.emptyList();
         } catch (IllegalStateException e) {

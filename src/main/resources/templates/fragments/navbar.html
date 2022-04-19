@@ -22,7 +22,7 @@
                         <a class="nav-link" th:href="@{/assignments}">Feladatok</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/gradebook-entries}">Osztályzatok</a>
+                        <a class="nav-link" th:href="@{/gradebook-entries}">Naplóbejegyzések</a>
                     </li>
                     <li class="nav-item" th:if="${@userUtil.hasAnyRole('ADMIN')}">
                         <a class="nav-link" th:href="@{/users}">Felhasználók</a>

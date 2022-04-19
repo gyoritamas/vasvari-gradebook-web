@@ -9,11 +9,11 @@
 </head>
 
 <body>
-<div th:include="fragments/navbar"></div>
+<!--<div th:include="fragments/navbar"></div>-->
 <div class="container-fluid mt-5 px-2 p-5">
     <div class="offset-2 col-8">
         <h1 th:if="${#response.status == 404}" class="mb-4">Az oldal nem található</h1>
-        <h1 th:if="${#response.status==500}" class="mb-4">Hiba történt</h1>
+        <h1 th:if="${#response.status == 500}" class="mb-4">Hiba történt</h1>
         <div th:if="${problem}">
             <table class="table table-responsive-sm">
                 <tr>
